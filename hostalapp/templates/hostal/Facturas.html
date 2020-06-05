@@ -1,0 +1,83 @@
+{% extends 'hostal/base.html' %}
+
+{% block content %}
+<title>Facturas</title>
+<body>
+    <div class="CabeceraModulo">
+        <div class="cerrarSesion">
+            <a href="{% url 'InicioSesion' %}"> 
+            <button type="button" class="btn btn-cerrarSesion" >Cerrar Sesión</button>
+        </a>
+        </div>
+        <div class="btonAyuda ml-4 mr-4">
+            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda "></i>
+            </button>
+        </div>
+    </div>
+    <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
+        <div class="wrapper wrapper--w960">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Factura</h2>
+                </div>
+
+                <div class="titulos-cliente">
+                    <h2 class="title-admin">Facturado a: Hernan Saavedra </h2>
+                </div>
+                <div class="datosFactura d-flex justify-content-around mt-5 mb-5">
+                    <div class="FacEmpresa">Empresa: DuocUc</div>
+                    <div class="FacRol">Rol: 2223-6</div>
+                    <div class="FacGiro">Giro: Servicio Educacional </div>
+                </div> 
+                <div class="tabla-contenidos">
+                    <table class="table text-center " >
+                        <thead class="thead-dark text-center">
+                          <tr >
+                            <th class="text-center"scope="col">Descripción</th>
+                            <th class="text-center"scope="col">Cantidad de Huespedes</th>
+                            <th class="text-center"scope="col">Valor Neto</th>
+                            <th class="text-center"scope="col">Total</th>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <th class="text-center"scope="row">
+                                <br>Descripcion de los servicio del hospedaje 
+                                <br>Numero Orden de compra: xxxxxxxx 
+                                <br>Fecha: xx/xx/xx
+                        </th>
+                        <td>3</td>
+                        <td>$30.000</td>
+                        <td>$90.000</td> 
+                        </tr> 
+                        </tbody> 
+                    </table>
+            </div>
+            <div class="recptorTitulo center-block pb-5 title-admin">
+                Receptor
+            </div>
+            <div class="receptorF d-flex center-block ">
+                <div class="rt d-flex ">
+                    <label for="rut" class="rt mr-4">Rut: </label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="nom d-flex ">
+                    <label for="nombre" class="mr-4 ml-4">Nombre: </label>
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="btn pt-5">
+            <button id="btn " class="btn text-light registro btn-space " type="button" > 
+               Generar Factura
+               </button>
+            </div>
+        </div>     
+    </div>
+
+</body>
+
+    
+
+
+{% endblock %}

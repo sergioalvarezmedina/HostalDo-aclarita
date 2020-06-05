@@ -1,0 +1,197 @@
+{% extends 'hostal/base.html' %}
+
+{% block content %}
+<title>Solicitar Servicio</title>
+<body>
+    <div class="CabeceraModulo">
+        <div class="nomCliente"> <h4>Bienvenido Nombre Cliente </h4></div>
+        <div class="btonAyuda ml-4 mr-4">
+            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
+            </button>
+        </div>
+
+    </div>
+    <div class="">
+        <div class="wrapper wrapper--w960">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Solicitar Servicio</h2>
+                </div>
+                <br>
+ <form class="needs-validation" novalidate>
+  <div class="form-row d-flex justify-content-around">
+    <div class="control-label form-inline">
+      <label for="validationCustom01" class="mr-3">Rut</label>
+      <input type="text" class="form-control" id="validationCustom01" value="Rut" required>
+    </div>
+    <div class="control-label form-inline">
+      <label for="validationCustom02" class="mr-3">Nombre</label>
+      <input type="text" class="form-control" id="validationCustom02" value="Nombre" required>
+    </div>
+     <div class="form-inline">
+      <label for="validationCustom03" class="mr-3">Apellido</label>
+      <input type="text" class="form-control" id="apellido" value="Apellido" required>
+    </div>
+  </div>
+  <div class="form-row d-flex justify-content-around">
+    <div class="form-inline">
+      <label for="validationCustom04" class="mr-3">Cargo</label>
+      <input type="text" class="form-control" id="cargo" value="Cargo" required>
+      </div>
+      <div class="form-inline">
+      <label for="validationCustom04" class="mr-3">Menu</label>
+       <select class="form-control">
+                 <option value="+47">Ejecutivo</option>
+                    <option value="+46">Vegetariano</option>
+                    <option value="+45">Vegano</option>
+            </select>
+      </div>
+    </div>
+    <div class="botonesUsuario">
+    <button id="btn " class="btn text-light registro btn-space " type="button" > 
+      Agregar
+    </button>
+    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+      Limpiar
+    </button>
+    </div>
+    <br>
+    <br>
+    <div class="titulos d-flex mt-5 mb-5 col-9 center-block ">
+      <input class="buscarEmpresa form-control"></input>
+      <button id="btn " class="btn text-light registro btn-space " type="button" > 
+           Buscar
+          </button>
+  </div>
+</form>
+<div class="tabla-contenidos">
+                <table class="table text-center " >
+                    <thead class="thead-dark text-center">
+                      <tr >
+                        <th class="text-center"scope="col">ID OC</th>
+                        <th class="text-center"scope="col">Días</th>
+                        <th class="text-center"scope="col">Total</th>
+                        <th class="text-center"scope="col">Fecha Ingreso</th>
+                        <th class="text-center"scope="col">Fecha Salida</th>
+                        <th class="text-center"scope="col" >Cantidad Empleados<i class="far fa-user"></i></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th class="text-center"scope="row">01</th>
+                        <td>4</td>
+                        <td>$14.000</td>
+                        <td>24/08/19</td>
+                        <td>26/08/29</td>
+                         <!-- Ejemplo Modal-->
+                         <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
+                          2
+                         </button></td>
+                      <tr>
+                        <th class="text-center"scope="row">02</th>
+                        <td>4</td>
+                        <td>$14.000</td>
+                        <td>24/08/19</td>
+                        <td>26/08/29</td>
+                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
+                          2
+                         </button></td>
+                      <tr>
+                        <th class="text-center"scope="row">03</th>
+                        <td>4</td>
+                        <td>$14.000</td>
+                        <td>24/08/19</td>
+                        <td>26/08/29</td>
+                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
+                          2
+                         </button></td>
+                    </tbody>
+                  </table>
+                </div>
+                 <!--Modal-->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+         
+           <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Rut</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido Paterno</th>
+                <th scope="col">Apellido Materno</th>
+                <th scope="col">Cargo</th>
+                <th scope="col">Menú</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+<div class="dropdown center-block">
+    <label class=""><h4>Forma de Pago</h3></label>
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Forma de Pago
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <button class="dropdown-item" type="button">Efectivo</button>
+    <button class="dropdown-item" type="button">Tarjeta de Credito</button>
+  </div>
+</div>
+<br>
+<div class="botonesSolicitar ">
+    <button id="btn " class="btn text-light registro btn-space " type="button" > 
+      Limpiar Registro
+    </button>
+    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+      Enviar OC
+    </button>
+
+</div>
+    <br>
+
+            <!-- Modal Ayuda-->
+<div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+    {% endblock %}

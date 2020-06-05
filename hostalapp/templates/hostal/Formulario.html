@@ -1,0 +1,209 @@
+{% load static %}
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+
+    <!-- Titulo Pagina-->
+    <title>Registro</title>
+
+        <!-- Icons font CSS-->
+        <link href="{% static 'vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+        <link href="{% static 'vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+        <!-- Font -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    
+        <!-- Vendor CSS-->
+        <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+        <link href="{% static 'vendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
+    <!-- estilos CSS-->
+    <link href="{% static 'css/estilos.css'%}" rel="stylesheet" media="all">
+</head>
+
+<body>
+    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+        <div class="wrapper wrapper--w790">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Registro Hostal Doña Clarita</h2>
+                </div>
+                <br>
+                <div class="datos-empresa">
+                    <h3 class="title-empresa">Datos Empresa</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/GuardarFormulario/">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="name">Nombre Empresa</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="nombre_empresa">
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="crearCliente" value="0">
+                        <div class="form-row">
+                            <div class="name">Rol Empresa</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="rol_empresa" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Razon Social</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="razon_social" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Región</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <div class="rs-select2 js-select-simple select--no-search">
+                                        <select name="region" for="regiones" id="regiones">
+                                            <option disabled="disabled" selected="selected" >-Seleccion Región-</option>
+                                        </select>
+                                        <div class="select-dropdown"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name" >Comuna</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <div class="rs-select2 js-select-simple select--no-search">
+                                        <select name="comuna" for="comunas"id="comunas">
+                                            <option disabled="disabled" selected="selected">-Selecciona Comuna-</option>
+                                        </select>
+                                        <div class="select-dropdown"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Dirección</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="direccion">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Telefono</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="telefono" name="telefono">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Email</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="email" name="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="datos-empresa">
+                            <h3 class="title-empresa">Datos Contacto</h3>
+                        </div>
+                        <br>
+                        <div class="form-row">
+                            <div class="name">Nombre</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="nombre_persona">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Apellido Paterno</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="Ap_paterno">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Apellido Materno</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="Ap_materno">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Email</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="email" name="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Nombre Usuario</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="text" name="username">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name"> Contraseña</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="password"  name="contrasena">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Repetir Contraseña</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="password"  name="repetir-contraseña">
+                                </div>
+                            </div>
+                        </div class="boton">
+                        <button class="btn btn--radius-2 btn--color" type="submit">
+                            REGISTRARME
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        {% if insert == 1 %}
+        alert('Registro guardado exitosamente');
+        location.repace("/");
+        {% endif %}}
+    </script>
+
+   <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <!-- Vendor JS-->
+    <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+    <script src="{% static 'vendor/datepicker/moment.min.js' %}"></script>
+    <script src="{% static 'vendor/datepicker/daterangepicker.js' %}"></script>
+
+    
+    <script src="{% static 'js/global.js' %}"></script>
+    <!-- Region y Comunas JS-->
+    <script src="{% static 'js/comunas.js' %}"></script>
+    <!-- razon Social JS-->
+    <script src="{% static 'js/razonSocial.js' %}"></script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
+<!-- end document-->

@@ -1,0 +1,113 @@
+{% extends 'hostal/base.html' %}
+
+{% block content %}
+<title>Administración Clientes</title>
+<body>
+    <div class="CabeceraModulo">
+        <div class="btonAyuda ml-4 mr-4">
+            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
+            </button>
+        </div>
+    </div>
+<div class="">
+    <div class="wrapper wrapper--w960">
+        <div class="card card-5">
+            <div class="card-heading">
+                <h2 class="title">Administración Clientes</h2>
+            </div>
+                <div class="contenedor  justify-content-around ">
+                    <div class="d-flex ">
+                    <div class="filtroClientes row">
+                        <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
+                            <div class="empresa mr-5"> Rut</div>
+                            <input class="buscarEmpresa form-control ml-5"></input>
+                        </div>
+                        <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
+                            <div class="empresa mr-2"> Empresa</div>
+                            <input class="buscarEmpresa form-control ml-4"></input>
+                        </div>
+                        <div class="titulos d-flex mt-3 mb-5 col-9 center-block ">
+                            <div class="empresa mr-4"> Región</div>
+                            <input class="buscarEmpresa form-control ml-4"></input>
+                        </div>
+                </div>
+                <div class="btn align-self-center mr-5 pr-5 col-3">
+                    <button id="btn " class="btn text-light registro btn-space center-block" type="button" > 
+                        Buscar
+                    </button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Rut</th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Región</th>
+                        <th scope="col">Modificar datos</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">17.480.866-k</th>
+                        <td>Carozzi</td>
+                        <td>Las maravillas 9090</td>
+                        <td>Viña del Mar</td>
+                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
+                            Editar
+                           </button></td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">17.480.866-k</th>
+                        <td>Carozzi</td>
+                        <td>Las maravillas 9090</td>
+                        <td>Viña del Mar</td>
+                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
+                            Editar
+                           </button></td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">17.480.866-k</th>
+                        <td>Carozzi</td>
+                        <td>Las maravillas 9090</td>
+                        <td>Viña del Mar</td>
+                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
+                            Editar
+                           </button></td>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="icono-accesos d-flex">
+                    <a href="{% url 'CrearNuevoCliente' %}">
+                    <button class="iconosMenus "><i class="fa fa-user-plus"></i><div class="textoMenus"> Crear Nuevo Cliente </div></button>
+                  </div>
+                  </a>
+            </div>
+    </div>
+</div>
+</body>
+
+            <!-- Modal Ayuda-->
+<div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
