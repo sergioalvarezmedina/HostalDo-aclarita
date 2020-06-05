@@ -133,7 +133,7 @@ def AdministracionCliente(request):
         return render(request, 'hostal/InicioSesion.html', {'msg':'No se ha encontrado ninguna sesión activa'})
 
 def AdministracionOrdenesCompra(request):
-    ordenCompra = HOrdenCompra.objects.get(orden_compra_id=1)
+    ordenCompra = HOrdenCompra.objects.get()
     return render(request, 'hostal/AdministracionOrdenesCompra.html',{'ordenCompra':ordenCompra})
 
 def Facturas(request):
@@ -178,7 +178,9 @@ def ModuloRegistrarHuesped(request):
     return render (request, 'hostal/RegistroHuespedes.html')
 
 def AdminClientesAgregar(request):
-    return render (request, 'hostal/AdminClientesAgregar.html')
+    listadoClientes = HOrganismo.objects.all()
+    print(listadoClientes)
+    return render(request, 'hostal/AdminClientesAgregar.html',{'listadoClientes':listadoClientes})
 
 def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html')

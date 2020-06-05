@@ -4,6 +4,16 @@ body{
     background-size: cover;
     background-attachment: fixed;
 }
+
+#div1 {
+     overflow:scroll;
+     height:200px;
+     width:500px;
+}
+#div1 table {
+    width:500px;
+    background-color:lightgray;
+}
 /*.logotipo{
   padding-top: 10px;
   width: 150px;

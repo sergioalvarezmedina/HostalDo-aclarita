@@ -48,36 +48,20 @@
                       </tr>
                     </thead>
                     <tbody>
+                    
+                      {%for listadoClientes in listadoClientes %}
                       <tr>
-                        <th scope="row">17.480.866-k</th>
-                        <td>Carozzi</td>
-                        <td>Las maravillas 9090</td>
-                        <td>Viña del Mar</td>
+                        <th scope="row">{{listadoClientes.rut}}</th>
+                        <td>{{listadoClientes.nombre_fantasia}}</td>
+                        <td>{{listadoClientes.direccion}}</td>
+                        <td>Región</td>
                         <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
                             Editar
                            </button></td>
                         </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">17.480.866-k</th>
-                        <td>Carozzi</td>
-                        <td>Las maravillas 9090</td>
-                        <td>Viña del Mar</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                            Editar
-                           </button></td>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">17.480.866-k</th>
-                        <td>Carozzi</td>
-                        <td>Las maravillas 9090</td>
-                        <td>Viña del Mar</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                            Editar
-                           </button></td>
-                        </td>
-                      </tr>
+                        </tr>
+                      {% endfor %}
+                      
                     </tbody>
                   </table>
                   <div class="icono-accesos d-flex">
