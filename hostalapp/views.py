@@ -345,3 +345,7 @@ def mainHostal(request):
 def getOrdenCompra(request):
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html')
+
+def generarOrdenDePedidos(request): #template 30
+    
+    return render(request, 'hostal/generarOrdenDePedidos.html')

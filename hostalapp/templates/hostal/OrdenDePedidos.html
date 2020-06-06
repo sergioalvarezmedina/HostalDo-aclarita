@@ -47,6 +47,7 @@
                                   <td>{{ordenPedido.documento_fecha}}</td>
                                   <td>{{ordenPedido.registro_fecha}}</td>
                                   <td>{{ordenPedido.usuario.username}}</td>
+                                  <td ><button data-toggle="modal" data-target="#listarProductos" id="btn "   class="btn text-light registro btn-space " type="button">Ver</button></td>
                                   <!--<td>{{ordenPedido.}}</td>
                                   <td>{{ordenPedido.}}</td>
                                   <td></td>-->
@@ -58,7 +59,14 @@
                          </div>
                      <div class="icono-accesos d-flex justify-content-around ">
                         <button class="iconosMenus  text-light registro btn-space "><i class="fa fa-truck"></i><div class="textoMenus">Proveedores </div></button>
-                        <button class="iconosMenus  text-light registro btn-space "><i class="fa fa-play"></i></i><div class="textoMenus">Generar OP </div></button>
+                        
+                        <a href="{% url 'generarOrdenDePedidos' %}">
+                        <button class="iconosMenus  text-light registro btn-space ">
+                          <i class="fas fa-play"></i></i>
+                          <div class="textoMenus">Generar OP </div>
+                        </button>
+                        </a>
+
                         <button class="iconosMenus  text-light registro btn-space"><i class="fa fa-hamburger"></i><div class="textoMenus">Productos</div></button>
                       </div>
                 </div>
@@ -84,4 +92,63 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Listado de proudctos-->
+<div class="modal fade" id="listarProductos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Listado de productos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <table class="table table-responsive table-bordered">
+    <thead>
+        <tr>
+            <th>Codigo de producto</th>
+            <th>Nombre</th>
+            <th>Familia</th>
+            <th>Unidad de medida</th>
+            <th>Costo</th>
+            <th>Enviado</th>
+            <th>Fecha de envio</th>
+            <th>Recepción</th>
+            <th>Fecha de recepción</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+             <td>999999999999999</td>
+            <td>xxxxxxxx</td>
+            <td>xxxxxxxx</td>
+            <td>Gr</td>
+            <td>$900</td>
+            <td>Pendiente</td>
+            <td>
+                    <div class="form-group">
+                     <input type="date" name="bday" max="3000-12-31" min="1000-01-01" class="form-control">
+                     </div>
+            </td>
+            <td>
+              <div class="form-check">
+                <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+              </div>
+            </td>
+            <td>-</td>
+            <td>10</td>
+        </tr>
+    </tbody>
+</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

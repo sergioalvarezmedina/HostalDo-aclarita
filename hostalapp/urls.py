@@ -27,6 +27,7 @@ urlpatterns = [
     path('CrearNuevoProovedor/', views.CrearNuevoProovedor, name="CrearNuevoProovedor"), #24 25
     path('AdminProveedor/', views.AdminProveedor, name="AdminProveedor"), #26
     path('EditarProovedor/', views.EditarProovedor, name="EditarProovedor"), #27
+    path('generarOrdenDePedidos/', views.generarOrdenDePedidos, name="generarOrdenDePedidos"), #30
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
