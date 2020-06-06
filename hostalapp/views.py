@@ -229,6 +229,7 @@ def GuardarNuevoCliente(request):
 
 
     cliente.save()
+    return render(request, "hostal/AdminClientesAgregar.html")
 
 #def EditarCliente(request, organismo_id):
 
@@ -327,7 +328,7 @@ def AdminProveedor(request):
     #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":
         #return render (request, 'hostal/AdminProveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
 
-    proveedor = HOrganismo.objects.get(proveedor_flag=1)
+    proveedor = HOrganismo.objects.all()
     return render (request, 'hostal/AdminProveedor.html', {'proveedor':proveedor})
 
 def EditarProovedor(request):

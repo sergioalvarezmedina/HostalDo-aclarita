@@ -21,7 +21,7 @@
             <div class="center-block"><label for="" class="mt-4">Datos Contacto</label></div>
             </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form method="POST" action="/GuardarNuevoCliente/">
+                <form method="POST" action="/GuardarFormulario/">
                     {% csrf_token %}
                     <div class="row">
                 <div class="col ml-4 justify-content-around ">
@@ -29,7 +29,7 @@
                         <label for="validationCustom01" class="mr-3">Rol Empresa</label>
                         <input type="text" class="form-control col-lg-7 ml-5" name="rol_empresa"id="validationCustom01" value="" required>
                     </div>
-                    <input type="hidden" name="crearCliente" value="1">
+                    <input type="hidden" name="crearCliente" value="0">
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
                          <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombre_empresa" value="" required>
