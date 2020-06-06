@@ -25,8 +25,8 @@
                 <div class="datos-empresa">
                     <h3 class="title-empresa">Mis Solicitudes</h3>
                 </div>
-                    <div class="tabla-contenidos mt-4 mb-4">
-                        <table class="table text-center " >
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                      <table class="table table-bordered table-striped mb-0">
                             <thead class="thead-dark text-center">
                               <tr >
                                 <th class="text-center"scope="col">ID OP</th>
@@ -40,39 +40,19 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th class="text-center"scope="row">01</th>
-                                <td>05</td>
-                                <td>24/12/19</td>
-                                <td>26/12/19</td>
-                                <td>Sergio</td>
-                                <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" >
-                                 Ver
-                                </button></td>
-                                <td>Enviado</td>
-                              </tr>
-                              <tr>
-                                <th class="text-center"scope="row">01</th>
-                                <td>05</td>
-                                <td>24/12/19</td>
-                                <td>26/12/19</td>
-                                <td>Sergio</td>
-                                <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" >
-                                 Ver
-                                </button></td>
-                                <td>Enviado</td>
-                              </tr>
-                              <tr>
-                                <th class="text-center"scope="row">01</th>
-                                <td>05</td>
-                                <td>24/12/19</td>
-                                <td>26/12/19</td>
-                                <td>Sergio</td>
-                                <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" >
-                                 Ver
-                                </button></td>
-                                <td>Enviado</td>
-                              </tr>
+                                {%for ordenPedido in ordenPedido %}
+                                  <tr>
+                                  <th scope="row">{{ordenPedido.orden_pedido_id}}</th>
+                                  <td>{{ordenPedido.documento_numero}}</td>
+                                  <td>{{ordenPedido.documento_fecha}}</td>
+                                  <td>{{ordenPedido.registro_fecha}}</td>
+                                  <td>{{ordenPedido.usuario.username}}</td>
+                                  <!--<td>{{ordenPedido.}}</td>
+                                  <td>{{ordenPedido.}}</td>
+                                  <td></td>-->
+                                  </tr>
+                                {% endfor %}
+                                
                             </tbody>
                           </table>
                          </div>

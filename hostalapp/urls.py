@@ -35,5 +35,7 @@ urlpatterns = [
     path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
     path('ModuloRegistrarHuesped/', views.ModuloRegistrarHuesped, name="ModuloRegistrarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
+    #path('EditarCliente/<int:organismo_id>', views.EditarCliente, name="EditarCliente"),
+    
 
 ]

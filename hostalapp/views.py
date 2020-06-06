@@ -1,4 +1,4 @@
-from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna
+from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido
 from django.shortcuts import render,HttpResponse
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
@@ -230,6 +230,14 @@ def GuardarNuevoCliente(request):
 
     cliente.save()
 
+#def EditarCliente(request, organismo_id):
+
+ #   organismo_id= request.GET("organismo_id")
+  #  cliente = HOrganismo.objects.filter(id=organismo_id)
+
+   # return render (request, 'hostal/EditarCliente.html')
+
+
 def CrearNuevoProovedor(request):
     return render (request, 'hostal/CrearNuevoProveedor.html')
 
@@ -326,8 +334,9 @@ def EditarProovedor(request):
     return render (request, 'hostal/EditarProovedor.html')
 
 def OrdenDePedidos(request):
-    #ordenPedido = HOrdenPedido.objects.get(orden_pedido_id=1)
-    return render (request, 'hostal/OrdenDePedidos.html')#,{'ordenPedido':ordenPedido})
+    ordenPedido = HOrdenPedido.objects.all()
+    print(ordenPedido)
+    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido})
 
 def mainHostal(request):
 
