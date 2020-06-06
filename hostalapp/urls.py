@@ -34,6 +34,6 @@ urlpatterns = [
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
     path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
     path('ModuloRegistrarHuesped/', views.ModuloRegistrarHuesped, name="ModuloRegistrarHuesped"),
-    
+    path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
 
 ]

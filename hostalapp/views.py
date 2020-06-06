@@ -107,9 +107,9 @@ def GuardarFormulario(request):
     cliente.comuna_id=comuna.comuna_id
     cliente.vigencia=1
 
-  
+
     cliente.save()
-    
+
     if request.POST["crearCliente"] == 1:
         return render(request, "hostal/Formulario.html",{'insert':1})
     else:
@@ -229,7 +229,7 @@ def GuardarNuevoCliente(request):
 
 
     cliente.save()
- 
+
 def CrearNuevoProovedor(request):
     return render (request, 'hostal/CrearNuevoProveedor.html')
 
@@ -332,3 +332,7 @@ def OrdenDePedidos(request):
 def mainHostal(request):
 
     return render(request, 'hostal/menu.html')
+
+def getOrdenCompra(request):
+
+    return render(request, 'hostal/AdministracionOrdenesCompra.html')
