@@ -328,8 +328,8 @@ def AdminProveedor(request):
     #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":
         #return render (request, 'hostal/AdminProveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
 
-    proveedor = HOrganismo.objects.all()
-    return render (request, 'hostal/AdminProveedor.html', {'proveedor':proveedor})
+    proveedor = HOrganismo.objects.filter(proveedor_flag =1)
+    return render (request, 'hostal/AdminProveedor.html' ,{'proveedor':proveedor})
 
 def EditarProovedor(request):
     return render (request, 'hostal/EditarProovedor.html')
