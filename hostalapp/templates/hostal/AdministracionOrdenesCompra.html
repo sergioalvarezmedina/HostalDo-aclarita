@@ -2,6 +2,9 @@
 {% load static %}
 {% block content %}
 <title>Ordenes de Compra</title>
+
+<script src="{% static 'js/hostal.js' %}?{% now "YmdHis" %}"></script>
+
 <body>
     <div class="CabeceraModulo">
       <a href="{% url 'InicioSesion' %}">
@@ -31,11 +34,11 @@
                     <div class="row">
                       <div class="col-lg-6">
                         <label># OC</label>
-                        <input type="text" class="form-control" name="ocNumero" id="ocNumero" onkeydown="return onlyNum(event);" onpaste="return false;">
+                        <input type="text" class="form-control" name="ocNumero" id="ocNumero" onkeypress="return onlyNum(event);" onkeydown="return onlyNum(event);" onpaste="return false;" maxlength="10">
                       </div>
                       <div class="col-lg-6">
                         <label>Cliente</label>
-                        <input type="text" class="form-control" name="cliente" id="cliente">
+                        <input type="text" class="form-control" name="cliente" id="cliente" maxlength="100">
                       </div>
                     </div>
 
@@ -53,37 +56,37 @@
                 <div class="tabla-contenidos">
                 <table class="table text-center " >
                     <thead class="thead-dark text-center">
-                      <tr >
+                      <tr>
                         <th class="text-center"scope="col">ID OC</th>
                         <th class="text-center"scope="col">Empresa</th>
                         <th class="text-center"scope="col">Días</th>
                         <th class="text-center"scope="col">Total</th>
                         <th class="text-center"scope="col">Fecha Ingreso</th>
                         <th class="text-center"scope="col">Fecha Salida</th>
-                        <th class="text-center"scope="col" >Cantidad Empleados<i class="far fa-user"></i>
+                        <th class="text-center"scope="col" >Cantidad Empleados </i>
                         <th class="text-center"scope="col">Arribos</th>
                         <th class="text-center"scope="col">Facturas</th>
-                        </th>
                       </tr>
                     </thead>
                     <tbody>
-<!--                      <tr>
-                        <th class="text-center"scope="row">{{ordenCompra.orden_compra_id}}</th>
-                        <td>{{ordenCompra.organismo.nombre_fantasia}}</td>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>{{ordenCompra.servicio_inicio}}</td>
-                        <td>{{ordenCompra.servicio_fin}}</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" >
-                         6
-                        </button></td>
-                        <td>02</td>
-                        <td >
-                          <a href="{% url 'Facturas' %}">
-                          <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" >
-                         Ver Factura
-                        </button></a></td>
-                      </tr>-->
+                        {% for o in oc %}
+                          <tr>
+                            <th class="text-center"scope="col">#{{ o.orden_compra_id }}</th>
+                            <th scope="col">Raz&oacute;n social: {{ o.organismo_nombre_fantasia }}{% if o.organismo_nombre_fantasia and o.organismo_razon_social %}<br>{% endif %}Nombre fantas&iacute;a:{{ o.organismo_razon_social }}</th>
+                            <th class="text-center"scope="col">{{ o.dias }}</th>
+                            <th class="text-center"scope="col">{{ o.total }}</th>
+                            <th class="text-center"scope="col">{{ o.servicio_inicio }}</th>
+                            <th class="text-center"scope="col">{{ o.servicio_fin }}</th>
+                            <th class="text-center"scope="col" >{{ o.empleados_cantidad }} {% if o.empleados_cantidad > 0 %}<i class="fa fa-users"></i>{% endif %}
+                            <th class="text-center"scope="col">{{ o.empleados_arrivos_cantidad }} {% if o.empleados_arrivos_cantidad > 0 %}<i class="fa fa-flag-checkered"></i>{% endif %}</th>
+                            <th class="text-center"scope="col">
+                              <button class="btn btn-danger" type="button" onclick >Facturaci&oacute;n</button>
+                            </th>
+                          </tr>
+                        {% endfor %}
+                        <tr>
+                          <td colspan="9" class="alert alert-warning">{{msg}}</td>
+                        </tr>
                     </tbody>
                   </table>
                 </div>
@@ -160,7 +163,5 @@
     </div>
   </div>
 </div>
-
-<script src="{% static 'js/hostal.js' %}">
 
 {% endblock %}
