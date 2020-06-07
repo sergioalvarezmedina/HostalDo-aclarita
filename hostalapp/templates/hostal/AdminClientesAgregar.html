@@ -13,13 +13,13 @@
     <div class="wrapper wrapper--w960">
         <div class="card card-5">
             <div class="card-heading">
-                <h2 class="title">Administración Clientes</h2>
+                <h2 class="title">Editar Clientes</h2>
             </div>
                 <div class="contenedor  justify-content-around ">
                     <div class="d-flex ">
                     <div class="filtroClientes row">
                         <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
-                            <div class="empresa mr-5"> Rut</div>
+                            <div class="empresa mr-5"> Rol</div>
                             <input class="buscarEmpresa form-control ml-5"></input>
                         </div>
                         <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
@@ -56,9 +56,8 @@
                         <td>{{listadoClientes.nombre_fantasia}}</td>
                         <td>{{listadoClientes.direccion}}</td>
                         <td>Región</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                            Editar
-                           </button></td>
+                        <td ><a href="/EditarCliente/{{ listadoClientes.organismo_id }}">Editar</a></td>
+                           
                         </td>
                         </tr>
                       {% endfor %}

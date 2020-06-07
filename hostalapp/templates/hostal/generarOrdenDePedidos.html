@@ -1,0 +1,289 @@
+{% extends 'hostal/base.html' %}
+
+{% block content %}
+<title>GENERAR ORDEN DE PEDIDO</title>
+<body>
+    <div class="CabeceraModulo">
+        <div class="nomCliente"> <h4>Bienvenido Nombre Cliente </h4></div>
+        <div class="btonAyuda ml-4 mr-4">
+            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div class="wrapper wrapper--w960">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">GENERAR ORDEN DE PEDIDO</h2>
+                </div>
+                <br>
+ <form class="needs-validation" novalidate>
+  
+  <div class="form-row d-flex justify-content-around">
+    
+    <div class="control-label form-inline">
+      <label for="validationCustom01" class="mr-3">Rut</label>
+      <input type="text" class="form-control" id="validationCustom01" value="Rut" required>
+    </div>
+    
+    <div class="control-label form-inline">
+      <label for="validationCustom02" class="mr-3">Razón Social</label>
+      <input type="text" class="form-control" id="validationCustom02" value="Razon Social" required>
+    </div>
+     
+     <div class="form-inline">
+      <label for="validationCustom03" class="mr-3">Giro</label>
+      <input type="text" class="form-control" id="Giro" value="Giro" required>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="botonesParteuno">
+    <button id="btn " class="btn text-light registro btn-space " type="button" data-toggle="modal" data-target="#Buscarproveedor"> 
+      Buscar Proveedor
+    </button>
+    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+      Limpiar
+    </button>
+    </div>
+
+  </div>
+
+  <div class="form-row d-flex justify-content-around">
+    
+    <div class="control-label form-inline">
+      <label for="validationCustom01" class="mr-3">Codigo Producto</label>
+      <input type="text" class="form-control" id="CodigoProducto" value="Codigo Producto" required>
+    </div>
+    
+    <div class="control-label form-inline">
+      <label for="validationCustom02" class="mr-3">Nombre Prodcuto</label>
+      <input type="text" class="form-control" id="NombreProdcuto" value="Nombre Prodcuto" required>
+    </div>
+     
+     <div class="form-inline">
+      <label for="validationCustom03" class="mr-3">Cantidad</label>
+      <input type="text" class="form-control" id="Cantidad" value="Cantidad" required>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="botonesPartedos">
+    <button id="btn " class="btn text-light registro btn-space " type="button" data-toggle="modal" data-target="#Buscarproducto"> 
+      Buscar Producto
+    </button>
+    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+      Agregar Producto
+    </button>
+    </div>
+
+  </div>
+
+</form>
+<br>
+<div class="tabla-contenidos">
+                <table class="table text-center " >
+                    <thead class="thead-dark text-center">
+                      <tr >
+                        <th class="text-center"scope="col">Cod Proudcto</th>
+                        <th class="text-center"scope="col">Nombre Producto</th>
+                        <th class="text-center"scope="col">Unidad de Medida</th>
+                        <th class="text-center"scope="col">Cantidad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th class="text-center"scope="row">01</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                      <tr>
+                        <th class="text-center"scope="row">02</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                      <tr>
+                        <th class="text-center"scope="row">03</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                    </tbody>
+                  </table>
+                </div>
+<br>
+<div class="botonesSolicitar ">
+    <button id="btn " class="btn text-light registro btn-space " type="button" > 
+      Limpiar Registro
+    </button>
+    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+      Enviar OP
+    </button>
+
+</div>
+    <br>
+
+            <!-- Modal Ayuda-->
+<div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
+      </div>
+            <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+            <!-- Modal Buscar proveedor-->
+<div class="modal fade" id="Buscarproveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buscar Proveedor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                 <div class="control-label form-inline justify-content-center">
+               <label for="validationCustom01" class="mr-3">Rut</label>
+                <input type="text" class="form-control" id="validationCustom01" value="Rut" required>
+            </div>
+        <br>
+          <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom02" class="mr-3">Razón Social</label>
+             <input type="text" class="form-control" id="validationCustom02" value="Razon Social" required>
+            </div>
+        <br>
+           <div class="form-inline justify-content-center">
+             <label for="validationCustom03" class="mr-3">Giro</label>
+            <input type="text" class="form-control" id="Giro" value="Giro" required>
+          </div>
+        <br>
+        <div class="tabla-contenidos">
+                <table class="table text-center " >
+                    <thead class="thead-dark text-center">
+                      <tr >
+                        <th class="text-center"scope="col">Rut</th>
+                        <th class="text-center"scope="col">Giro</th>
+                        <th class="text-center"scope="col">Nombre</th>
+                        <th class="text-center"scope="col">Razon Social</th>
+                        <th class="text-center"scope="col">Selección</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th class="text-center"scope="row">01</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                        
+                      <tr>
+                        <th class="text-center"scope="row">02</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                      <tr>
+                        <th class="text-center"scope="row">03</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                    </tbody>
+                  </table>
+                </div>
+
+      </div>      
+    <br>        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+            <!-- Modal Buscar producto-->
+<div class="modal fade" id="Buscarproducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buscar Producto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                 <div class="control-label form-inline justify-content-center">
+               <label for="validationCustom01" class="mr-3">Codigo</label>
+                <input type="text" class="form-control" id="validationCustom01" value="Codigo" required>
+            </div>
+        <br>
+          <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom02" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom02" value="Nombre" required>
+            </div>
+        <br>
+           <div class="form-inline justify-content-center">
+             <label for="validationCustom03" class="mr-3">Familia</label>
+            <input type="text" class="form-control" id="Familia" value="Familia" required>
+          </div>
+        <br>
+        <div class="tabla-contenidos">
+                <table class="table text-center " >
+                    <thead class="thead-dark text-center">
+                      <tr >
+                        <th class="text-center"scope="col">Codigo Producto</th>
+                        <th class="text-center"scope="col">Nombre</th>
+                        <th class="text-center"scope="col">Familia</th>
+                        <th class="text-center"scope="col">Unidad de medida</th>
+                        <th class="text-center"scope="col">Selección</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th class="text-center"scope="row">01</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                      <tr>
+                        <th class="text-center"scope="row">02</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                      <tr>
+                        <th class="text-center"scope="row">03</th>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td>XXXXXXXXXXXXXX</td>
+                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                    </tbody>
+                  </table>
+                </div>
+
+      </div>      
+    <br>        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    {% endblock %}

@@ -1,4 +1,4 @@
-from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna
+from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido
 from django.shortcuts import render,HttpResponse
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
@@ -231,6 +231,15 @@ def GuardarNuevoCliente(request):
 
 
     cliente.save()
+    return render(request, "hostal/AdminClientesAgregar.html")
+
+#def EditarCliente(request, organismo_id):
+
+ #   organismo_id= request.GET("organismo_id")
+  #  cliente = HOrganismo.objects.filter(id=organismo_id)
+
+   # return render (request, 'hostal/EditarCliente.html')
+
 
 def CrearNuevoProovedor(request):
     return render (request, 'hostal/CrearNuevoProveedor.html')
@@ -319,17 +328,18 @@ def GuardarNuevoUsuario(request):
 
 def AdminProveedor(request):
     #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":
-        #return render (request, 'hostal/AdminProveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
+        #return render (request, 'hostal/AdminPr    oveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
 
-    proveedor = HOrganismo.objects.get(proveedor_flag=1)
-    return render (request, 'hostal/AdminProveedor.html', {'proveedor':proveedor})
+    proveedor = HOrganismo.objects.filter(proveedor_flag =1)
+    return render (request, 'hostal/AdminProveedor.html' ,{'proveedor':proveedor})
 
 def EditarProovedor(request):
     return render (request, 'hostal/EditarProovedor.html')
 
 def OrdenDePedidos(request):
-    #ordenPedido = HOrdenPedido.objects.get(orden_pedido_id=1)
-    return render (request, 'hostal/OrdenDePedidos.html')#,{'ordenPedido':ordenPedido})
+    ordenPedido = HOrdenPedido.objects.all()
+    print(ordenPedido)
+    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido})
 
 def mainHostal(request):
 
@@ -433,3 +443,10 @@ def getOrdenCompra(request):
 
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "oc" : oc, "status" : "success"})
+<<<<<<< HEAD
+=======
+
+def generarOrdenDePedidos(request): #template 30
+    
+    return render(request, 'hostal/generarOrdenDePedidos.html')
+>>>>>>> 6dd0461ef1fd92129afb305eedc1c5bff043343a
