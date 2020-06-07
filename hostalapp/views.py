@@ -326,7 +326,7 @@ def GuardarNuevoUsuario(request):
 
 def AdminProveedor(request):
     #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":
-        #return render (request, 'hostal/AdminProveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
+        #return render (request, 'hostal/AdminPr    oveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
 
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
     return render (request, 'hostal/AdminProveedor.html' ,{'proveedor':proveedor})
@@ -345,7 +345,102 @@ def mainHostal(request):
 
 def getOrdenCompra(request):
 
-    return render(request, 'hostal/AdministracionOrdenesCompra.html')
+    msg = ""
+
+    if request.POST["ocNumero"] == "" and request.POST["cliente"] == "":
+
+        print("Datos sin valor")
+        msg = "Para recuperar órdenes de compra se requiere como mínimo un filtro de búsqueda."
+        return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "status" : "error"})
+
+    try:
+
+        ocFlag=0
+        clienteFlag=0
+
+        ocNumero = int(request.POST["ocNumero"]) if (request.POST["ocNumero"]!="") else 0
+        cliente = request.POST["cliente"] if (request.POST["cliente"]!="") else ''
+
+        print("CLiente "+cliente)
+
+        if "ocNumero" in request.POST and request.POST["ocNumero"]!="":
+            ocFlag=1
+
+        if "cliente" in request.POST and request.POST["cliente"]!="":
+            clienteFlag=1
+
+        if ocFlag==1 and clienteFlag==1:
+
+            print("Ambos criterios "+request.POST["ocNumero"]+" "+request.POST["ocNumero"])
+            oc = HOrdenCompra.objects.raw("SELECT * FROM H_ORDEN_COMPRA WHERE ORDEN_COMPRA_ID=%i", [ocNumero])
+
+        elif ocNumero>0:
+
+            sql="""
+                            SELECT
+                                oc.orden_compra_id orden_compra_id,
+                                TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                                TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                                NVL(o.razon_social, 'S/D') organismo_razon_social,
+                                NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                                oc.servicio_fin-oc.servicio_inicio dias,
+                                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                            FROM
+                                h_orden_compra oc
+                            INNER JOIN
+                                h_usuario u
+                                ON
+                                    oc.usuario_id=u.usuario_id
+                            INNER JOIN
+                                h_organismo o
+                                ON
+                                    oc.organismo_id=o.organismo_id
+                            WHERE
+                                oc.orden_compra_id=%i
+                        """ % ocNumero
+
+            print ("Query : "+sql)
+            oc = HOrdenCompra.objects.raw(sql);
+
+        elif cliente != "":
+
+            cliente=cliente.upper()
+
+            oc = HOrdenCompra.objects.raw("""
+                            SELECT
+                                oc.orden_compra_id orden_compra_id,
+                                TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                                TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                                NVL(o.razon_social, 'S/D') organismo_razon_social,
+                                NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                                ocþ.servicio_fin-oc.servicio_inicio dias,
+                                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                            FROM
+                                h_orden_compra oc
+                            INNER JOIN
+                                h_usuario u
+                                ON
+                                    oc.usuario_id=u.usuario_id
+                            INNER JOIN
+                                h_organismo o
+                                ON
+                                    oc.organismo_id=o.organismo_id
+                            WHERE
+                                UPPER(o.nombre_fantasia) LIKE UPPER(%s) OR
+                                UPPER(o.razon_social) LIKE UPPER(%s)
+                        """, [cliente+'%', cliente+'%']
+                    )
+
+    except:
+
+        print("Se ha producido una excepción ", sys.exc_info()[0])
+        oc = {}
+        msg = "El criterio de búsqueda utilizado no ha retornado registros."
+
+
+    return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "oc" : oc, "status" : "success"})
 
 def generarOrdenDePedidos(request): #template 30
     
