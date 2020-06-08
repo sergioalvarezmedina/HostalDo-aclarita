@@ -447,11 +447,13 @@ def generarOrdenDePedidos(request): #template 30
     
     return render(request, 'hostal/generarOrdenDePedidos.html')
 
-def AdministracionHabitaciones(request): #template 30
-    
+def AdministracionHabitaciones(request): #template 37 -43 
     return render(request, 'hostal/AdministracionHabitaciones.html')
 
 #URL PROVEEDOR
 
 def ProveedorOrdenDePedidos(request):
     return render(request, 'hostal/ProveedorOrdenDePedidos.html')
+
+def AdministracionMenu(request):
+    return render(request, 'hostal/AdministracionMenu.html')
