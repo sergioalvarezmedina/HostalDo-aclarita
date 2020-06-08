@@ -31,6 +31,7 @@ urlpatterns = [
     path('EditarProovedor/', views.EditarProovedor, name="EditarProovedor"), #27
     path('generarOrdenDePedidos/', views.generarOrdenDePedidos, name="generarOrdenDePedidos"), #30 31 32 33
     path('AdministracionHabitaciones/', views.AdministracionHabitaciones, name="AdministracionHabitaciones"), #37 -43
+    path('AdministracionMenu/', views.AdministracionMenu, name="AdministracionMenu"), #44 -46
 
     #URLS PROVEEDOR
 
