@@ -40,7 +40,7 @@
           <button type="button" onclick="setLogin($('#usuario').val(), $('#password').val());"  class="btn text-light registro btn-space">
             Entrar
           </button>
-          <button type="button" class="btn text-light registro btn-space mt-4" onclick="setDesktop('{% url 'Formulario' %}');">
+          <button type="summit" class="btn text-light registro btn-space mt-4" onclick="$('#formLogin').prop('action','{% url 'Formulario' %}');">
             Soy un nuevo cliente
           </button>
           </div>

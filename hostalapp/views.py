@@ -332,8 +332,8 @@ def AdminProveedor(request):
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
     return render (request, 'hostal/AdminProveedor.html' ,{'proveedor':proveedor})
 
-def EditarProovedor(request):
-    return render (request, 'hostal/EditarProovedor.html')
+def EditarProveedor(request):
+    return render (request, 'hostal/EditarProveedor.html')
 
 def OrdenDePedidos(request):
     ordenPedido = HOrdenPedido.objects.all()
@@ -415,7 +415,7 @@ def getOrdenCompra(request):
                                 TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
                                 NVL(o.razon_social, 'S/D') organismo_razon_social,
                                 NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                                ocþ.servicio_fin-oc.servicio_inicio dias,
+                                oc.servicio_fin-oc.servicio_inicio dias,
                                 (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
                                 (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
                             FROM
@@ -452,7 +452,7 @@ def AdministracionHabitaciones(request): #template 37 -43
 
 def AdministracionMenu(request):
     return render(request, 'hostal/AdministracionMenu.html')
-    
+
 #URL PROVEEDOR
 
 def ProveedorOrdenDePedidos(request):
