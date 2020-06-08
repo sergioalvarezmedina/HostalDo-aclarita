@@ -4,19 +4,21 @@ from . import views
 
 urlpatterns = [
 
-    #URLS CLIENTES
+    #URLS LOGGIN
     path('', views.InicioSesion, name="InicioSesion"), #1
 
     path('setLogin', views.setLogin, name="setLogin"), #1
-    path('mainHostal', views.mainHostal, name="mainHostal"), #1
+    path('mainHostal', views.mainHostal, name="mainHostal"), #12
 
     path('Formulario/', views.Formulario, name="Formulario"), #3 4 5
+
+    #URLS CLIENTES
     path('AdministracionCliente/', views.AdministracionCliente, name="AdministracionCliente"), #6 7
     path('SolicitarServicio/', views.SolicitarServicio, name="SolicitarServicio"), #8
-    #9 10 11 falta (misdatos)
+    path('misDatos/', views.misDatos, name="misDatos"), #9 10 11
+
 
     #URLS HOSTAL
-    path('Iconos/', views.Iconos, name="Iconos"),   #12
     path('AdministracionOrdenesCompra/', views.AdministracionOrdenesCompra, name="AdministracionOrdenesCompra"), #13 14 15
     path('Facturas/', views.Facturas, name="Facturas"), #16 17
     path('RegistroHuespedes/', views.RegistroHuespedes, name="RegistroHuespedes"), #18 19
@@ -27,7 +29,12 @@ urlpatterns = [
     path('CrearNuevoProovedor/', views.CrearNuevoProovedor, name="CrearNuevoProovedor"), #24 25
     path('AdminProveedor/', views.AdminProveedor, name="AdminProveedor"), #26
     path('EditarProovedor/', views.EditarProovedor, name="EditarProovedor"), #27
-    path('generarOrdenDePedidos/', views.generarOrdenDePedidos, name="generarOrdenDePedidos"), #30
+    path('generarOrdenDePedidos/', views.generarOrdenDePedidos, name="generarOrdenDePedidos"), #30 31 32 33
+    path('AdministracionHabitaciones/', views.AdministracionHabitaciones, name="AdministracionHabitaciones"), #37 -43
+
+    #URLS PROVEEDOR
+
+   path('ProveedorOrdenDePedidos/', views.ProveedorOrdenDePedidos, name="ProveedorOrdenDePedidos"), #34 -36
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),

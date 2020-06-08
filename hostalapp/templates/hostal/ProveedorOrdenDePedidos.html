@@ -1,0 +1,145 @@
+{% extends 'hostal/base.html' %}
+
+{% block content %}
+<title>Proveedor</title>
+
+<body>
+    <div class="CabeceraModulo">
+        <div class="cerrarSesion">
+            <a href="{% url 'InicioSesion' %}">
+            <button type="button" class="btn btn-cerrarSesion" >Cerrar Sesión</button>
+        </a>
+        </div>
+        <div class="btonAyuda ml-4 mr-4">
+            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
+            </button>
+        </div>
+    </div>
+    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+        <div class="wrapper wrapper--w790">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Orden de Pedidos</h2>
+                </div>
+                <br>
+                <div class="datos-empresa">
+                    <h3 class="title-empresa">Productos Solicitados</h3>
+                </div>
+                    <div class="tabla-contenidos mt-4 mb-4">
+                        <table class="table text-center " >
+                            <thead class="thead-dark text-center">
+                              <tr >
+                                <th class="text-center"scope="col">ID OP</th>
+                                <th class="text-center"scope="col">Doc N°</th>
+                                <th class="text-center"scope="col">Doc.Fecha</th>
+                                <th class="text-center"scope="col">Fecha Registro</th>
+                                <th class="text-center"scope="col" >Usuario</th>
+                                <th class="text-center"scope="col">Detalle</th>
+                                <th class="text-center"scope="col">Estado</th>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th class="text-center"scope="row">01</th>
+                                <td>05</td>
+                                <td>24/12/19</td>
+                                <td>26/12/19</td>
+                                <td>Sergio</td>
+                                <td ><button data-toggle="modal" data-target="#listarProductos" id="btn " class="btn text-light registro btn-space " type="button">
+                                 Ver
+                                </button></td>
+                                <td>Enviado</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                         </div>
+                </div>
+    </div>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+ <!-- Modal Ayuda-->
+<div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="listarProductos" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Listado de productos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <table class="table table-responsive table-bordered">
+    <thead>
+        <tr>
+            <th>Codigo de producto</th>
+            <th>Nombre</th>
+            <th>Familia</th>
+            <th>Unidad de medida</th>
+            <th>Valor Unitario</th>
+            <th>Enviado</th>
+            <th>Recepción Estimada</th>
+            <th>N° Documento</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>999999999999999</td>
+            <td>xxxxxxxx</td>
+            <td>xxxxxxxx</td>
+            <td>Kg</td>
+            <td>
+                <div class="form-group">
+                  <input type="ValorUnitario" class="form-control" id="exampleValorUnitario" aria-describedby="ValorUnitario">
+                </div>     
+            </td>
+            <td>  
+              <div class="form-check">
+                <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+              </div>
+
+            </td>
+            <td>
+                    <div class="form-group">
+                     <input type="date" name="bday" max="3000-12-31" min="1000-01-01" class="form-control">
+                     </div>
+            </td>
+            <td>
+                <div class="form-group">
+                  <input type="numeroDoc" class="form-control" id="numeroDoc" aria-describedby="numeroDoc">
+                </div>     
+            </td>
+        </tr>
+    </tbody>
+</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+

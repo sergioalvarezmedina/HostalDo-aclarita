@@ -119,12 +119,11 @@ def GuardarFormulario(request):
 
 
 
-def Iconos(request):
-    ayuda = HAsistente.objects.get(modulo_id=2)
-    return render(request, "hostal/Iconos.html", {'ayuda':ayuda})
-
 def SolicitarServicio(request):
     return render(request, 'hostal/SolicitarServicio.html')
+
+def misDatos(request):
+    return render(request, 'hostal/misDatos.html')
 
 def AdministracionCliente(request):
 
@@ -443,10 +442,16 @@ def getOrdenCompra(request):
 
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "oc" : oc, "status" : "success"})
-<<<<<<< HEAD
-=======
 
 def generarOrdenDePedidos(request): #template 30
     
     return render(request, 'hostal/generarOrdenDePedidos.html')
->>>>>>> 6dd0461ef1fd92129afb305eedc1c5bff043343a
+
+def AdministracionHabitaciones(request): #template 30
+    
+    return render(request, 'hostal/AdministracionHabitaciones.html')
+
+#URL PROVEEDOR
+
+def ProveedorOrdenDePedidos(request):
+    return render(request, 'hostal/ProveedorOrdenDePedidos.html')
