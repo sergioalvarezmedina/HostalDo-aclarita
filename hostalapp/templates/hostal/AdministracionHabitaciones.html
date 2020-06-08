@@ -69,13 +69,13 @@
                                     <div class="select-dropdown"></div>
                                 </div>
                        <button id="btn " class="btn text-light registro btn-space " type="button">Aplicar Estado</button>
-                       <button id="btn " class="btn text-light registro btn-space" type="button">Nuevo Tipo de Habitación</button>
+                       <button id="btn " class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
                     </div>
                    <br>
                    <br>
                    <div class="text-center">
                 <button id="btn " class="btn text-light registro btn-space text" type="button">Eliminar</button>
-               <button id="btn " class="btn text-light registro btn-space" type="button">Agregar</button>
+               <button id="btn " class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Agregar</button>
                </div>
                   </div>
               </div>
@@ -103,9 +103,9 @@
   </div>
 </div>
 
-<!-- Modal Listado de proudctos-->
+<!-- Modal Editar habitacion-->
 <div class="modal fade" id="editar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">Editar Habitaciones</h5>
@@ -113,24 +113,112 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-         
+        <div class="modal-body">
+                 <div class="control-label form-inline justify-content-center">
+               <label for="validationCustom01" class="mr-3">ID Habitacion</label>
+                <input type="text" class="form-control" id="validationCustom01"  required>
+            </div>
+        <br>
+          <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom02" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom02"  required>
+            </div>
+        <br>
+           <div class="form-inline justify-content-center">
+             <label for="validationCustom03" class="mr-3">Precio</label>
+            <input type="text" class="form-control" id="Giro"  required>
+          </div>
+        <br>
+               <div class="form-inline justify-content-center">
+             <label for="validationCustom03" class="mr-3">Accesorios</label>
+            <input type="text" class="form-control" id="Giro" required>
+          </div>
+        <br>
+            <div class="control-label form-inline mr-3 justify-content-center" >           
+                         <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                    <select name="estado" for="estado" id="estado" class="form-control"><option disabled="disabled" selected="selected">  Selecione Tipo  </option></select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                                </div>
+                                 </div>
 
-        <form>
-        <div class="form-group">
-        <label for="exampleInputEmail1">ID Habitación</label>
-          <input type="IdHabitacion" class="form-control" id="IdHabitacion" aria-describedby="IdHabitacion" placeholder=" ">
-        <label for="exampleInputEmail1">Nombre</label>
-          <input type="IdHabitacion" class="form-control" id="IdHabitacion" aria-describedby="IdHabitacion" placeholder=" ">
-         <label for="exampleInputEmail1">Precio</label>
-         <input type="IdHabitacion" class="form-control" id="IdHabitacion" aria-describedby="IdHabitacion" placeholder=" ">
-         <label for="exampleInputEmail1">Accesorios</label>
-         <input type="IdHabitacion" class="form-control" id="IdHabitacion" aria-describedby="IdHabitacion" placeholder=" ">
-
-        </div>
-        </form>
-
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar Cambios</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar habitacion-->
+<div class="modal fade" id="Agregar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Agregar Habitaciones</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+                 <div class="control-label form-inline justify-content-center">
+               <label for="validationCustom01" class="mr-3">ID Habitacion</label>
+                <input type="text" class="form-control" id="validationCustom01"  required>
+            </div>
+        <br>
+          <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom02" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom02"  required>
+            </div>
+        <br>
+           <div class="form-inline justify-content-center">
+             <label for="validationCustom03" class="mr-3">Precio</label>
+            <input type="text" class="form-control" id="Giro"  required>
+          </div>
+        <br>
+               <div class="form-inline justify-content-center">
+             <label for="validationCustom03" class="mr-3">Accesorios</label>
+            <input type="text" class="form-control" id="Giro" required>
+          </div>
+        <br>
+            <div class="control-label form-inline mr-3 justify-content-center" >           
+                         <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                    <select name="estado" for="estado" id="estado" class="form-control"><option disabled="disabled" selected="selected">  Selecione Tipo  </option></select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                                </div>
+                                 </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal Agregar tipo habitacion-->
+<div class="modal fade" id="TipoHabitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Agregar Tipo Habitación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+                 <div class="control-label form-inline justify-content-center">
+               <label for="validationCustom01" class="mr-3">Nombre</label>
+                <input type="text" class="form-control" id="validationCustom01"  required>
+            </div>
+  
+                                 </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-primary">Guardar Cambios</button>
