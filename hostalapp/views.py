@@ -47,7 +47,7 @@ def setLogin(request):
 
             data = {
                 "status":"success",
-                "uri":"mainProveedor",
+                "uri":"ProveedorOrdenDePedidos",
                 }
 
         else:
