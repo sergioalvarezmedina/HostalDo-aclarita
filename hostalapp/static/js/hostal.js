@@ -45,8 +45,6 @@ function setLogin(user, pass) {
     },
     function (data) {
 
-      alert(data);
-
       try {
 
         var rec = JSON.parse(data);
