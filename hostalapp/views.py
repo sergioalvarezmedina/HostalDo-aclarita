@@ -27,24 +27,19 @@ def setLogin(request):
 
         usuario=HUsuario.objects.get(username=dataUser["user"]);
 
-        if usuario.contrasena == encode(WORDFISH, dataUser["pass"]):
+        if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == "2":
 
-        	if usuario.usuario_perfil_id == 2:
+            data = {
+                'status':'success',
+                'uri':'mainHostal',
+                }
 
-           		data = {
-                 	'status':'success',
-                    'uri':'mainHostal',
-           		   }
-           
-            else:
+        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == "3":
 
-                data = {
-                     'status':'success',
-                     'uri':'mainHostal',
-                }     
-
-
-# request.session['accesoId']=dataUser["user"]
+            data = {
+                'status':'success',
+                'uri':'mainCliente',
+                }
 
         else:
 
@@ -55,7 +50,7 @@ def setLogin(request):
                 #'pass':usuario.contrasena,
             }
 
-            request.session['accesoId']=''
+        request.session['accesoId']=''
 
     except HUsuario.DoesNotExist:
 
@@ -452,7 +447,7 @@ def getOrdenCompra(request):
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "oc" : oc, "status" : "success"})
 
 def generarOrdenDePedidos(request): #template 30
-    
+
     return render(request, 'hostal/generarOrdenDePedidos.html')
 
 def AdministracionHabitaciones(request): #template 37 -43
@@ -465,4 +460,3 @@ def AdministracionMenu(request):
 
 def ProveedorOrdenDePedidos(request):
     return render(request, 'hostal/ProveedorOrdenDePedidos.html')
-

@@ -3,7 +3,7 @@
 {% block content %}
 <title>Administración Clientes</title>
 <body>
-    
+
 <div class="">
     <div class="wrapper wrapper--w960">
         <div class="card card-5">
@@ -23,11 +23,11 @@
                         </div>
                         <div class="titulos d-flex mt-3 mb-5 col-9 center-block ">
                             <div class="empresa mr-4"> Región</div>
-                            <input class="buscarEmpresa form-control ml-4"></input>
+                            <input class="buscarEmpresa form-control ml-3"></input>
                         </div>
                 </div>
                 <div class="btn align-self-center mr-5 pr-5 col-3">
-                    <button id="btn " class="btn text-light registro btn-space center-block" type="button" > 
+                    <button id="btn " class="btn text-light registro btn-space center-block" type="button" >
                         Buscar
                     </button>
                     </div>
@@ -44,7 +44,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                    
+
                       {%for listadoClientes in listadoClientes %}
                       <tr>
                         <th scope="row">{{listadoClientes.rut}}</th>
@@ -52,16 +52,16 @@
                         <td>{{listadoClientes.direccion}}</td>
                         <td>Región</td>
                         <td ><a href="/EditarCliente/{{ listadoClientes.organismo_id }}">Editar</a></td>
-                           
+
                         </td>
                         </tr>
                       {% endfor %}
-                      
+
                     </tbody>
                   </table>
                   </div>
                   <div class="icono-accesos d-flex">
-                    <a href="{% url 'CrearNuevoCliente' %}">
+                    <a href="{% url 'GuardarNuevoCliente' %}">
                     <button class="iconosMenus "><i class="fa fa-user-plus"></i><div class="textoMenus"> Crear Nuevo Cliente </div></button>
                   </div>
                   </a>
@@ -90,4 +90,3 @@
 </div>
 
 {% endblock %}
-
