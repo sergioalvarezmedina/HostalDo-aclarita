@@ -29,21 +29,21 @@ def setLogin(request):
 
         usuario=HUsuario.objects.get(username=dataUser["user"]);
 
-        if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 2:
+        if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 2: # ADMINISTRADOR
 
             data = {
                 "status":"success",
                 "uri":"mainHostal",
                 }
 
-        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 3:
+        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 3: # CLIENTE
 
             data = {
                 "status":"success",
-                "uri":"AdministracionOrdenesCompra",
+                "uri":"AdministracionCliente",
                 }
 
-        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 4:
+        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 4: # PROVEEDOR
 
             data = {
                 "status":"success",
@@ -66,7 +66,8 @@ def setLogin(request):
         data = {
             'status':'error',
             'msg':"Credenciales incorrectas, reintente nuevamente.",
-            #'encode':encode(WORDFISH, dataUser["pass"]),
+            "passIni":dataUser["pass"],
+            "pass":encode(WORDFISH, dataUser["pass"]),
         }
 
         request.session['accesoId']=''
@@ -139,11 +140,7 @@ def misDatos(request):
 
 def AdministracionCliente(request):
 
-    if checkSession():
-        return render(request, 'hostal/AdministracionCliente.html')
-    else:
-
-        return render(request, 'hostal/InicioSesion.html', {'msg':'No se ha encontrado ninguna sesión activa'})
+    return render(request, 'hostal/AdministracionCliente.html')
 
 def AdministracionOrdenesCompra(request):
     ordenCompra = HOrdenCompra.objects.get()
