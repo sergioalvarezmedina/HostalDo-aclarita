@@ -40,7 +40,7 @@ def setLogin(request):
 
             data = {
                 "status":"success",
-                "uri":"mainCliente",
+                "uri":"AdministracionOrdenesCompra",
                 }
 
         elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 4:
