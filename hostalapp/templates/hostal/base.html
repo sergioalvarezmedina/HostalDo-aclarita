@@ -46,8 +46,26 @@
     <body>
 
     <div class="wrapper">
+      <div class="CabeceraModulo d-flex justify-content-between ">
+       <div class="btonAyuda ml-4 mr-4">
+            <a href="javascript:history.back()" class="btn btn-cerrarSesion btn-space ">
+            Volver Atrás</a>
+        </div>
+        <div class="cerrarSesion d-flex">
+            <a href="{% url 'InicioSesion' %}">
+            <button type="button" class="btn btn-cerrarSesion" >Cerrar Sesión</button>
+        </a>
+        <div class="btonAyuda ml-4 mr-4">
+            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
+            </button>
+        </div>
+        </div>
+        
+       
+    </div>
 
         {% block content %}
+
         {% endblock %}
 
     </div>

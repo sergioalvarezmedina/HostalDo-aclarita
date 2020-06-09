@@ -41,8 +41,9 @@
             Entrar
           </button>
           <button type="summit" class="btn text-light registro btn-space mt-4" onclick="$('#formLogin').prop('action','{% url 'Formulario' %}');">
+          <a href="{% url 'Formulario'%}"  class="btn text-light registro btn-space mt-4">
             Soy un nuevo cliente
-          </button>
+          </a>
           </div>
         </form>
       </div>

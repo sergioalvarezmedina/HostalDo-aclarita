@@ -29,14 +29,22 @@ def setLogin(request):
 
         if usuario.contrasena == encode(WORDFISH, dataUser["pass"]):
 
-            data = {
-                'status':'success',
-                'uri':'mainHostal',
-                #'encode':encode(WORDFISH, dataUser["pass"]),
-                #'pass':usuario.contrasena,
-            }
+        	if usuario.usuario_perfil_id == 2:
 
-            request.session['accesoId']=dataUser["user"]
+           		data = {
+                 	'status':'success',
+                    'uri':'mainHostal',
+           		   }
+           
+            else:
+
+                data = {
+                     'status':'success',
+                     'uri':'mainHostal',
+                }     
+
+
+# request.session['accesoId']=dataUser["user"]
 
         else:
 
