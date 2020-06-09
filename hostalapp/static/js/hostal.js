@@ -51,7 +51,7 @@ function setLogin(user, pass) {
 
         if (rec.status=="success") {
 
-          $("#formLogin").prop("action", "/"+rec.uri);
+          $("#formLogin").prop("action", rec.uri+"/");
           $("#formLogin").submit();
 
         } else {
