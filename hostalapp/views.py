@@ -25,16 +25,18 @@ def setLogin(request):
 
     try:
 
+        print("User "+dataUser["user"])
+
         usuario=HUsuario.objects.get(username=dataUser["user"]);
 
-        if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == "2":
+        if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 2:
 
             data = {
                 "status":"success",
                 "uri":"mainHostal",
                 }
 
-        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == "3":
+        elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 3:
 
             data = {
                 "status":"success",
@@ -46,7 +48,8 @@ def setLogin(request):
             data = {
                 "status":"error",
                 "msg":"Credenciales incorrectas, reintente nuevamente.",
-                #"pass":encode(WORDFISH, dataUser["pass"]),
+                "passIni":dataUser["pass"],
+                "pass":encode(WORDFISH, dataUser["pass"]),
             }
 
         request.session['accesoId']=''
