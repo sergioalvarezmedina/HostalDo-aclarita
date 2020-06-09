@@ -30,24 +30,23 @@ def setLogin(request):
         if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == "2":
 
             data = {
-                'status':'success',
-                'uri':'mainHostal',
+                "status":"success",
+                "uri":"mainHostal",
                 }
 
         elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == "3":
 
             data = {
-                'status':'success',
-                'uri':'mainCliente',
+                "status":"success",
+                "uri":"mainCliente",
                 }
 
         else:
 
             data = {
-                'status':'error',
-                'msg':"Credenciales incorrectas, reintente nuevamente.",
-                #'encode':encode(WORDFISH, dataUser["pass"]),
-                #'pass':usuario.contrasena,
+                "status":"error",
+                "msg":"Credenciales incorrectas, reintente nuevamente.",
+                #"pass":encode(WORDFISH, dataUser["pass"]),
             }
 
         request.session['accesoId']=''
