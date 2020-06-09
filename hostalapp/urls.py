@@ -8,7 +8,7 @@ urlpatterns = [
     path('', views.InicioSesion, name="InicioSesion"), #1
 
     path('setLogin', views.setLogin, name="setLogin"), #1
-    path('mainHostal', views.mainHostal, name="mainHostal"), #12
+    path('mainHostal/', views.mainHostal, name="mainHostal"), #12
 
     path('Formulario/', views.Formulario, name="Formulario"), #3 4 5
 
@@ -45,6 +45,6 @@ urlpatterns = [
     path('ModuloRegistrarHuesped/', views.ModuloRegistrarHuesped, name="ModuloRegistrarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
     #path('EditarCliente/<int:organismo_id>', views.EditarCliente, name="EditarCliente"),
-    
+
 
 ]
