@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -47,30 +48,67 @@
 
     <div class="wrapper">
       <div class="CabeceraModulo d-flex justify-content-between ">
-       <div class="btonAyuda ml-4 mr-4">
-            <a href="javascript:history.back()" class="btn btn-cerrarSesion btn-space ">
-            Volver Atrás</a>
+
+        {% if form.id != 'menu' %}
+          <div class="btonAyuda ml-4 mr-4">
+              <a href="javascript:history.back()" class="btn btn-info"><i class="fa fa-navicon"></i> Volver Atrás</a>
+          </div>
+        {% else  %}
+        <div class="btonAyuda ml-4 mr-4">
         </div>
+        {% endif %}
+
         <div class="cerrarSesion d-flex">
             <a href="{% url 'InicioSesion' %}">
-            <button type="button" class="btn btn-cerrarSesion" >Cerrar Sesión</button>
-        </a>
-        <div class="btonAyuda ml-4 mr-4">
-            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
-            </button>
+              <button type="button" class="btn btn-info" ><i class="fa fa-sign-out"></i> Cerrar Sesión</button>
+            </a>
+
+            <div class="btonAyuda ml-4 mr-4">
+              <button type="button" class="btn btn-info" >
+                <i class="fa fa-question-circle fa-1x" data-toggle="modal" data-target="#modalAyuda"></i>
+              </button>
+            </div>
+
+          </div>
+
         </div>
-        </div>
-        
-       
+      </div>
+
     </div>
 
-        {% block content %}
+    {% block content %}
 
-        {% endblock %}
-
-    </div>
+    {% endblock %}
 
   </body>
 
+  <div class="modal fade" id="modalAyuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h2>Asistente</h2>
+          <h5 class="modal-title" id="exampleModalLabel">{{HAsistente.titulo}}</h5>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+
+        </div>
+
+        <div class="modal-body">
+           <p>{{form.ayuda}}</p>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal" aria-label="Close"><i class="fa fa-thumbs-up"></i> Entendido!</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 
 </html>

@@ -46,6 +46,7 @@
      <script src="{% static 'js/global.js'%}"></script>
     </head>
 
+<<<<<<< HEAD
 <title>Menu Principal</title>
 <body>
   <div class="wrapper">
@@ -63,6 +64,13 @@
        
     </div>
     
+=======
+    <div class="btonAyuda ml-4 mr-4">
+        <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
+        </button>
+    </div>
+
+>>>>>>> e9906d3415d3609a5ce37ca78d4ce3a4ca18b0f2
     <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
         <div class="wrapper wrapper--w960 ">
             <div class="card card-5 ">
@@ -70,9 +78,6 @@
                     <h2 class="title">Menú</h2>
                 </div>
                 <br>
-                <div class="titulos-cliente">
-                    <h2 class="title-admin">Mis Solicitudes </h2>
-                </div>
                 <div class="tabla-contenidos">
                   <div class="botonesPrincipales d-flex justify-content-around mt-5 mb-5">
 
@@ -152,24 +157,4 @@
     <script src="{% static 'js/modal.js' %}" ></script>
     <script src="{% static 'js/hostal.js' %}"></script>
 
-  <div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{{HAsistente.titulo}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="modal-body">
-          <h2>Titulo</h2>
-           <p>{{ayuda.contenido}}</p>
-        </div>
-
-        <div class="modal-footer">
-        </div>
-      </div>
-    </div>
-  </div>
 {% endblock %}

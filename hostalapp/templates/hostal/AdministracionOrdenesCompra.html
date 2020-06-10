@@ -6,17 +6,6 @@
 <script src="{% static 'js/hostal.js' %}?{% now "YmdHis" %}"></script>
 
 <body>
-    <div class="CabeceraModulo">
-      <a href="{% url 'InicioSesion' %}">
-        <div class="cerrarSesion">
-            <a class="btn btn-info" href="{% url 'InicioSesion' %}"><i class="fa fa-sign-out"></i> Cerrar Sesi&oacute;n</a>
-            </a>
-        </div>
-        <div class="btonAyuda ml-4 mr-4">
-            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i>
-            </button>
-        </div>
-    </div>
     <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
         <div class="wrapper wrapper--w960">
             <div class="card card-5">
@@ -77,7 +66,14 @@
                             <th class="text-center"scope="col">{{ o.total }}</th>
                             <th class="text-center"scope="col">{{ o.servicio_inicio }}</th>
                             <th class="text-center"scope="col">{{ o.servicio_fin }}</th>
-                            <th class="text-center "data-toggle="modal" data-target="#Modalempleados" scope="col" >{{ o.empleados_cantidad }} {% if o.empleados_cantidad > 0 %}<i class="fa fa-users"></i>{% endif %}
+                            <th class="text-center "data-toggle="modal" data-target="#Modalempleados" scope="col" onclick="getOCEmpleados('{{o.orden_compra_id}}')" >
+                               <span style="cursor:pointer">
+                              {{ o.empleados_cantidad }}
+                                  {% if o.empleados_cantidad > 0 %}
+                                  <i class="fa fa-users"></i>
+                                </span>
+                              {% endif %}
+                            </th>
                             <th class="text-center"scope="col">{{ o.empleados_arrivos_cantidad }} {% if o.empleados_arrivos_cantidad > 0 %}<i class="fa fa-flag-checkered"></i>{% endif %}</th>
                             <th class="text-center"scope="col">
                                 <a href="{% url 'Facturas' %}">
@@ -95,75 +91,83 @@
             </div>
         </div>
     </div>
-    <!-- Probando Modal-->
+
+
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="Modalempleados">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-        <div class="tituloModal pt-3 pb-3 center-block titulosModal">Listado Huespedes</div>
-       <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Rut</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Cargo</th>
-            <th scope="col">Arribo</th>
-            <th scope="col">Hora</th>
-            <th scope="col">Habitación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">{{Lhuespedes.rut}}</th>
-            <td>{{Lhuespedes.persona.nombre}} {{Lhuespedes.persona.paterno}}</td>
-            <td>{{Lhuespedes.cargo}}</td>
-             <td>
-                <div class="checkBox col-6">
-                <input type="checkbox" class="check">
-                </div>
-            </td>
-            <td><i class="far fa-clock col-6"></i></td>
-            <td><select class="form-control">
-                 <option value="+47">Habitación 1</option>
-                    <option value="+46">Habitación 2</option>
-                    <option value="+45">Habitación 3</option>
-            </select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="botonesUsuario pb-4">
-    <button id="btn " class="btn text-light registro btn-space " type="button" >
-      Agregar
-    </button>
-    <button id="btn " class="btn text-light registro btn-space" type="button" >
-      Limpiar
-    </button>
+
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+          <div class="tituloModal pt-3 pb-3 center-block titulosModal">Listado Huespedes</div>
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Rut</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Cargo</th>
+                <th scope="col">Arribo</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Habitación</th>
+              </tr>
+            </thead>
+            <tbody id="modalOCEmpleadosBody">
+              <tr>
+                <td colspan="6">
+                  <i class="fa fa-cog fa-spin fa-3x"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Rut</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Cargo</th>
+                <th scope="col">Arribo</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Habitación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">{{Lhuespedes.rut}}</th>
+                <td>{{Lhuespedes.persona.nombre}} {{Lhuespedes.persona.paterno}}</td>
+                <td>{{Lhuespedes.cargo}}</td>
+                 <td>
+                    <div class="checkBox col-6">
+                    <input type="checkbox" class="check">
+                    </div>
+                </td>
+                <td><i class="far fa-clock col-6"></i></td>
+                <td><select class="form-control">
+                     <option value="+47">Habitación 1</option>
+                        <option value="+46">Habitación 2</option>
+                        <option value="+45">Habitación 3</option>
+                </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="botonesUsuario pb-4">
+            <button id="btn " class="btn text-light registro btn-space " type="button" >Agregar</button>
+            <button id="btn " class="btn text-light registro btn-space" type="button" >Limpiar</button>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-  </div>
-</div>
+
     <div class="icono-accesos d-flex">
-        <a href="{% url 'RegistroHuespedes' %}"><button class="iconosMenus "><i class="fa fa-suitcase"></i><div class="textoMenus"> Registrar Huesped </div></button></a>
-    </div>
-
-
-    <!-- Modal -->
-<div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+      <a href="{% url 'RegistroHuespedes' %}">
+        <button class="iconosMenus ">
+          <i class="fa fa-suitcase"></i>
+          <div class="textoMenus">Registrar Huesped</div>
         </button>
-      </div>
-      <div class="modal-body">
-        El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
-      </div>
-      <div class="modal-footer">
-      </div>
+      </a>
     </div>
-  </div>
-</div>
+
 
 {% endblock %}
