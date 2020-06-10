@@ -1,4 +1,4 @@
-from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido
+from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion
 from django.shortcuts import render,HttpResponse
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
@@ -7,6 +7,13 @@ from django.db import connection
 import sys
 
 WORDFISH = '1236545dasdas$'
+ayudaDb = HAsistente.objects.all()
+
+form={}
+ayuda = {}
+for a in ayudaDb:
+    ayuda[a.modulo_id]=a.contenido
+
 
 def InicioSesion(request):
 
@@ -17,7 +24,7 @@ def InicioSesion(request):
 
     ayuda = HAsistente.objects.get(modulo_id=1)
 
-    return render(request, "hostal/InicioSesion.html" ,{'ayuda':ayuda})
+    return render(request, "hostal/InicioSesion.html", {'form' : form })
 
 def setLogin(request):
 
@@ -28,6 +35,8 @@ def setLogin(request):
         print("User "+dataUser["user"])
 
         usuario=HUsuario.objects.get(username=dataUser["user"]);
+
+        request.session['accesoId']=usuario.usuario_id
 
         if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 2: # ADMINISTRADOR
 
@@ -59,7 +68,7 @@ def setLogin(request):
                 "pass":encode(WORDFISH, dataUser["pass"]),
             }
 
-        request.session['accesoId']=''
+            request.session['accesoId']=''
 
     except HUsuario.DoesNotExist:
 
@@ -108,8 +117,8 @@ def GuardarFormulario(request):
 
     usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
-    usuario.save()
 
+    usuario.save()
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
@@ -140,11 +149,45 @@ def misDatos(request):
 
 def AdministracionCliente(request):
 
-    return render(request, 'hostal/AdministracionCliente.html')
+    usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
+
+    sql="""
+                    SELECT
+                        oc.orden_compra_id orden_compra_id,
+                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                        NVL(o.razon_social, 'S/D') organismo_razon_social,
+                        NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                        oc.servicio_fin-oc.servicio_inicio dias,
+                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                    FROM
+                        h_orden_compra oc
+                    INNER JOIN
+                        h_usuario u
+                        ON
+                            oc.usuario_id=u.usuario_id
+                    INNER JOIN
+                        h_organismo o
+                        ON
+                            oc.organismo_id=o.organismo_id
+                    WHERE
+                        oc.usuario_id=%s
+                """ % usuario.usuario_id
+
+    print ("Query : "+sql)
+    oc = HOrdenCompra.objects.raw(sql);
+
+    return render(request, 'hostal/AdministracionCliente.html', { "oc" : oc})
 
 def AdministracionOrdenesCompra(request):
-    ordenCompra = HOrdenCompra.objects.get()
-    return render(request, 'hostal/AdministracionOrdenesCompra.html',{'ordenCompra':ordenCompra})
+
+    form = {
+        "id" : "login",
+        "ayuda" : ayuda[3],
+        }
+
+    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form })
 
 def Facturas(request):
     return render(request, 'hostal/Facturas.html')
@@ -351,7 +394,9 @@ def OrdenDePedidos(request):
 
 def mainHostal(request):
 
-    return render(request, 'hostal/menu.html')
+    form={ "id" : "menu", "ayuda" : ayuda[1]}
+
+    return render(request, 'hostal/menu.html', { "form": form })
 
 def getOrdenCompra(request):
 
@@ -466,3 +511,91 @@ def AdministracionMenu(request):
 
 def ProveedorOrdenDePedidos(request):
     return render(request, 'hostal/ProveedorOrdenDePedidos.html')
+
+
+
+def getOCEmpleados(request):
+
+    dataIn = json.loads(request.POST["data"]);
+
+    hab = HHabitacion.objects.raw("""
+                    SELECT
+                        h.habitacion_id habitacion_id,
+                        h.rotulo rotulo,
+                        ht.descriptor tipo_descriptor
+                    FROM
+                        h_habitacion h
+                    INNER JOIN
+                        h_habitacion_tipo ht
+                        ON
+                            h.habitacion_tipo_id=ht.habitacion_tipo_id
+
+                    INNER JOIN
+                        h_habitacion_estado he
+                        ON
+                            h.habitacion_estado_id=he.habitacion_estado_id
+
+                    WHERE
+                        h.vigencia=1
+                """
+            )
+
+    habitacion=''
+    for h in hab:
+        habitacion=habitacion+'<option value="'+h.habitacion_id+'">'+h.rotulo+' '+h.habitacion_tipo
+
+    oc=HOcHuesped.objects.filter(oc_huesped_id=dataIn["ocId"]);
+
+    html = ''
+    for o in oc:
+
+        persona=HPersona.objects.get(persona_id=o.persona_id)
+
+        cargo="S/D"
+        if persona.cargo!="":
+            cargo=persona.cargo
+
+        hora=''
+        for h in range(0, 24):
+            hora=hora+"<option>"+str(h)+"</option>"
+
+        min=''
+        for m in range(0, 59):
+            min=min+"<option>"+str(m)+"</option>"
+
+        html = html + """
+            <tr>
+                <td>"""+persona.rut+"""</td>
+                <td>"""+persona.nombres+""" """+persona.paterno+""" """+persona.materno+"""  </td>
+                <td title=\"Sin dato\">"""+cargo+"""</td>
+                <td><input type=\"checkbox\"></td>
+                <td>
+                    <table width=\"100%\">
+                        <tr>
+                            <td>
+                                <select class="form-control" id="modalOCEmpleadoHHHH">
+                                    """+hora+"""
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" id="modalOCEmpleadoHHMM">
+                                    """+min+"""
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <select id=\"modalOCEmpleadoHabitacion\" class=\"form-control\">
+                    """+habitacion+"""
+                    </select>
+                </td>
+            </tr>
+            """
+
+    data={
+        "status":"success",
+        "html":html
+    }
+
+    return HttpResponse(json.dumps(data))

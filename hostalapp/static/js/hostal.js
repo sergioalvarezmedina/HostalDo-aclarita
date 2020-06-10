@@ -76,3 +76,49 @@ function setLogin(user, pass) {
   );
 
 }
+
+function getOCEmpleados(ocId) {
+
+  alert(ocId);
+
+  var dataIn =
+    {
+      ocId : ocId,
+    };
+
+  $.post(
+    "/getOCEmpleados",
+    {
+      data : JSON.stringify(dataIn),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    function (data) {
+
+      alert(data);
+
+      try {
+
+        var rec = JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          $("#modalOCEmpleadosBody").html(rec.html);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+  )
+  .fail(
+    function (jqXHR, textStatus, errorThrown) {
+      console.log("Error "+jqXHR.responseText);
+      alert("Se ha producido una excepción.");
+    }
+  );
+
+}
