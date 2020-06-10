@@ -55,6 +55,13 @@
                             <div class="value">
                                 <div class="input-group">
                                     <input class="input--style-5" type="text" name="username">
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-danger mt-1" role="alert">
+                                        {{message}}   
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

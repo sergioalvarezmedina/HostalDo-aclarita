@@ -365,15 +365,26 @@ def GuardarNuevoUsuario(request):
     usuario.persona_id=persona.persona_id
 
     usuario.username=request.POST["username"]
-    usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-    usuario.vigencia=1
-
-    perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
-
-    usuario.usuario_perfil_id=perfil.usuario_perfil_id
+    #validacion de que usuario ya existe! Aqui estoy trabajando
+    if HUsuario.objects.filter(username= usuario.username).count() > 0:
+        messages.error(request, "Usuario ya existe.")
 
 
-    usuario.save()
+        print("Usuario ", usuario.username, " ya existe")
+
+    else:
+        usuario.username=request.POST["username"]
+        usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
+        usuario.vigencia=1
+
+        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=2)
+
+        usuario.usuario_perfil_id=perfil.usuario_perfil_id
+
+
+        usuario.save()
+
+        return render (request, 'hostal/CrearNuevoUsuario.html')
 
     return render (request, 'hostal/CrearNuevoUsuario.html')
 
