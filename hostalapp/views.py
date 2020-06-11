@@ -531,7 +531,17 @@ def AdministracionMenu(request):
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html',{'listaMenu':listaMenu})
 
+def GuardarMenu(request):
 
+    plato = HMenu(
+        menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
+        nombre = request.POST["nombre_plato"],
+        vigencia= 1
+    )
+    print(plato)
+    plato.save()
+
+    return render(request, 'hostal/AdministracionMenu.html')
     #def OrdenDePedidos(request):
     #ordenPedido = HOrdenPedido.objects.all()
     ##print(ordenPedido)

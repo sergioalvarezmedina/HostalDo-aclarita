@@ -117,17 +117,21 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-         <div class="control-label form-inline justify-content-center">
-           <label for="validationCustom01" class="mr-3">Nombre</label>
-           <input type="text" class="form-control" id="validationCustom01"  required>
+        <form method="POST" action="/GuardarMenu/">
+          {% csrf_token %}
+          <div class="modal-body">
+           <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom01" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_plato" required>
+           </div>
          </div>
-       </div>
-       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar Cambios</button>
-      </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+          </form>
     </div>
+
   </div>
 </div>
 
