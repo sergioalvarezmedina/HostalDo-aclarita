@@ -1,4 +1,4 @@
-from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion
+from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu
 from django.shortcuts import render,HttpResponse
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
@@ -527,7 +527,15 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html')
 
 def AdministracionMenu(request):
-    return render(request, 'hostal/AdministracionMenu.html')
+    listaMenu = HMenu.objects.all()
+    print(listaMenu)
+    return render(request, 'hostal/AdministracionMenu.html',{'listaMenu':listaMenu})
+
+
+    #def OrdenDePedidos(request):
+    #ordenPedido = HOrdenPedido.objects.all()
+    ##print(ordenPedido)
+    #return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido})
 
 #URL PROVEEDOR
 
