@@ -316,33 +316,46 @@ def GuardarNuevoProvedor (request):
 
     usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
     usuario.username=request.POST["username"]
-    usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-    usuario.vigencia=1
+    if HUsuario.objects.filter(username= usuario.username).count() > 0:
+        messages.error(request, "Nombre de Usuario ya existe.")
+        print("Usuario ", usuario.username, " ya existe")
+    else:
+        usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
+        usuario.vigencia=1
+        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
 
-    perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
+        usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
-    usuario.usuario_perfil_id=perfil.usuario_perfil_id
-
-    usuario.save()
+        usuario.save()
 
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
     cliente.rut = request.POST["rol_empresa"]
-    cliente.nombre_fantasia = request.POST["nombre_empresa"]
-    cliente.direccion = request.POST["direccion"]
-    cliente.telefono = request.POST["telefono"]
 
-    comuna = HComuna.objects.get(comuna_id=2)
-    cliente.comuna_id=comuna.comuna_id
-    cliente.vigencia=1
+    if HOrganismo.objects.filter(rol_empresa = cliente.rut).count()>0:
+        messages.error(request, "Rol de empresa ya se encuentra registrado.")
 
-    try:
-        cliente.save()
-        messages.success(request, 'Registro Exitoso.')
-    except Exception as e:
-        messages.error(request, 'Ocurrió un error en el Registro.')
-    return render(request, "hostal/Formulario.html")
+
+    cliente.nombre_fantasia = request.POST["nombre_empresa"] 
+
+    if HOrganismo.objects.filter(nombre_empresa=cliente.nombre_fantasia).count()>0:
+        messages.error(request, "Nombre de empresa ya se encuentra registrado.")
+
+    else:
+        cliente.direccion = request.POST["direccion"]
+        cliente.telefono = request.POST["telefono"]
+
+        comuna = HComuna.objects.get(comuna_id=2)
+        cliente.comuna_id=comuna.comuna_id
+        cliente.vigencia=1
+
+        try:
+            cliente.save()
+            messages.success(request, 'Registro Exitoso.')
+        except Exception as e:
+            messages.error(request, 'Ocurrió un error en el Registro.')
+        return render(request, "hostal/Formulario.html")
 
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
@@ -367,10 +380,10 @@ def GuardarNuevoUsuario(request):
     usuario.username=request.POST["username"]
     #validacion de que usuario ya existe! Aqui estoy trabajando
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
-        messages.error(request, "Usuario ya existe.")
-
-
+        messages.error(request, "Nombre de Usuario ya existe.")
         print("Usuario ", usuario.username, " ya existe")
+
+        return render (request,'hostal/CrearNuevoUsuario.html')
 
     else:
         usuario.username=request.POST["username"]
@@ -385,8 +398,6 @@ def GuardarNuevoUsuario(request):
         usuario.save()
 
         return render (request, 'hostal/CrearNuevoUsuario.html')
-
-    return render (request, 'hostal/CrearNuevoUsuario.html')
 
 def AdminProveedor(request):
     #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":

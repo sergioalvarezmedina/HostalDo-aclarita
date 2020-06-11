@@ -16,20 +16,22 @@
                 <div class="center-block"><label for="" class="mt-4">Datos Contacto</label></div>
                 </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form class="needs-validation" novalidate>
+                <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/"novalidate>
+                  {% csrf_token %}
                     <div class="row">
+                  }
                 <div class="col ml-4 justify-content-around ">
                     <div class="control-label form-inline mb-3">
                         <label for="validationCustom01" class="mr-3">Rol Empresa</label>
-                        <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" value="" required>
+                        <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="rol_empresa" value="" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
-                         <input type="text" class="form-control col-lg-7" id="validationCustom02" value="" required>
+                         <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombre_empresa" value="" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom03" class="mr-3">Razon Social</label>
-                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="" required>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="" name="razon_social" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                         <label for="validationCustom03" class="mr-5 pr-4">Región</label>
@@ -51,11 +53,11 @@
                     </div>
                     <div class="control-label form-inline mb-3">
                         <label for="validationCustom03" class="mr-5 pr-5">Dirección</label>
-                        <input type="text" class="form-control ml-1" id="direccion" value="" required>
+                        <input type="text" class="form-control ml-1" id="direccion" value="" name="direccion" required>
                    </div>
                    <div class="control-label form-inline mb-3">
                     <label for="validationCustom03" class="mr-5 pr-5">Telefono</label>
-                    <input type="text" class="form-control ml-3" id="telefono" value="" required>
+                    <input type="text" class="form-control ml-3" id="telefono" name="telefono" value="" required>
                    </div>
                    <div class="control-label form-inline mb-3">
                     <label for="validationCustom03" class="mr-5 pr-5">Email</label>
@@ -66,15 +68,15 @@
                         <div class="col ml-4 justify-content-around ">
                             <div class="control-label form-inline mb-3">
                                 <label for="validationCustom01" class="mr-5 pr-4">Nombre</label>
-                                <input type="text" class="form-control ml-5 " id="validationCustom01" value="" required>
+                                <input type="text" class="form-control ml-5 " id="validationCustom01" name="nombre_persona" value="" required>
                             </div>
                             <div class="control-label form-inline mb-3">
                                  <label for="validationCustom02" class="mr-3 pr-1">Apellido Paterno</label>
-                                 <input type="text" class="form-control ml-2" id="validationCustom02" value="" required>
+                                 <input type="text" name="Ap_paterno" class="form-control ml-2" id="validationCustom02" value="" required>
                             </div>
                             <div class="control-label form-inline mb-3">
                                  <label for="validationCustom03" class="mr-4">Apellido Materno</label>
-                                 <input type="text" class="form-control" id="razons" value="" required>
+                                 <input type="text" class="form-control" name="Ap_materno" id="razons" value="" required>
                             </div>
                             <div class="control-label form-inline mb-3">
                                 <label for="validationCustom03" class="mr-4 pr-1">Correo Contacto</label>
@@ -86,11 +88,11 @@
                             </div>
                             <div class="control-label form-inline mb-3">
                                 <label for="validationCustom03" class="mr-4 pr-2">Nombre Usuario</label>
-                                <input type="text" class="form-control" id="direccion" value="" required>
+                                <input type="text" class="form-control" name="username" id="direccion" value="" required>
                            </div>
                            <div class="control-label form-inline mb-3">
                             <label for="validationCustom03" class="mr-5 pr-4">Contraseña</label>
-                            <input type="password" class="form-control ml-2" id="telefono" value="" required>
+                            <input type="password" class="form-control ml-2" name="contrasena" id="telefono" value="" required>
                            </div>
                            <div class="control-label form-inline mb-3">
                             <label for="validationCustom03" class="mr-2">Repetir Contraseña</label>
@@ -106,7 +108,7 @@
                     <input type="password" class="form-control" id="emai" value="" required>
                 </div>
                 <div class="botonesFormulario center-block">
-                    <button id="btn " class="btn text-light registro btn-space mb-3" type="button" > 
+                    <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" > 
                         Guardar Nuevo Proveedor
                       </button>
                 </div>
