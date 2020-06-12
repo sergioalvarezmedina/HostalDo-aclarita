@@ -59,6 +59,12 @@
         </div>
         {% endif %}
 
+        {% if urlpatterns == "AdministracionCliente" %}
+
+        <div><h5>Nombre Cliente</h5></div>
+
+        {% endif %}
+
         <div class="cerrarSesion d-flex">
             <a href="{% url 'InicioSesion' %}">
               <button type="button" class="btn btn-info" > <i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>

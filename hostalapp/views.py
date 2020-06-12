@@ -1,5 +1,5 @@
 from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse, HttpResponseRedirect
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
 from django.contrib import messages
@@ -331,15 +331,17 @@ def GuardarNuevoProvedor (request):
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
+
     cliente.rut = request.POST["rol_empresa"]
 
-    if HOrganismo.objects.filter(rol_empresa = cliente.rut).count()>0:
+    if HOrganismo.objects.filter(rut = cliente.rut).count()>0:
         messages.error(request, "Rol de empresa ya se encuentra registrado.")
 
+    cliente.proveedor_flag=1
 
     cliente.nombre_fantasia = request.POST["nombre_empresa"] 
 
-    if HOrganismo.objects.filter(nombre_empresa=cliente.nombre_fantasia).count()>0:
+    if HOrganismo.objects.filter(nombre_fantasia=cliente.nombre_fantasia).count()>0:
         messages.error(request, "Nombre de empresa ya se encuentra registrado.")
 
     else:
@@ -355,7 +357,8 @@ def GuardarNuevoProvedor (request):
             messages.success(request, 'Registro Exitoso.')
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
-        return render(request, "hostal/Formulario.html")
+    #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
+    return render(request, "GuardarNuevoProvedor/AdminProveedor.html")
 
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
