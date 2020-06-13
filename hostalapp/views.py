@@ -1,5 +1,5 @@
-from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu
-from django.shortcuts import render,HttpResponse, HttpResponseRedirect
+from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu, HPlato
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
 from django.contrib import messages
@@ -339,7 +339,7 @@ def GuardarNuevoProvedor (request):
 
     cliente.proveedor_flag=1
 
-    cliente.nombre_fantasia = request.POST["nombre_empresa"] 
+    cliente.nombre_fantasia = request.POST["nombre_empresa"]
 
     if HOrganismo.objects.filter(nombre_fantasia=cliente.nombre_fantasia).count()>0:
         messages.error(request, "Nombre de empresa ya se encuentra registrado.")
@@ -430,7 +430,7 @@ def EditarProveedor(request,organismo_id):
 
 
 
-    
+
 
 def OrdenDePedidos(request):
     ordenPedido = HOrdenPedido.objects.all()
@@ -660,5 +660,16 @@ def getOCEmpleados(request):
         "status":"success",
         "html":html
     }
+
+    return HttpResponse(json.dumps(data))
+
+def getMenuPlatosSel(request):
+
+    plato=HPlato.objects.all();
+
+    data={}
+
+    for p in plato:
+        data[p.plato_id]=p.nombre
 
     return HttpResponse(json.dumps(data))

@@ -122,3 +122,75 @@ function getOCEmpleados(ocId) {
   );
 
 }
+
+function selectElementMove(origenId, destinoId) {
+
+  var sel=new Array();
+
+  $("#"+origenId+" option").each(
+
+    function (indice, valor) {
+
+      if ($(this).prop("selected")) {
+
+        el = { id : $(this).val(), text : $(this).text() };
+        sel.push(el);
+        $(this).remove();
+
+      }
+
+    }
+
+  );
+
+  $(sel).each(
+    function (indice, valor) {
+
+      $('#'+destinoId).append('<option value="'+valor.id+'">'+valor.text+'</option>');
+
+    }
+  )
+
+}
+
+function getPlatosSeleccion(objId) {
+
+  $.post(
+
+    "/getPlatosSeleccion",
+
+    {
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+
+    function (data) {
+
+      var rec=JSON.parse("["+data+"]");
+
+      alert(rec.length);
+
+      // eliminando todos los items uno por uno
+      $("#"+objId+" option").each(
+        function (indice, valor) {
+          $(this).remove();
+        }
+      );
+
+      // recorriendo elementos recibidos en json e insertando al select
+      $(rec).each(
+        function (indice, valor) {
+          $("#"+objId).append('<option value="'+indice+'">'+valor+'</option>');
+        }
+      );
+
+      // ocultar engranaje
+      $("#NuevaMinutaPladoSpin").fadeOut("slow");
+      // mostrar selecciòn
+      $("#NuevaMinutaPladoEdit").fadeIn("slow");
+
+    }
+
+  );
+
+
+}
