@@ -54,6 +54,7 @@ urlpatterns = [
 
 
     # jquery , post
-    path('getPlatosSeleccion', views.getMenuPlatosSel, name="getMenuPlatosSel"), #1
+    path('getPlatosSeleccion', views.getMenuPlatosSel, name="getMenuPlatosSel"),
+    path('setMinutaPlatos', views.setMenuPlatosSel, name="setMenuPlatosSel"),
 
 ]

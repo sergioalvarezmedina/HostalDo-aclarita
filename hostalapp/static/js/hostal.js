@@ -1,9 +1,23 @@
+
 function onlyNum(e) {
 
   var n = "1234567890"+String.fromCharCode(8)+String.fromCharCode(9);
   var k = (e.which)?e.which:e.keyCode;
 
   return (n.indexOf(String.fromCharCode(k)) > -1);
+
+}
+
+function showProcess(msg) {
+
+  $("#modalProcessBody").html(msg);
+  $("#modalProcess").modal("show");
+
+}
+
+function hideProcess() {
+
+  $("#modalProcess").modal("hide");
 
 }
 
@@ -153,7 +167,7 @@ function selectElementMove(origenId, destinoId) {
 
 }
 
-function getPlatosSeleccion(objId) {
+function getPlatosSeleccion(origenId, destinoId) {
 
   $.post(
 
@@ -167,17 +181,13 @@ function getPlatosSeleccion(objId) {
 
       var rec=JSON.parse(data);
 
-      // eliminando todos los items uno por uno
-      $("#"+objId+" option").each(
-        function (indice, valor) {
-          $(this).remove();
-        }
-      );
 
+      cleanSelect(origenId);
+      cleanSelect(destinoId);
       // recorriendo elementos recibidos en json e insertando al select
       $(rec).each(
         function (indice, valor) {
-          $("#"+objId).append('<option value="'+valor.id+'">'+valor.nombre+'</option>');
+          $("#"+origenId).append('<option value="'+valor.id+'">'+valor.nombre+'</option>');
         }
       );
 
@@ -190,5 +200,66 @@ function getPlatosSeleccion(objId) {
 
   );
 
+
+}
+
+function cleanSelect(objId) {
+
+  $("#"+objId+" option").each(
+    function (indice, valor) {
+      $(this).remove();
+    }
+  );
+
+}
+
+function setMinuta(selId) {
+
+  var sel=new Array();
+
+  $("#"+selId+" option").each(
+
+    function (indice, valor) {
+
+      el = { id : $(this).val(), text : $(this).text() };
+      sel.push(el);
+      $(this).remove();
+
+    }
+
+  );
+
+  if (!sel.length || sel.length==0) {
+
+    alert("Para proceder con el registro de la nueva minuta se requiere como mìnimo la inclusión de un plato.");
+    return;
+
+  }
+
+  $("#NuevaMinutaCerrar").prop("disabled", true);
+  $("#NuevaMinutaGuardar").prop("disabled", true);
+
+  $("#NuevaMinutaPladoEdit").html("Guardando minuta... ");
+  $("#NuevaMinutaPladoEdit").fadeOut("slow");
+  $("#NuevaMinutaPladoSpin").fadeIn("slow");
+
+  $.post(
+
+    "/setMinutaPlatos",
+
+    {
+      data : sel,
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+
+    function (data) {
+
+      alert(data);
+
+      var rec=JSON.parse(data);
+
+    }
+
+  );
 
 }

@@ -560,7 +560,13 @@ def AdministracionHabitaciones(request): #template 37 -43
 def AdministracionMenu(request):
     listaMenu = HMenu.objects.all()
     print(listaMenu)
-    return render(request, 'hostal/AdministracionMenu.html',{'listaMenu':listaMenu})
+
+    form = {
+            "listaMenu" : listaMenu,
+            "ayuda" : ayuda[3] # poner el ìndice de la ayuda para esta pantalla
+        }
+
+    return render(request, 'hostal/AdministracionMenu.html', { "form" : form })
 
 def GuardarMenu(request):
 
@@ -683,5 +689,13 @@ def getMenuPlatosSel(request):
                 "nombre":p.nombre,
                 }
             )
+
+    return HttpResponse(json.dumps(data))
+
+def setMenuPlatosSel(request):
+
+    print(request.POST["data"])
+
+    data = {}
 
     return HttpResponse(json.dumps(data))

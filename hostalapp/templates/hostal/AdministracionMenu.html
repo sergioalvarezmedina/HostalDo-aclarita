@@ -41,10 +41,10 @@
               </tr>
             </thead>
             <tbody>
-              {% for listaMenu in listaMenu %}
+              {% for listaMenu in form.listaMenu %}
               <tr>
                 <th scope="row">{{listaMenu.registro_fecha}}</th>
-                <td>{{listaMenu.nombre}}</td>
+                <td>{{ listaMenu.nombre }}</td>
                 <td><div class="form-check">
                   <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
                 </div></td>
@@ -55,7 +55,7 @@
           </div>
 
           <div class="text-center">
-            <button data-toggle="modal" data-target="#NuevaMinuta" id="btn " class="btn text-light registro btn-space text" type="button" onclick="getPlatosSeleccion('NuevaMinutaPlatoAdd');">Agregar Minuta</button>
+            <button data-toggle="modal" data-target="#NuevaMinuta" id="btn " class="btn text-light registro btn-space text" type="button" onclick="getPlatosSeleccion('NuevaMinutaPlatoAdd', 'NuevaMinutaPlatoSel');">Agregar Minuta</button>
             <button id="btn " class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Eliminar</button>
           </div>
         </div>
@@ -66,34 +66,14 @@
     </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
 
-    <!-- Modal Ayuda-->
-    <div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
-          </div>
-          <div class="modal-footer">
-          </div>
-        </div>
-      </div>
-    </div>
 
-
-    <!-- Modal Agregar Nuevo Menú-->
     <div class="modal fade" id="NuevoMenu" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="staticBackdropLabel">Agregar Menú</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true" >&times;</span>
             </button>
           </div>
           <div class="modal-body">
@@ -101,69 +81,69 @@
              <label for="validationCustom01" class="mr-3">Nombre</label>
              <input type="text" class="form-control" id="validationCustom01"  required>
            </div>
-         </div>
-         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar Cambios</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Guardar Cambios</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="NuevaMinuta" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
+    <div class="modal fade" id="NuevaMinuta" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
 
-          <h5 class="modal-title" id="staticBackdropLabel">Agregar Menú</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            <h5 class="modal-title" id="staticBackdropLabel">Agregar Menú</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" id="NuevaMinutaClose">&times;</span>
+            </button>
 
-        </div>
+          </div>
 
-        <div class="modal-body">
+          <div class="modal-body">
 
-          <div class="row">
-            <div class="col-lg-6">
-              <label>Fecha</label>
-              <div class="form-group">
-               <input type="date" name="bday" max="3000-12-31" min="1000-01-01" class="form-control">
+            <div class="row">
+              <div class="col-lg-6">
+                <label>Fecha</label>
+                <div class="form-group">
+                 <input type="date" name="bday" max="3000-12-31" min="1000-01-01" class="form-control">
+                </div>
               </div>
             </div>
+
+            <br>
+
+            <div id="NuevaMinutaPladoSpin"><i class="fa fa-spin fa-cog fa-2x"></i> Cargando platos</div>
+
+            <div id="NuevaMinutaPladoEdit" class="row" style="display:none">
+
+              <div class="col-lg-5" >
+                <select class="form-control" id="NuevaMinutaPlatoAdd" multiple rows="8">
+                </select>
+              </div>
+              <div class="col-lg-2">
+                <button class="btn btn-primary" onclick="selectElementMove('NuevaMinutaPlatoAdd', 'NuevaMinutaPlatoSel');"><i class="fa fa-chevron-right"></i></button>
+                <button class="btn btn-primary" onclick="selectElementMove('NuevaMinutaPlatoSel', 'NuevaMinutaPlatoAdd');"><i class="fa fa-chevron-left"></i></button>
+              </div>
+              <div class="col-lg-5">
+                <select class="form-control" id="NuevaMinutaPlatoSel" multiple rows="8">
+                </select>
+              </div>
+            </div>
+
           </div>
 
-          <br>
-
-          <div id="NuevaMinutaPladoSpin"><i class="fa fa-spin fa-cog fa-2x"></i> Cargando platos</div>
-
-          <div id="NuevaMinutaPladoEdit" class="row" style="display:none">
-
-            <div class="col-lg-5" >
-              <select class="form-control" id="NuevaMinutaPlatoAdd" multiple rows="8">
-              </select>
+           <div class="modal-footer">
+              <button type="button" id="NuevaMinutaCerrar" class="btn btn-secondary" data-dismiss="modal" onclick="$('#NuevaMinuta').modal('hide');">Cerrar</button>
+              <button type="button" id="NuevaMinutaGuardar" class="btn btn-primary" onclick="setMinuta('NuevaMinutaPlatoSel');">Guardar Cambios</button>
             </div>
-            <div class="col-lg-2">
-              <button class="btn btn-primary" onclick="selectElementMove('NuevaMinutaPlatoAdd', 'NuevaMinutaPlatoSel');"><i class="fa fa-chevron-right"></i></button>
-              <button class="btn btn-primary" onclick="selectElementMove('NuevaMinutaPlatoSel', 'NuevaMinutaPlatoAdd');"><i class="fa fa-chevron-left"></i></button>
-            </div>
-            <div class="col-lg-5">
-              <select class="form-control" id="NuevaMinutaPlatoSel" multiple rows="8">
-              </select>
-            </div>
-          </div>
 
         </div>
 
-       <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        </div>
-
-    </div>
-
+      </div>
   </div>
-</div>
 
 <script src="{% static 'js/hostal.js' %}"></script>
 
