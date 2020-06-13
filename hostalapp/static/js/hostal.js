@@ -165,9 +165,7 @@ function getPlatosSeleccion(objId) {
 
     function (data) {
 
-      var rec=JSON.parse("["+data+"]");
-
-      alert(rec.length);
+      var rec=JSON.parse(data);
 
       // eliminando todos los items uno por uno
       $("#"+objId+" option").each(
@@ -179,7 +177,7 @@ function getPlatosSeleccion(objId) {
       // recorriendo elementos recibidos en json e insertando al select
       $(rec).each(
         function (indice, valor) {
-          $("#"+objId).append('<option value="'+indice+'">'+valor+'</option>');
+          $("#"+objId).append('<option value="'+valor.id+'">'+valor.nombre+'</option>');
         }
       );
 

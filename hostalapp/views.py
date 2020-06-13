@@ -320,7 +320,7 @@ def GuardarNuevoProvedor (request):
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
         messages.error(request, "Nombre de Usuario ya existe.")
         print("Usuario ", usuario.username, " ya existe")
-    
+
     else:
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
@@ -363,7 +363,7 @@ def GuardarNuevoProvedor (request):
     proveedor=HOrganismo.objects.all()
 
 
-    form = { 
+    form = {
     'proveedor':proveedor}
     return render(request, "hostal/AdminProveedor.html",{'form':form})
 
@@ -675,9 +675,13 @@ def getMenuPlatosSel(request):
 
     plato=HPlato.objects.all();
 
-    data={}
+    data=[]
 
     for p in plato:
-        data[p.plato_id]=p.nombre
+        data.append(
+                {"id":p.plato_id,
+                "nombre":p.nombre,
+                }
+            )
 
     return HttpResponse(json.dumps(data))
