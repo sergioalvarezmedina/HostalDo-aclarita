@@ -411,24 +411,26 @@ def AdminProveedor(request):
 
 def EditarProveedor(request,organismo_id):
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
-    datosOrg = {'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
-    'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
-    'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres}
-    #if request.method == 'GET': #para q cargue los datos en el template
-     #   datos= {'nombre_empresa':proveedor.nombre_fantasia, 'rol_empresa':proveedor.rut,
-      #  'razon_social':proveedor.razon_social}
-       # return render(request,'estructuracion/cliente_crear.html')
-   # if request.method == 'POST':#para guardar los datos una vez modificados
-    #        cliente.nombre = request.POST['nombre']
-     #       cliente.documento = request.POST['numero_documento']
-      #      cliente.email = request.POST['email']
-       #     cliente.ciudad = Ciudad.objects.get(pk = request.POST['ciudad'])
-        #   cliente.save()
-
-    #eturn render(request,'estructuracion/cliente_consultar.html')
 
 
-    return render (request, 'hostal/EditarProveedor.html', datosOrg)
+    if request.method == 'GET':
+        datosOrg ={'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
+        'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
+        'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
+        'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
+        'username':proveedor.usuario.username}
+
+
+        return render (request, 'hostal/EditarProveedor.html', datosOrg)
+
+
+    #if request.method == 'POST':#para guardar los datos una vez modificados
+    #   METODO     proveedor.razon_social = request.POST['razon_social']
+     #   return render (request, 'hostal/AdminProveedor.html')
+
+
+
+    
 
 def OrdenDePedidos(request):
     ordenPedido = HOrdenPedido.objects.all()
