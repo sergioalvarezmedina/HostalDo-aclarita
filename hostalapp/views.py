@@ -316,9 +316,11 @@ def GuardarNuevoProvedor (request):
 
     usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
     usuario.username=request.POST["username"]
+
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
         messages.error(request, "Nombre de Usuario ya existe.")
         print("Usuario ", usuario.username, " ya existe")
+    
     else:
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
@@ -358,7 +360,12 @@ def GuardarNuevoProvedor (request):
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
     #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
-    return render(request, "/AdminProveedor.html")
+    proveedor=HOrganismo.objects.all()
+
+
+    form = { 
+    'proveedor':proveedor}
+    return render(request, "hostal/AdminProveedor.html",{'form':form})
 
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
@@ -407,7 +414,8 @@ def AdminProveedor(request):
         #return render (request, 'hostal/AdminPr    oveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
 
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
-    return render (request, 'hostal/AdminProveedor.html' ,{'proveedor':proveedor})
+    form = {'proveedor':proveedor}
+    return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
 
 def EditarProveedor(request,organismo_id):
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
