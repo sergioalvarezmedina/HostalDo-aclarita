@@ -80,11 +80,11 @@
                             </div>
                             <div class="control-label form-inline mb-3">
                                 <label for="validationCustom03" class="mr-4 pr-1">Correo Contacto</label>
-                                <input type="text" class="form-control" id="razons" value="" required>
+                                <input type="text" class="form-control" id="razons" name="Pemail" value="{{Pemail}}" required>
                            </div>
                            <div class="control-label form-inline mb-3">
                             <label for="validationCustom03" class="mr-3">Numero Contacto</label>
-                            <input type="text" class="form-control" id="razons" value="" required>
+                            <input type="text" class="form-control" id="razons" name="Ptelefono" value="{{Ptelefono}}" required>
                             </div>
                             <div class="control-label form-inline mb-3">
                                 <label for="validationCustom03" class="mr-4 pr-2">Nombre Usuario</label>
@@ -107,7 +107,6 @@
                     <label for="validationCustom03" class="mr-3">Datos Cuenta</label>
                     <input type="password" class="form-control" id="emai" value="" required>
                 </div>
-         
                                    {% if messages %}
                                    <div class="alert alert-danger control-label" role="alert">
                                     {% for message in messages %}
@@ -116,8 +115,7 @@
                                     </div>
                                     {% endfor %}
                                      </div>
-                                     {% endif %}
-         
+                                     {% endif %}  
                 <div class="botonesFormulario ml-5 pl-5">
                     <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" > 
                         Guardar Nuevo Proveedor

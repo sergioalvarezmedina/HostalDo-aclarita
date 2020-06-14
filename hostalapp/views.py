@@ -1,4 +1,5 @@
-from .models import HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra, HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu, HPlato
+from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
+HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu, HPlato,HPersonaDireccion)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
@@ -312,6 +313,7 @@ def GuardarNuevoProvedor (request):
 
     print("Persona "+str(persona.persona_id))
 
+
     usuario.persona_id=persona.persona_id
 
     usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
@@ -329,6 +331,19 @@ def GuardarNuevoProvedor (request):
         usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
         usuario.save()
+
+
+    #Direccion Usuario
+
+    direccionP = HPersonaDireccion(
+    persona_direccion_id =getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+    telefono = request.POST["Ptelefono"],
+    email =request.POST["Pemail"]
+        )
+    direccionP.persona_id = persona.persona_id
+    direccionP.usuario_id = usuario.usuario_id 
+    
+    direccionP.save()
 
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
@@ -418,7 +433,9 @@ def AdminProveedor(request):
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
 
 def EditarProveedor(request,organismo_id):
+
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
+    direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id) 
 
 
     if request.method == 'GET':
@@ -426,11 +443,16 @@ def EditarProveedor(request,organismo_id):
         'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
         'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
         'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
-        'username':proveedor.usuario.username}
+        'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
+        'Pemail':direccionP.email}
+
+        #verificar si funka
+
+        #if direccionP.usuario.usuario_id == 'null':
+         #   direccionP.usuario.usuario_id = usuario.usuario_id
 
 
-        return render (request, 'hostal/EditarProveedor.html', datosOrg)
-
+    return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
     #if request.method == 'POST':#para guardar los datos una vez modificados
     #   METODO     proveedor.razon_social = request.POST['razon_social']
