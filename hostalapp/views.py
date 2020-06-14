@@ -570,19 +570,27 @@ def AdministracionMenu(request):
 
 def GuardarMenu(request):
 
-    plato = HMenu(
+    menu = HMenu(
         menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
-        nombre = request.POST["nombre_plato"],
+        nombre = request.POST["nombre_menu"],
         vigencia= 1
     )
-    print(plato)
-    plato.save()
+    print(menu)
+    menu.save()
 
     return render(request, 'hostal/AdministracionMenu.html')
-    #def OrdenDePedidos(request):
-    #ordenPedido = HOrdenPedido.objects.all()
-    ##print(ordenPedido)
-    #return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido})
+##############################################
+def GuardarMenu(request):
+
+    menu = HMenu(
+        menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
+        nombre = request.POST["nombre_menu"],
+        vigencia= 1
+    )
+    print(menu)
+    menu.save()
+
+    return render(request, 'hostal/AdministracionMenu.html')
 
 #URL PROVEEDOR
 
