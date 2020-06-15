@@ -40,6 +40,10 @@ urlpatterns = [
 
     path('ProveedorOrdenDePedidos/', views.ProveedorOrdenDePedidos, name="ProveedorOrdenDePedidos"), #34 -36
 
+    path('AdministracionProductos/', views.AdministracionProductos, name="AdministracionProductos"), #47 - 52
+    
+
+
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
     path('GuardarNuevoCliente/', views.GuardarNuevoCliente, name="GuardarNuevoCliente"),

@@ -1,0 +1,163 @@
+{% extends 'hostal/base.html' %}
+
+{% load static %}
+{% block content %}
+<title>Mantenedor Menu</title>
+<body>
+  <div class="btonAyuda ml-4 mr-4">
+    <button type="button" class="" ><i class="far fa-question-circle iconoAyuda" data-toggle="modal" data-target="#Ayuda"></i></button>
+  </div>
+
+  <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+    <div class="wrapper wrapper--w790">
+      <div class="card card-5">
+        <div class="card-heading">
+          <h2 class="title">Administrar Productos</h2>
+        </div>
+        <div class="botonesParteuno">
+          <br>
+          <div class="control-label form-inline mb-3">
+              <label for="validationCustom03" class="mr-10 pr-2">Familia</label>
+            <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+               <select name="estado" for="estado" id="estado" class="form-control  mr-5">
+               <option disabled="disabled" selected="selected">Lacteos</option>
+              </select>
+            <div class="select-dropdown"></div>
+          </div>
+        </div>
+        </div>
+
+        <div class="datos-empresa text-center">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-bordered table-striped mb-0">
+             <thead class="thead-dark text-center">
+               <tr>
+                <th class="text-center"scope="col">Codigo</th>
+                <th class="text-center"scope="col">Nombre</th>
+                <th class="text-center"scope="col">Familia</th>
+                <th class="text-center"scope="col">Stock</th>
+                <th class="text-center"scope="col">Costo</th>
+                <th class="text-center"scope="col">Valor</th>
+                <th class="text-center"scope="col">Sel</th>
+                <th class="text-center"scope="col">Edición</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">xxx</th>
+                <td>xxx</td>
+                <td>xxx</td>
+                <td>xxx</td>
+                <td>xxx</td>
+                <td>xxx</td>
+                <td><div class="form-check"><input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="..."></div></td>
+                <td ><button data-toggle="modal" data-target="#editar" id="btn "   class="btn text-light registro btn-space " type="button">Editar</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center">
+            <button id="btn " class="btn text-light registro btn-space" data-toggle="modal" data-target="#NuevaFamilia" type="button">Nueva Familia</button>
+          </div>
+          <br>
+          <div class="text-center">
+            <button id="btn " class="btn text-light registro btn-space" data-toggle="modal" data-target="#Eliminar" type="button">Eliminar</button>
+            <button id="btn " class="btn text-light registro btn-space" data-toggle="modal" data-target="#AgregarProducto" type="button">Agregar</button>
+          </div>
+        </div>
+      </div>
+
+      {% csrf_token %}
+
+    </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+
+
+ <!-- Modal Nueva Familia-->
+  <div class="modal fade" id="NuevaFamilia" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar Familia</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" action="/GuardarMenu/">
+          {% csrf_token %}
+          <div class="modal-body">
+           <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom01" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_familia" required>
+           </div>
+         </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+          </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar producto-->
+<div class="modal fade" id="AgregarProducto" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Editar Habitaciones</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+                 <div class="control-label form-inline justify-content-center">
+                <label for="validationCustom01" class="mr-3">Proveedor</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_proveedor" required>
+            </div>
+        <br>
+            <div class="control-label form-inline justify-content-center" >           
+                         <label for="validationCustom03" class="mr-10 pr-4">Familia</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                    <select name="estado" for="estado" id="estado" class="form-control"><option disabled="disabled" selected="selected">    -Lacteos-    </option></select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                                </div>
+            <br>
+            <div class="control-label form-inline justify-content-center">
+                <label>Fecha Vencimiento</label>
+                <div class="form-group">
+                 <input type="date" name="bday" max="3000-12-31" min="1000-01-01" class="form-control">
+                </div>
+            </div>
+            <br>
+            <div class="control-label form-inline justify-content-center">
+                <label for="validationCustom01" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_producto" required>
+            </div>
+                <br>
+            <div class="control-label form-inline justify-content-center">
+                <label for="validationCustom01" class="mr-3">Descripción</label>
+             <input type="text" class="form-control" id="validationCustom01" name="Descripcion" required>
+            </div>
+            <br>
+            <div class="control-label form-inline justify-content-center">
+                <label for="validationCustom01" class="mr-3">Valor</label>
+             <input type="text" class="form-control" id="validationCustom01" name="valor" required>
+            </div>
+            <br>
+            <div class="control-label form-inline justify-content-center">
+                <label for="validationCustom01" class="mr-3">Stock Critico</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_descripcion" required>
+            </div>
+            <br>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
