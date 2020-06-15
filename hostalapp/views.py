@@ -343,8 +343,7 @@ def GuardarNuevoProvedor (request):
     direccionP.persona_id = persona.persona_id
     direccionP.usuario_id = usuario.usuario_id 
     
-    direccionP.save()
-
+ 
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
@@ -370,14 +369,14 @@ def GuardarNuevoProvedor (request):
         cliente.vigencia=1
 
         try:
+            direccionP.save()
+
             cliente.save()
             messages.success(request, 'Registro Exitoso.')
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
     #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
     proveedor=HOrganismo.objects.all()
-
-
     form = {
     'proveedor':proveedor}
     return render(request, "hostal/AdminProveedor.html",{'form':form})
@@ -435,7 +434,9 @@ def AdminProveedor(request):
 def EditarProveedor(request,organismo_id):
 
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
-    direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id) 
+
+
+    direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
 
 
     if request.method == 'GET':
@@ -445,12 +446,10 @@ def EditarProveedor(request,organismo_id):
         'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
         'Pemail':direccionP.email}
-
         #verificar si funka
 
-        #if direccionP.usuario.usuario_id == 'null':
-         #   direccionP.usuario.usuario_id = usuario.usuario_id
-
+        if direccionP.usuario.usuario_id == 'NULL':
+           direccionP.usuario.usuario_id = proveedor.usuario.usuario_id
 
     return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
