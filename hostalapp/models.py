@@ -126,8 +126,14 @@ class HAsistente(models.Model):
     vigencia = models.FloatField()
 
     class Meta:
+        verbose_name = "Ayuda"
+        verbose_name_plural = "Ayuda"
+        ordering = ["asistente_id"]
         managed = False
         db_table = 'h_asistente'
+
+    def __str__(self):
+        return self.contenido
 
 
 class HComuna(models.Model):
@@ -136,8 +142,14 @@ class HComuna(models.Model):
     region = models.ForeignKey('HRegion', models.DO_NOTHING)
 
     class Meta:
+        verbose_name = "Comuna"
+        verbose_name_plural = "Comunas"
+        ordering = ["comuna_id"]
         managed = False
         db_table = 'h_comuna'
+
+    def __str__(self):
+        return self.nombre
 
 
 class HHabitacion(models.Model):
@@ -213,8 +225,14 @@ class HModulo(models.Model):
     descripcion = models.CharField(max_length=100)
 
     class Meta:
+        verbose_name = "modulo"
+        verbose_name_plural = "Modulos"
+        ordering = ["modulo_id"]
         managed = False
         db_table = 'h_modulo'
+
+    def __str__(self):
+        return self.descripcion
 
 
 class HOcHuesped(models.Model):

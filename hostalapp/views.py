@@ -635,6 +635,8 @@ def GuardarMenu(request):
 def ProveedorOrdenDePedidos(request):
     return render(request, 'hostal/ProveedorOrdenDePedidos.html')
 
+def AdministracionProductos(request):
+    return render(request, 'hostal/AdministracionProductos.html')
 
 
 def getOCEmpleados(request):
