@@ -29,14 +29,15 @@
                               </tr>
                             </thead>
                             <tbody>
+                              {% for listaHabitaciones in form.listaHabitaciones %}
                                   <tr>
-                                  <th scope="row">#9999</th>
-                                  <td>xxxxxxx</td>
-                                  <td>xxxxxxx</td>
-                                  <td>xxxxxxx</td>
-                                  <td>xx</td>
-                                  <td>$0</td>
-                                  <td>xxxxx</td>
+                                  <th scope="row">{{listaHabitaciones.habitacion_id}}</th>
+                                  <td>{{listaHabitaciones.rotulo}}</td>
+                                  <td>{{listaHabitaciones.habitacion_tipo.descriptor}}</td>
+                                  <td>{{listaHabitaciones.habitacion_estado.descripcion}}</td>
+                                  <td>{{listaHabitaciones.camas}}</td>
+                                  <td>{{listaHabitaciones.precio}}</td>
+                                  <td>{{listaHabitaciones.accesorios}}</td>
                                   <td>
                                       <div class="form-check">
                                         <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
@@ -44,6 +45,7 @@
                                   </td>
                                  <td ><button data-toggle="modal" data-target="#editar" id="btn "   class="btn text-light registro btn-space " type="button">Editar</button></td>
                                   </tr>
+                                  {% endfor %}
                             </tbody>
                           </table>
                          </div>

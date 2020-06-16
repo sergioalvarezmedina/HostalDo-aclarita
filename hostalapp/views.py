@@ -1,5 +1,5 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
-HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion, HMenu, HPlato,HPersonaDireccion)
+HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato,HPersonaDireccion)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
@@ -593,7 +593,16 @@ def generarOrdenDePedidos(request): #template 30
     return render(request, 'hostal/generarOrdenDePedidos.html')
 
 def AdministracionHabitaciones(request): #template 37 -43
-    return render(request, 'hostal/AdministracionHabitaciones.html')
+    listaHabitaciones = HHabitacion.objects.all()
+    print(listaHabitaciones)
+    form = {
+            "listaHabitaciones" : listaHabitaciones,
+            "ayuda" : ayuda[3]
+        }
+    return render(request, 'hostal/AdministracionHabitaciones.html', {"form" : form})
+
+
+
 
 def AdministracionMenu(request):
     listaMenu = HMenu.objects.all()
