@@ -381,6 +381,12 @@ def GuardarNuevoProvedor (request):
     'proveedor':proveedor}
     return render(request, "hostal/AdminProveedor.html",{'form':form})
 
+def BuscarProveedor(request):
+    #veamos si resulta
+
+    bscarProv = HOrganismo.objects.filter(bscarRut = bscarProv.rut)
+
+
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
 
@@ -425,11 +431,22 @@ def GuardarNuevoUsuario(request):
 
 def AdminProveedor(request):
     #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":
-        #return render (request, 'hostal/AdminPr    oveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
-
+        #return render (request, 'hostal/AdminProveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
     form = {'proveedor':proveedor}
+
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
+
+def BuscarProveedor(request):
+
+    rutProv = request.GET.get('rut')
+    proveedor = HOrganismo.objects.filter( 
+        rut = rutProv ,
+        proveedor_flag =1
+        )
+    print(proveedor)
+
+    return render (request, 'hostal/AdminProveedor.html',{'proveedor':proveedor})
 
 def EditarProveedor(request,organismo_id):
 

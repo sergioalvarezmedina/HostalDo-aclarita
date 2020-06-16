@@ -30,8 +30,7 @@ urlpatterns = [
     path('OrdenDePedidos/', views.OrdenDePedidos, name="OrdenDePedidos"), #28
     path('CrearNuevoProovedor/', views.CrearNuevoProovedor, name="CrearNuevoProovedor"), #24 25
     path('AdminProveedor/', views.AdminProveedor, name="AdminProveedor"), #26
-    path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
-    #path('EditarProveedor/', views.EditarProveedor, name="EditarProveedor"), #27
+
     path('generarOrdenDePedidos/', views.generarOrdenDePedidos, name="generarOrdenDePedidos"), #30 31 32 33
     path('AdministracionHabitaciones/', views.AdministracionHabitaciones, name="AdministracionHabitaciones"), #37 -43
     path('AdministracionMenu/', views.AdministracionMenu, name="AdministracionMenu"), #44 -46
@@ -46,6 +45,8 @@ urlpatterns = [
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
     path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
+    path('BuscarProveedor/', views.BuscarProveedor, name="BuscarProveedor"),
+    path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
 
     path('ModuloRegistrarHuesped/', views.ModuloRegistrarHuesped, name="ModuloRegistrarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
