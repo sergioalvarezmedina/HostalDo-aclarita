@@ -37,7 +37,7 @@
             <span class=""><a href="#" class="olvide">Olvide mi Contraseña</a></span>
           </div>
           <div class="btnsInicio">
-          <button type="button" onclick="setLogin($('#usuario').val(), $('#password').val());"  class="btn text-light registro btn-space">
+          <button id="entrar" type="button" onclick="setLogin($('#usuario').val(), $('#password').val());"  class="btn text-light registro btn-space">
             Entrar
           </button>
           <button type="summit" class="btn text-light registro btn-space mt-4" onclick="$('#formLogin').prop('action','{% url 'Formulario' %}');">
