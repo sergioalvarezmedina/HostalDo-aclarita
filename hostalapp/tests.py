@@ -10,13 +10,11 @@ import time
 class usando_unittest(unittest.TestCase):
 
 	def setUp(self):
-		self.driver = webdriver.Chrome(executable_path=r"C:\Users\Hector\Desktop\selenium\chromedriver.exe")
+		self.driver = webdriver.Chrome(executable_path=r"C:\Users\Hector\HostalDo-aclarita\hostalapp\drivechrome\chromedriver.exe")
 
 	def test_ingreso(self):
 		driver = self.driver
 		driver.get("http://127.0.0.1:8000/")
-
-
 
 
 ######################
