@@ -1,6 +1,6 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
 HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato,HPersonaDireccion)
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
 from django.contrib import messages
@@ -592,6 +592,8 @@ def generarOrdenDePedidos(request): #template 30
 
     return render(request, 'hostal/generarOrdenDePedidos.html')
 
+############ MODULO HABITACIONES    
+
 def AdministracionHabitaciones(request): #template 37 -43
     listaHabitaciones = HHabitacion.objects.all()
     print(listaHabitaciones)
@@ -601,8 +603,24 @@ def AdministracionHabitaciones(request): #template 37 -43
         }
     return render(request, 'hostal/AdministracionHabitaciones.html', {"form" : form})
 
+def GuardarNuevaHabitacion(request):
+    
+    nuevoTipoHabitacion = HHabitacionTipo(
+        habitacion_tipo_id=(3),
+        descriptor= request.POST["nombre_tipo_habitacion"]
+        )
+    nuevoTipoHabitacion.save()
+
+    return render(request, 'AdministracionHabitaciones.html')
 
 
+def Eliminar_habitacion(request, id):
+    habitacion = HHabitacion.objects.get(habitacion_id=habitacion_id)
+    habitacion.delete()
+
+    return redirect(to="AdministracionHabitaciones")
+
+############ MODULO MENU    
 
 def AdministracionMenu(request):
     listaMenu = HMenu.objects.all()

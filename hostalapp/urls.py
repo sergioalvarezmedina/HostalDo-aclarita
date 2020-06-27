@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 from . import urls2
+from .views import Eliminar_habitacion
 
 urlpatterns = [
 
@@ -56,6 +57,8 @@ urlpatterns = [
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
 
     path('getOCEmpleados', views.getOCEmpleados, name="getOCEmpleados"),
+
+    path('Eliminar_habitacion/<id>/', Eliminar_habitacion, name="Eliminar_habitacion"),
 
 
     # jquery , post
