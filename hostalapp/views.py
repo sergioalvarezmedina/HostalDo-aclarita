@@ -604,15 +604,14 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
 
 def GuardarNuevaHabitacion(request):
-
+    
     nuevoTipoHabitacion = HHabitacionTipo(
-        habitacion_tipo_id=(3),
+        habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
         descriptor= request.POST["nombre_tipo_habitacion"]
         )
     nuevoTipoHabitacion.save()
 
-    return render(request, 'AdministracionHabitaciones.html')
-
+    return redirect(to="AdministracionHabitaciones")
 
 def Eliminar_habitacion(request):
 
