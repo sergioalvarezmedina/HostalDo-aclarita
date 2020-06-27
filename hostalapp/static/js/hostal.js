@@ -263,3 +263,62 @@ function setMinuta(selId) {
   );
 
 }
+
+function showHabitacionEliminar(habitacionId) {
+
+  if (confirm("¿Est{a seguro de eliminar la habitación selecconada?")) {
+
+    unsetHabitacion(habitacionId);
+
+  }
+
+
+}
+
+function unsetHabitacion(habitacionId) {
+
+  var sel={};
+
+  var index=0;
+  $("input[name='sel']:checked").each(
+    function(){
+      sel[index++]=$(this).val();
+    }
+  );
+
+  $.post(
+    "/unsetHabitacion",
+    {
+      sel : JSON.stringify(sel),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+
+    function (data) {
+
+      alert(data);
+
+      try {
+
+        var rec=JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          location.reload();
+
+        } else {
+
+          showMessage(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+
+  );
+
+}

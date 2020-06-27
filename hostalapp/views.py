@@ -341,9 +341,9 @@ def GuardarNuevoProvedor (request):
     email =request.POST["Pemail"]
         )
     direccionP.persona_id = persona.persona_id
-    direccionP.usuario_id = usuario.usuario_id 
-    
- 
+    direccionP.usuario_id = usuario.usuario_id
+
+
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
@@ -440,7 +440,7 @@ def AdminProveedor(request):
 def BuscarProveedor(request):
 
     rutProv = request.GET.get('rut')
-    proveedor = HOrganismo.objects.filter( 
+    proveedor = HOrganismo.objects.filter(
         rut = rutProv ,
         proveedor_flag =1
         )
@@ -592,7 +592,7 @@ def generarOrdenDePedidos(request): #template 30
 
     return render(request, 'hostal/generarOrdenDePedidos.html')
 
-############ MODULO HABITACIONES    
+############ MODULO HABITACIONES
 
 def AdministracionHabitaciones(request): #template 37 -43
     listaHabitaciones = HHabitacion.objects.all()
@@ -601,10 +601,10 @@ def AdministracionHabitaciones(request): #template 37 -43
             "listaHabitaciones" : listaHabitaciones,
             "ayuda" : ayuda[3]
         }
-    return render(request, 'hostal/AdministracionHabitaciones.html', {"form" : form})
+    return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
 
 def GuardarNuevaHabitacion(request):
-    
+
     nuevoTipoHabitacion = HHabitacionTipo(
         habitacion_tipo_id=(3),
         descriptor= request.POST["nombre_tipo_habitacion"]
@@ -614,13 +614,35 @@ def GuardarNuevaHabitacion(request):
     return render(request, 'AdministracionHabitaciones.html')
 
 
-def Eliminar_habitacion(request, id):
-    habitacion = HHabitacion.objects.get(habitacion_id=habitacion_id)
-    habitacion.delete()
+def Eliminar_habitacion(request):
 
-    return redirect(to="AdministracionHabitaciones")
+    sel=json.loads(request.POST["sel"])
+    data = {}
 
-############ MODULO MENU    
+    if len(sel) > 0:
+
+        for selId in sel:
+
+            print("ID "+str(sel[selId]))
+            habitacion = HHabitacion.objects.get(habitacion_id=sel[selId])
+            habitacion.delete()
+
+        data = {
+
+            "status" : "success",
+            "msg" : "selecciòn eliminada."
+        }
+
+    else:
+
+        data = {
+            "status" : "error",
+            "msg" : "Se ha producido un error al intentar eliminar la habitación, el identificador recibido es inconsistente."
+        }
+
+    return HttpResponse(json.dumps(data))
+
+############ MODULO MENU
 
 def AdministracionMenu(request):
     listaMenu = HMenu.objects.all()

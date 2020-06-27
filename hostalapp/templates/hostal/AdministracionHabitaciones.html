@@ -1,10 +1,10 @@
 {% extends 'hostal/base.html' %}
+{% load static  %}
 
 {% block content %}
 <title>Mantenedor Habitaciones</title>
 
 <body>
-    hola
     <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
         <div class="wrapper wrapper--w790">
             <div class="card card-5">
@@ -13,6 +13,7 @@
                 </div>
                 <br>
                 <div class="datos-empresa">
+                  {% csrf_token %}
                 </div>
                     <div class="table-wrapper-scroll-y my-custom-scrollbar">
                       <table class="table table-bordered table-striped mb-0">                            <thead class="thead-dark text-center">
@@ -40,7 +41,7 @@
                                   <td>{{listaHabitaciones.accesorios}}</td>
                                   <td>
                                       <div class="form-check">
-                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{listaHabitaciones.habitacion_id}}" aria-label="...">
                                      </div>
                                   </td>
                                  <td ><button data-toggle="modal" data-target="#editar" id="btnEditarHab"   class="btn text-light registro btn-space " type="button">Editar</button></td>
@@ -52,11 +53,11 @@
                          <br>
                          <br>
                      <div class="botonesParteuno">
-                      <div class="control-label form-inline mb-3" >           
+                      <div class="control-label form-inline mb-3" >
                          <label for="validationCustom03" class="mr-10 pr-4">Estado</label>
                                 <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
                                     <select name="estado" for="estado" id="estado" class="form-control">
-                                       {% for listaHabitaciones in form.listaHabitaciones %} 
+                                       {% for listaHabitaciones in form.listaHabitaciones %}
                                         <option selected="selected" >{{listaHabitaciones.habitacion_estado.descripcion}}</option>
                                         {% endfor %}
                                     </select>
@@ -68,13 +69,13 @@
                    <br>
                    <br>
                    <div class="text-center">
-                <button id="btnEliminarHab" class="btn text-light registro btn-space text" type="button">Eliminar</button>
+                <button id="btnEliminarHab" class="btn text-light registro btn-space text" type="button" onclick="showHabitacionEliminar()">Eliminar</button>
                <button id="btnAgregarHab" class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Agregar</button>
                </div>
                   </div>
               </div>
 
-           
+
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
@@ -109,28 +110,28 @@
       </div>
         <div class="modal-body">
                  <div class="control-label form-inline justify-content-center">
-               <label for="validationCustom01" class="mr-3">ID Habitacion</label>
-                <input type="text" class="form-control" id="validationCustom01"  required>
+               <label for="habitacionId" class="mr-3">ID Habitacion</label>
+                <input type="text" class="form-control" id="habitacionId"  required>
             </div>
         <br>
           <div class="control-label form-inline justify-content-center">
-             <label for="validationCustom02" class="mr-3">Nombre</label>
-             <input type="text" class="form-control" id="validationCustom02"  required>
+             <label for="habitacionNombre" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="habitacionNombre"  required>
             </div>
         <br>
            <div class="form-inline justify-content-center">
-             <label for="validationCustom03" class="mr-3">Precio</label>
-            <input type="text" class="form-control" id="Giro"  required>
+             <label for="editHabitacionPrecio" class="mr-3">Precio</label>
+            <input type="text" class="form-control" id="editHabitacionPrecio"  required>
           </div>
         <br>
                <div class="form-inline justify-content-center">
-             <label for="validationCustom03" class="mr-3">Accesorios</label>
-            <input type="text" class="form-control" id="Giro" required>
+             <label for="habitacionAccesorios" class="mr-3">Accesorios</label>
+            <input type="text" class="form-control" id="habitacionAccesorios" required>
           </div>
         <br>
-            <div class="control-label form-inline mr-3 justify-content-center" >          
+            <div class="control-label form-inline mr-3 justify-content-center" >
                          <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3"> 
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
                                     <select name="estado" for="estado" id="estado" class="form-control">
                                       {% for listaHabitaciones in form.listaHabitaciones %}
                                       <option selected="selected">{{listaHabitaciones.habitacion_tipo.descriptor}}</option>
@@ -160,8 +161,8 @@
       </div>
         <div class="modal-body">
                  <div class="control-label form-inline justify-content-center">
-               <label for="validationCustom01" class="mr-3">ID Habitacion</label>
-                <input type="text" class="form-control" id="validationCustom01"  required>
+               <label for="agregarHabitacionId" class="mr-3">ID Habitacion</label>
+                <input type="text" class="form-control" id="agregarHabitacionId"  required>
             </div>
         <br>
           <div class="control-label form-inline justify-content-center">
@@ -170,27 +171,27 @@
             </div>
         <br>
            <div class="form-inline justify-content-center">
-             <label for="validationCustom03" class="mr-3">Precio</label>
-            <input type="text" class="form-control" id="Giro"  required>
+             <label for="habitacionPrecio" class="mr-3">Precio</label>
+            <input type="text" class="form-control" id="habitacionPrecio"  required>
           </div>
         <br>
                <div class="form-inline justify-content-center">
-             <label for="validationCustom03" class="mr-3">Accesorios</label>
-            <input type="text" class="form-control" id="Giro" required>
+             <label for="agregarHabitacionAccesorios" class="mr-3">Accesorios</label>
+            <input type="text" class="form-control" id="agregarHabitacionAccesorios" required>
           </div>
         <br>
-            <div class="control-label form-inline mr-3 justify-content-center" >           
-                         <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-                                    <select name="estado" for="estado" id="estado" class="form-control">
-                                      {% for listaHabitaciones in form.listaHabitaciones %}
-                                      <option disabled="disabled" selected="selected">{{listaHabitaciones.habitacion_tipo.descriptor}}</option>
-                                      {% endfor %}
-                                    </select>
-                                    <div class="select-dropdown"></div>
-                                </div>
-                                </div>
-                                 </div>
+          <div class="control-label form-inline mr-3 justify-content-center" >
+             <label for="habitacionTipo" class="mr-10 pr-4">Tipo Habitación</label>
+            <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+              <select name="habitacionTipo" for="habitacionTipo" id="estado" class="form-control">
+                {% for listaHabitaciones in form.listaHabitaciones %}
+                <option disabled="disabled" selected="selected">{{listaHabitaciones.habitacion_tipo.descriptor}}</option>
+                {% endfor %}
+              </select>
+              <div class="select-dropdown"></div>
+            </div>
+            </div>
+             </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-primary">Guardar Cambios</button>
@@ -224,5 +225,28 @@
     </div>
   </div>
 </div>
+
+<div id="modalMessage" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-header">
+      <span id="modalMessageHeader"></span>
+    </div>
+
+    <div class="modal-content">
+      <span id="modalMessageBody"></span>
+    </div>
+
+    <div class="modal-fotter">
+      <span id="modalMessageFooter"></span>
+    </div>
+
+  </div>
+</div>
+
+<script src="{% static "js/jquery-3.5.1.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/modal.js" %}"></script>
+<script src="{% static "js/hostal.js" %}"></script>
 
 {% endblock %}

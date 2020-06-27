@@ -41,7 +41,7 @@ urlpatterns = [
     path('ProveedorOrdenDePedidos/', views.ProveedorOrdenDePedidos, name="ProveedorOrdenDePedidos"), #34 -36
 
     path('AdministracionProductos/', views.AdministracionProductos, name="AdministracionProductos"), #47 - 52
-    
+
 
 
     #Metodos
@@ -64,5 +64,7 @@ urlpatterns = [
     # jquery , post
     path('getPlatosSeleccion', views.getMenuPlatosSel, name="getMenuPlatosSel"),
     path('setMinutaPlatos', views.setMenuPlatosSel, name="setMenuPlatosSel"),
+
+    path('unsetHabitacion', views.Eliminar_habitacion, name="Eliminar_habitacion"),
 
 ]
