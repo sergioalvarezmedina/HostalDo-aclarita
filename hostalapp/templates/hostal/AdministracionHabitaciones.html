@@ -57,8 +57,8 @@
                          <label for="validationCustom03" class="mr-10 pr-4">Estado</label>
                                 <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
                                     <select name="estado" for="estado" id="estado" class="form-control">
-                                       {% for listaHabitaciones in form.listaHabitaciones %}
-                                        <option selected="selected" >{{listaHabitaciones.habitacion_estado.descripcion}}</option>
+                                       {% for estadoHabitacion in form.estadoHabitacion %}
+                                        <option selected="selected" >{{estadoHabitacion.descripcion}}</option>
                                         {% endfor %}
                                     </select>
                                     <div class="select-dropdown"></div>
@@ -133,8 +133,8 @@
                          <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
                                 <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
                                     <select name="estado" for="estado" id="estado" class="form-control">
-                                      {% for listaHabitaciones in form.listaHabitaciones %}
-                                      <option selected="selected">{{listaHabitaciones.habitacion_tipo.descriptor}}</option>
+                                      {% for tipoHabitacion in form.tipoHabitacion %}
+                                      <option selected="selected">{{tipoHabitacion.descriptor}}</option>
                                       {% endfor %}
                                     </select>
                                     <div class="select-dropdown"></div>

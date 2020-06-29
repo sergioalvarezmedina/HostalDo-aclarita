@@ -266,7 +266,7 @@ function setMinuta(selId) {
 
 function showHabitacionEliminar(habitacionId) {
 
-  if (confirm("¿Est{a seguro de eliminar la habitación selecconada?")) {
+  if (confirm("¿Esta seguro de eliminar la habitación selecconada?")) {
 
     unsetHabitacion(habitacionId);
 

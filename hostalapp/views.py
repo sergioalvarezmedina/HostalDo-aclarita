@@ -596,14 +596,19 @@ def generarOrdenDePedidos(request): #template 30
 
 def AdministracionHabitaciones(request): #template 37 -43
     listaHabitaciones = HHabitacion.objects.all()
+    estadoHabitacion = HHabitacionEstado.objects.all()
+    tipoHabitacion = HHabitacionTipo.objects.all()
     print(listaHabitaciones)
     form = {
             "listaHabitaciones" : listaHabitaciones,
+            "estadoHabitacion" : estadoHabitacion,
+            "tipoHabitacion" : tipoHabitacion,
             "ayuda" : ayuda[3]
         }
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
 
-def GuardarNuevaHabitacion(request):
+
+def GuardarNuevaHabitacion(request): 
     
     nuevoTipoHabitacion = HHabitacionTipo(
         habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
