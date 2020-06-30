@@ -635,6 +635,37 @@ def AgregarHabitacion(request):
 
     return redirect(to="AdministracionHabitaciones")
 
+
+
+def Modificar_EstadoHabitacion(request):
+
+    sel=json.loads(request.POST["sel"])
+    data = {}
+
+    if len(sel) > 0:
+
+        for selId in sel:
+
+            print("ID "+str(sel[selId]))
+            habitacion = HHabitacion.objects.get(habitacion_id=sel[selId])
+            habitacion.save()
+
+        data = {
+
+            "status" : "success",
+            "msg" : "selección Modificada."
+        }
+
+    else:
+
+        data = {
+            "status" : "error",
+            "msg" : "Se ha producido un error al intentar modificar la habitación, el identificador recibido es inconsistente."
+        }
+
+    return HttpResponse(json.dumps(data))
+
+
 def Eliminar_habitacion(request):
 
     sel=json.loads(request.POST["sel"])
@@ -651,7 +682,7 @@ def Eliminar_habitacion(request):
         data = {
 
             "status" : "success",
-            "msg" : "selecciòn eliminada."
+            "msg" : "selección eliminada."
         }
 
     else:

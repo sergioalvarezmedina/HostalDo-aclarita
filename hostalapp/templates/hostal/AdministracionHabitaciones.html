@@ -63,7 +63,10 @@
                                     </select>
                                     <div class="select-dropdown"></div>
                                 </div>
-                       <button id="btnAplicarEstado" class="btn text-light registro btn-space " type="button">Aplicar Estado</button>
+                  <form method="POST" action="/ModificarEstado/">
+                    {% csrf_token %}
+                       <button id="btnAplicarEstado" class="btn text-light registro btn-space" type="button" onclick="showModificarEstado()">Aplicar Estado</button>
+                  </form>
                        <button id="btnNuevTipoHab" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
                     </div>
                    <br>

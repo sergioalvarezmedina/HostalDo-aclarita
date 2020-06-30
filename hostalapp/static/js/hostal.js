@@ -264,9 +264,70 @@ function setMinuta(selId) {
 
 }
 
+function showModificarEstado(habitacionId) {
+
+  if (confirm("¿Esta seguro de Modificar la habitación seleccionada?")) {
+
+    unsetHabitacion1(habitacionId);
+
+  }
+
+
+}
+
+function unsetHabitacion1(habitacionId) {
+
+  var sel={};
+
+  var index=0;
+  $("input[name='sel']:checked").each(
+    function(){
+      sel[index++]=$(this).val();
+    }
+  );
+
+  $.post(
+    "/unsetHabitacion1",
+    {
+      sel : JSON.stringify(sel),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+
+    function (data) {
+
+      alert(data);
+
+      try {
+
+        var rec=JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          location.reload();
+
+        } else {
+
+          showMessage(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+
+  );
+
+}
+
+
+
 function showHabitacionEliminar(habitacionId) {
 
-  if (confirm("¿Esta seguro de eliminar la habitación selecconada?")) {
+  if (confirm("¿Esta seguro de eliminar la habitación seleccionada?")) {
 
     unsetHabitacion(habitacionId);
 
@@ -274,6 +335,8 @@ function showHabitacionEliminar(habitacionId) {
 
 
 }
+
+
 
 function unsetHabitacion(habitacionId) {
 
