@@ -623,9 +623,9 @@ def AgregarHabitacion(request):
     nuevaHabitacion = HHabitacion(
         habitacion_id = request.POST['HabitacionID'],
         rotulo = request.POST["NombreHabitacion"],
-        habitacion_tipo = HHabitacionTipo.objects.get(habitacion_tipo_id = request.POST['habitacionTipo']) ,
+        habitacion_tipo = HHabitacionTipo.objects.get(descriptor = request.POST['habitacionTipo']) ,
         habitacion_estado = HHabitacionEstado.objects.get(habitacion_estado_id = 1),
-        camas = ("plaza"),
+        camas = request.POST["CamasHabitacion"],
         accesorios = request.POST["AccesoriosHabitacion"],
         precio = request.POST["PrecioHabitacion"],
         vigencia = 1

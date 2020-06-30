@@ -164,22 +164,27 @@
         <div class="modal-body">
                  <div class="control-label form-inline justify-content-center">
                <label for="agregarHabitacionId" class="mr-3">ID Habitacion</label>
-                <input type="text" class="form-control" id="agregarHabitacionId"  name="HabitacionID" required>
+                <input type="text" class="form-control" id="HabitacionID"  name="HabitacionID" required>
             </div>
         <br>
           <div class="control-label form-inline justify-content-center">
              <label for="validationCustom02" class="mr-3">Nombre</label>
-             <input type="text" class="form-control" id="validationCustom02"  name="NombreHabitacion" required>
+             <input type="text" class="form-control" id="NombreHabitacion"  name="NombreHabitacion" required>
             </div>
         <br>
            <div class="form-inline justify-content-center">
              <label for="habitacionPrecio" class="mr-3">Precio</label>
-            <input type="text" class="form-control" id="habitacionPrecio"  name="PrecioHabitacion" required>
+            <input type="text" class="form-control" id="PrecioHabitacion"  name="PrecioHabitacion" required>
+          </div>
+          <br>
+               <div class="form-inline justify-content-center">
+             <label for="agregarHabitacionAccesorios" class="mr-3">Camas</label>
+            <input type="text" class="form-control" id="CamasHabitacion" name="CamasHabitacion" required>
           </div>
         <br>
                <div class="form-inline justify-content-center">
              <label for="agregarHabitacionAccesorios" class="mr-3">Accesorios</label>
-            <input type="text" class="form-control" id="agregarHabitacionAccesorios" name="AccesoriosHabitacion" required>
+            <input type="text" class="form-control" id="AccesoriosHabitacion" name="AccesoriosHabitacion" required>
           </div>
         <br>
           <div class="control-label form-inline mr-3 justify-content-center" >
@@ -187,7 +192,7 @@
             <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
               <select name="habitacionTipo" for="habitacionTipo" id="estado" class="form-control">
                   {% for tipoHabitacion in form.tipoHabitacion %}
-                        <option selected="selected">{{tipoHabitacion.habitacion_tipo_id}}</option>
+                        <option selected="selected">{{tipoHabitacion.descriptor}}</option>
                  {% endfor %}
               </select>
               <div class="select-dropdown"></div>
