@@ -621,11 +621,11 @@ def GuardarNuevaHabitacion(request):
 def AgregarHabitacion(request): 
     
     nuevaHabitacion = HHabitacion(
-        habitacion_id = request.POST["HabitacionID"],
+        habitacion_id = request.POST['HabitacionID'],
         rotulo = request.POST["NombreHabitacion"],
-        habitacion_tipo = request.POST["habitacionTipo"],
-        habitacion_estado = 1,
-        camas = ("palza"),
+        habitacion_tipo = HHabitacionTipo.objects.get(habitacion_tipo_id = request.POST['habitacionTipo']) ,
+        habitacion_estado = HHabitacionEstado.objects.get(habitacion_estado_id = 1),
+        camas = ("plaza"),
         accesorios = request.POST["AccesoriosHabitacion"],
         precio = request.POST["PrecioHabitacion"],
         vigencia = 1
@@ -633,7 +633,7 @@ def AgregarHabitacion(request):
         )
     nuevaHabitacion.save()
 
-    return redirect(to="AgregarHabitacion")
+    return redirect(to="AdministracionHabitaciones")
 
 def Eliminar_habitacion(request):
 

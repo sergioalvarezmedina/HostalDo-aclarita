@@ -187,7 +187,7 @@
             <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
               <select name="habitacionTipo" for="habitacionTipo" id="estado" class="form-control">
                   {% for tipoHabitacion in form.tipoHabitacion %}
-                      <option selected="selected">{{tipoHabitacion.descriptor}}</option>
+                        <option selected="selected">{{tipoHabitacion.habitacion_tipo_id}}</option>
                  {% endfor %}
               </select>
               <div class="select-dropdown"></div>
