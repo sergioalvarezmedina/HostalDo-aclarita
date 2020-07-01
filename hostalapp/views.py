@@ -1,6 +1,6 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
 HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato,HPersonaDireccion)
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from .functions import encode, decode, checkSession, getSecuenciaId
 import json
 from django.contrib import messages
@@ -341,9 +341,9 @@ def GuardarNuevoProvedor (request):
     email =request.POST["Pemail"]
         )
     direccionP.persona_id = persona.persona_id
-    direccionP.usuario_id = usuario.usuario_id 
-    
- 
+    direccionP.usuario_id = usuario.usuario_id
+
+
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
@@ -440,7 +440,7 @@ def AdminProveedor(request):
 def BuscarProveedor(request):
 
     rutProv = request.GET.get('rut')
-    proveedor = HOrganismo.objects.filter( 
+    proveedor = HOrganismo.objects.filter(
         rut = rutProv ,
         proveedor_flag =1
         )
@@ -592,17 +592,109 @@ def generarOrdenDePedidos(request): #template 30
 
     return render(request, 'hostal/generarOrdenDePedidos.html')
 
+############ MODULO HABITACIONES
+
 def AdministracionHabitaciones(request): #template 37 -43
     listaHabitaciones = HHabitacion.objects.all()
+    estadoHabitacion = HHabitacionEstado.objects.all()
+    tipoHabitacion = HHabitacionTipo.objects.all()
     print(listaHabitaciones)
     form = {
             "listaHabitaciones" : listaHabitaciones,
+            "estadoHabitacion" : estadoHabitacion,
+            "tipoHabitacion" : tipoHabitacion,
             "ayuda" : ayuda[3]
         }
-    return render(request, 'hostal/AdministracionHabitaciones.html', {"form" : form})
+    return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
+
+
+def GuardarNuevaHabitacion(request): 
+    
+    nuevoTipoHabitacion = HHabitacionTipo(
+        habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
+        descriptor= request.POST["nombre_tipo_habitacion"]
+        )
+    nuevoTipoHabitacion.save()
+
+    return redirect(to="AdministracionHabitaciones")
+
+def AgregarHabitacion(request): 
+    
+    nuevaHabitacion = HHabitacion(
+        habitacion_id = request.POST['HabitacionID'],
+        rotulo = request.POST["NombreHabitacion"],
+        habitacion_tipo = HHabitacionTipo.objects.get(descriptor = request.POST['habitacionTipo']) ,
+        habitacion_estado = HHabitacionEstado.objects.get(habitacion_estado_id = 1),
+        camas = request.POST["CamasHabitacion"],
+        accesorios = request.POST["AccesoriosHabitacion"],
+        precio = request.POST["PrecioHabitacion"],
+        vigencia = 1
+
+        )
+    nuevaHabitacion.save()
+
+    return redirect(to="AdministracionHabitaciones")
 
 
 
+def Modificar_EstadoHabitacion(request):
+
+    sel=json.loads(request.POST["sel"])
+    data = {}
+
+    if len(sel) > 0:
+
+        for selId in sel:
+
+            print("ID "+str(sel[selId]))
+            habitacion = HHabitacion.objects.get(habitacion_id=sel[selId])
+            habitacion.save()
+
+        data = {
+
+            "status" : "success",
+            "msg" : "selección Modificada."
+        }
+
+    else:
+
+        data = {
+            "status" : "error",
+            "msg" : "Se ha producido un error al intentar modificar la habitación, el identificador recibido es inconsistente."
+        }
+
+    return HttpResponse(json.dumps(data))
+
+
+def Eliminar_habitacion(request):
+
+    sel=json.loads(request.POST["sel"])
+    data = {}
+
+    if len(sel) > 0:
+
+        for selId in sel:
+
+            print("ID "+str(sel[selId]))
+            habitacion = HHabitacion.objects.get(habitacion_id=sel[selId])
+            habitacion.delete()
+
+        data = {
+
+            "status" : "success",
+            "msg" : "selección eliminada."
+        }
+
+    else:
+
+        data = {
+            "status" : "error",
+            "msg" : "Se ha producido un error al intentar eliminar la habitación, el identificador recibido es inconsistente."
+        }
+
+    return HttpResponse(json.dumps(data))
+
+############ MODULO MENU
 
 def AdministracionMenu(request):
     listaMenu = HMenu.objects.all()

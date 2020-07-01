@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 from . import urls2
+from .views import Eliminar_habitacion, Modificar_EstadoHabitacion
 
 urlpatterns = [
 
@@ -40,7 +41,7 @@ urlpatterns = [
     path('ProveedorOrdenDePedidos/', views.ProveedorOrdenDePedidos, name="ProveedorOrdenDePedidos"), #34 -36
 
     path('AdministracionProductos/', views.AdministracionProductos, name="AdministracionProductos"), #47 - 52
-    
+
 
 
     #Metodos
@@ -49,6 +50,9 @@ urlpatterns = [
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
     path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
+    path('GuardarNuevaHabitacion/', views.GuardarNuevaHabitacion, name="GuardarNuevaHabitacion"),
+    path('AgregarHabitacion/', views.AgregarHabitacion, name="AgregarHabitacion"),
+
     path('BuscarProveedor/', views.BuscarProveedor, name="BuscarProveedor"),
     path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
 
@@ -58,8 +62,14 @@ urlpatterns = [
     path('getOCEmpleados', views.getOCEmpleados, name="getOCEmpleados"),
 
 
+
+
+
     # jquery , post
     path('getPlatosSeleccion', views.getMenuPlatosSel, name="getMenuPlatosSel"),
     path('setMinutaPlatos', views.setMenuPlatosSel, name="setMenuPlatosSel"),
+
+    path('unsetHabitacion', views.Eliminar_habitacion, name="Eliminar_habitacion"),
+    path('unsetHabitacio1', views.Modificar_EstadoHabitacion, name="Modificar_EstadoHabitacion"),
 
 ]
