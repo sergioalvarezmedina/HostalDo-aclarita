@@ -44,7 +44,7 @@
                                         <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{listaHabitaciones.habitacion_id}}" aria-label="...">
                                      </div>
                                   </td>
-                                 <td ><button data-toggle="modal" data-target="#editar" id="btnEditarHab"   class="btn text-light registro btn-space " type="button">Editar</button></td>
+                                 <td ><a href="{% url 'Editarhab' listaHabitaciones.habitacion_id %}"><button id="btnEditarHab"   class="btn text-light registro btn-space " type="button">Editar</button></a></td>
                                   </tr>
                                   {% endfor %}
                             </tbody>
@@ -96,57 +96,6 @@
         El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
       </div>
       <div class="modal-footer">
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Editar habitacion-->
-<div class="modal fade" id="editar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Editar Habitaciones</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <div class="modal-body">
-                 <div class="control-label form-inline justify-content-center">
-               <label for="habitacionId" class="mr-3">ID Habitacion</label>
-                <input type="text" class="form-control" id="habitacionId"  required>
-            </div>
-        <br>
-          <div class="control-label form-inline justify-content-center">
-             <label for="habitacionNombre" class="mr-3">Nombre</label>
-             <input type="text" class="form-control" id="habitacionNombre"  required>
-            </div>
-        <br>
-           <div class="form-inline justify-content-center">
-             <label for="editHabitacionPrecio" class="mr-3">Precio</label>
-            <input type="text" class="form-control" id="editHabitacionPrecio"  required>
-          </div>
-        <br>
-               <div class="form-inline justify-content-center">
-             <label for="habitacionAccesorios" class="mr-3">Accesorios</label>
-            <input type="text" class="form-control" id="habitacionAccesorios" required>
-          </div>
-        <br>
-            <div class="control-label form-inline mr-3 justify-content-center" >
-                         <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-                                    <select name="estado" for="estado" id="estado" class="form-control">
-                                      {% for tipoHabitacion in form.tipoHabitacion %}
-                                      <option selected="selected">{{tipoHabitacion.descriptor}}</option>
-                                      {% endfor %}
-                                    </select>
-                                    <div class="select-dropdown"></div>
-                                </div>
-                                </div>
-                                 </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar Cambios</button>
       </div>
     </div>
   </div>
