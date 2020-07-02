@@ -11,14 +11,13 @@
                 <h2 class="title">Administración Proveedor</h2>
             </div>
                 <div class="contenedor  justify-content-around ">
-                  <form action="/BuscarProveedor/" method="GET">
-                  {% csrf_token %}
+                  <form  method="GET">
 
                     <div class="d-flex ">
                     <div class="filtroClientes row">
                         <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
                             <div class="empresa mr-5"> Rut</div>
-                            <input class="buscarEmpresa form-control ml-5" name="rut" value="{{rutProv}}"></input>
+                            <input class="buscarEmpresa form-control ml-5" name="buscar"  value="{{request.GET.buscar}}"></input>
                         </div>
                         <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
                             <div class="empresa mr-2"> Empresa</div>
@@ -30,7 +29,7 @@
                         </div>
                   </div>
                   <div class="btn align-self-center mr-5 pr-5 col-3">
-                    <button id="btnBuscarProvedor" class="btn text-light registro btn-space center-block" type="submit" > 
+                    <button id="btnBuscarProvedor" class="btn text-light registro btn-space center-block" type="submit"  > 
                         Buscar
                     </button>
                     </div>

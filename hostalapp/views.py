@@ -5,6 +5,7 @@ from .functions import encode, decode, checkSession, getSecuenciaId
 import json
 from django.contrib import messages
 from django.db import connection
+from django.db.models import Q
 import sys
 
 WORDFISH = '1236545dasdas$'
@@ -385,11 +386,6 @@ def GuardarNuevoProvedor (request):
     'proveedor':proveedor}
     return render(request, "hostal/AdminProveedor.html",{'form':form})
 
-def BuscarProveedor(request):
-    #veamos si resulta
-
-    bscarProv = HOrganismo.objects.filter(bscarRut = bscarProv.rut)
-
 
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
@@ -434,23 +430,36 @@ def GuardarNuevoUsuario(request):
         return render (request, 'hostal/CrearNuevoUsuario.html')
 
 def AdminProveedor(request):
-    #if 'accesoId' not in request.session['accesoId'] or request.session['accesoId']=="":
-        #return render (request, 'hostal/AdminProveedor.html', {'msg':'No se ha encontrado una sesi&oacute;n activa-'})
+
+    
+    queryset = request.GET.get('buscar')
+    if queryset :
+        proveedor = HOrganismo.objects.filter(
+            Q(rut__icontains = queryset) |
+            Q(nombre_fantasia = queryset)
+            ).distinct()
+        print(proveedor)
+        form = {'proveedor':proveedor}
+
+        return render (request, 'hostal/AdminProveedor.html',{'form':form} )
+    
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
     form = {'proveedor':proveedor}
 
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
 
-def BuscarProveedor(request):
+#def BuscarProveedor(request):
 
-    rutProv = request.GET.get('rut')
-    proveedor = HOrganismo.objects.filter(
-        rut = rutProv ,
-        proveedor_flag =1
-        )
-    print(proveedor)
+ #   rutProv = request.GET.get('rut', '')
+  #  proveedor = HOrganismo.objects.filter(
+   #     rut = rutProv ,
+    #    proveedor_flag =1,
+         
+      #  )
+    #print(request.GET)
 
-    return render (request, 'hostal/AdminProveedor.html',{'proveedor':proveedor})
+    #return render (request, 'hostal/AdminProveedor.html',{'proveedor':proveedor})
+
 
 def EditarProveedor(request,organismo_id):
 
@@ -468,12 +477,32 @@ def EditarProveedor(request,organismo_id):
         'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
         'Pemail':direccionP.email}
         #verificar si funka
+        return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
-    return render (request, 'hostal/EditarProveedor.html', datosOrg)
+    
+    if request.method == 'POST':#para guardar los datos una vez modificados
+    
+        proveedor.rut = request.POST['rol_empresa']
+        proveedor.nombre_fantasia = request.POST ['nombre_empresa']
+        proveedor.razon_social = request.POST ['razon_social']
+        proveedor.direccion = request.POST ['direccion']
+        proveedor.telefono = request.POST ['telefono']
+        proveedor.persona.nombres = request.POST['nombre_persona']
+        proveedor.persona.paterno = request.POST['Ap_paterno']
+        proveedor.persona.materno = request.POST ['Ap_materno']
+        proveedor.usuario.username= request.POST['username']
+        direccionP.telefono = request.POST ['Ptelefono']
+        direccionP.email = request.POST ['Pemail']
 
-    #if request.method == 'POST':#para guardar los datos una vez modificados
-    #   METODO     proveedor.razon_social = request.POST['razon_social']
-     #   return render (request, 'hostal/AdminProveedor.html')
+        direccionP.save()
+        proveedor.save()
+
+
+        proveedor=HOrganismo.objects.filter(proveedor_flag=1)
+        form = {
+        'proveedor':proveedor
+        }
+        return render (request, 'hostal/AdminProveedor.html', {'form':form})
 
 
 
