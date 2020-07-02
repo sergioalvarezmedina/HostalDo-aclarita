@@ -465,16 +465,11 @@ def EditarProveedor(request,organismo_id):
         'Pemail':direccionP.email}
         #verificar si funka
 
-        if direccionP.usuario.usuario_id == 'NULL':
-           direccionP.usuario.usuario_id = proveedor.usuario.usuario_id
-
     return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
     #if request.method == 'POST':#para guardar los datos una vez modificados
     #   METODO     proveedor.razon_social = request.POST['razon_social']
      #   return render (request, 'hostal/AdminProveedor.html')
-
-
 
 
 
