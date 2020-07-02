@@ -148,6 +148,10 @@ def SolicitarServicio(request):
 def misDatos(request):
     return render(request, 'hostal/misDatos.html')
 
+def Editarhab(request, habitacion_id):
+    habitacion = HHabitacion.objects.get(habitacion_id=habitacion_id)
+    return render(request, 'hostal/Editarhab.html')
+
 def AdministracionCliente(request):
 
     usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
@@ -601,6 +605,15 @@ def AdministracionHabitaciones(request): #template 37 -43
             "ayuda" : ayuda[3]
         }
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
+
+def Editarhab(request, habitacion_id):
+    habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
+
+    if request.method == 'GET':
+        datosOrg ={'idHabitacion':habitacion.habitacion_id,'nombreHabitacion':habitacion.rotulo,
+                   'precioHabitacion':habitacion.precio,'camasHabitacion':habitacion.camas,'accesoriosHabitacion':habitacion.accesorios}
+
+    return render(request, 'hostal/Editarhab.html', datosOrg)
 
 
 def GuardarNuevaHabitacion(request): 

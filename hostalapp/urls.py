@@ -42,7 +42,7 @@ urlpatterns = [
 
     path('AdministracionProductos/', views.AdministracionProductos, name="AdministracionProductos"), #47 - 52
 
-
+    path('Editarhab/<habitacion_id>', views.Editarhab, name="Editarhab"), 
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
