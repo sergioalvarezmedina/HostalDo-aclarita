@@ -5,6 +5,7 @@
 
 <title>Mantenedor Habitaciones</title>
 <body>
+<<<<<<< HEAD
   <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
     <div class="wrapper wrapper--w790">
       <div class="card card-5">
@@ -78,6 +79,82 @@
           </div>
         </div>
       </div>
+=======
+    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+        <div class="wrapper wrapper--w790">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Administración Habitaciones</h2>
+                </div>
+                <br>
+                <div class="datos-empresa">
+                  {% csrf_token %}
+                </div>
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                      <table class="table table-bordered table-striped mb-0">                            <thead class="thead-dark text-center">
+                              <tr >
+                                <th class="text-center"scope="col">ID Habitación</th>
+                                <th class="text-center"scope="col">Nombre</th>
+                                <th class="text-center"scope="col">Tipo</th>
+                                <th class="text-center"scope="col">Estado</th>
+                                <th class="text-center"scope="col">Camas</th>
+                                <th class="text-center"scope="col">Precio</th>
+                                <th class="text-center"scope="col">Accesorios</th>
+                                <th class="text-center"scope="col">Selección</th>
+                                <th class="text-center"scope="col">Edición</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for listaHabitaciones in form.listaHabitaciones %}
+                                  <tr>
+                                  <th scope="row">{{listaHabitaciones.habitacion_id}}</th>
+                                  <td>{{listaHabitaciones.rotulo}}</td>
+                                  <td>{{listaHabitaciones.habitacion_tipo.descriptor}}</td>
+                                  <td>{{listaHabitaciones.habitacion_estado.descripcion}}</td>
+                                  <td>{{listaHabitaciones.camas}}</td>
+                                  <td>{{listaHabitaciones.precio}}</td>
+                                  <td>{{listaHabitaciones.accesorios}}</td>
+                                  <td>
+                                      <div class="form-check">
+                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{listaHabitaciones.habitacion_id}}" aria-label="...">
+                                     </div>
+                                  </td>
+                                 <td ><a href="{% url 'Editarhab' listaHabitaciones.habitacion_id %}"><button id="btnEditarHab"   class="btn text-light registro btn-space " type="button">Editar</button></a></td>
+                                  </tr>
+                                  {% endfor %}
+                            </tbody>
+                          </table>
+                         </div>
+                         <br>
+                         <br>
+                     <div class="botonesParteuno">
+                      <div class="control-label form-inline mb-3" >
+                         <label for="validationCustom03" class="mr-10 pr-4">Estado</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                    <select name="estado" for="estado" id="estado" class="form-control">
+                                       {% for estadoHabitacion in form.estadoHabitacion %}
+                                        <option selected="selected" >{{estadoHabitacion.descripcion}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                  <form method="POST" action="/ModificarEstado/">
+                    {% csrf_token %}
+                       <button id="btnAplicarEstado" class="btn text-light registro btn-space" type="button" onclick="showModificarEstado()">Aplicar Estado</button>
+                  </form>
+                       <button id="btnNuevTipoHab" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
+                    </div>
+                   <br>
+                   <br>
+                   <div class="text-center">
+                <button id="btnEliminarHab" class="btn text-light registro btn-space text" type="button" onclick="showHabitacionEliminar()">Eliminar</button>
+               <button id="btnAgregarHab" class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Agregar</button>
+               </div>
+                  </div>
+              </div>
+
+
+>>>>>>> master
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
@@ -100,6 +177,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 <!-- Modal Editar habitacion-->
 <div class="modal fade" id="editar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -142,6 +220,8 @@
   </div>
 </div>
 
+=======
+>>>>>>> master
 <!-- Modal Agregar habitacion-->
 <div class="modal fade" id="Agregar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">

@@ -1,0 +1,60 @@
+{% extends 'hostal/base.html' %}
+
+{% block content %}
+<title>Editar Habitación</title>
+
+<body>
+
+        <div class="wrapper wrapper--w960">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Editar Habitación</h2>
+                </div>
+                <div class="d-flex mb-3">
+                  <div class="center-block"><label for="" class="mt-4">Datos Habitación</label>
+                    </div>
+                </div>
+                <div class="contenedorFormulario form-row justify-content-around">
+                <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/"novalidate>
+                  {% csrf_token %}
+                    <div class="row">
+                <div class="col ml-4 justify-content-around ">
+                    <div class="control-label form-inline mb-3">
+                        <label for="validationCustom01" class="mr-3">Id Habitación</label>
+                        <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="idHabitacion" value="{{idHabitacion}} " required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                         <label for="validationCustom02" class="mr-3">Nombre</label>
+                         <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombreHabitacion" value="{{nombreHabitacion}}" required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                         <label for="validationCustom03" class="mr-3">Precio </label>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{precioHabitacion}}" name="precioHabitacion" required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                         <label for="validationCustom03" class="mr-3">Camas</label>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{camasHabitacion}}" name="camasHabitacion" required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                         <label for="validationCustom03" class="mr-3">Accesorios</label>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{accesoriosHabitacion}}" name="accesoriosHabitacion" required>
+                    </div>
+
+                      <div class="control-label form-inline mr-3 justify-content-center" >
+                         <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                    <select name="tipoHabitacion" for="estado" id="estado" class="form-control">
+                                      {% for tipoHabitacion in form.tipoHabitacion %}
+                                      <option selected="selected">{{tipoHabitacion.descriptor}}</option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                                </div>
+                                <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" >
+                        Guardar Edición
+                      </button>
+                </div>
+</body>
+
+{% endblock %}
