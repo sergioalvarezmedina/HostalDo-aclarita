@@ -575,4 +575,4 @@ const Modal = (($) => {
   return Modal
 })($)
 
-export default Modal
+//export default Modal

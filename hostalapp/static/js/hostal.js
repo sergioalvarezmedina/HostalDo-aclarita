@@ -93,8 +93,6 @@ function setLogin(user, pass) {
 
 function getOCEmpleados(ocId) {
 
-  alert(ocId);
-
   var dataIn =
     {
       ocId : ocId,
@@ -107,8 +105,6 @@ function getOCEmpleados(ocId) {
       csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
     },
     function (data) {
-
-      alert(data);
 
       try {
 
@@ -254,8 +250,6 @@ function setMinuta(selId) {
 
     function (data) {
 
-      alert(data);
-
       var rec=JSON.parse(data);
 
     }
@@ -264,16 +258,15 @@ function setMinuta(selId) {
 
 }
 
-function showModificarEstado(habitacionId) {
+//function showModificarEstado(habitacionId) {
 
-  if (confirm("¿Esta seguro de Modificar la habitación seleccionada?")) {
+//  if (confirm("¿Esta seguro de Modificar la habitación seleccionada?")) {
 
-    unsetHabitacion1(habitacionId);
+    //unsetHabitacion1(habitacionId);
 
-  }
+//  }
 
-
-}
+//}
 
 function unsetHabitacion1(habitacionId) {
 
@@ -287,15 +280,13 @@ function unsetHabitacion1(habitacionId) {
   );
 
   $.post(
-    "/unsetHabitacion1",
+    "/unsetHabitacion",
     {
       sel : JSON.stringify(sel),
       csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
     },
 
     function (data) {
-
-      alert(data);
 
       try {
 
@@ -336,6 +327,16 @@ function showHabitacionEliminar(habitacionId) {
 
 }
 
+function showHabitacionEstado(habitacionId) {
+
+  if (confirm("¿Esta seguro de cambiar el estado de la habitación seleccionada?")) {
+
+    setHabitacionEstado(habitacionId);
+
+  }
+
+
+}
 
 
 function unsetHabitacion(habitacionId) {
@@ -358,7 +359,52 @@ function unsetHabitacion(habitacionId) {
 
     function (data) {
 
-      alert(data);
+      try {
+
+        var rec=JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          location.reload();
+
+        } else {
+
+          showMessage(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+
+  );
+
+}
+
+function setHabitacionEstado(habitacionId) {
+
+  var sel={};
+
+  var index=0;
+  $("input[name='sel']:checked").each(
+    function(){
+      sel[index++]=$(this).val();
+    }
+  );
+
+  $.post(
+    "/setHabitacioEstado",
+    {
+      sel : JSON.stringify(sel),
+      estado : $("#estado").val(),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+
+    function (data) {
 
       try {
 

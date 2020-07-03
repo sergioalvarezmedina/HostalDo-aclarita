@@ -70,6 +70,6 @@ urlpatterns = [
     path('setMinutaPlatos', views.setMenuPlatosSel, name="setMenuPlatosSel"),
 
     path('unsetHabitacion', views.Eliminar_habitacion, name="Eliminar_habitacion"),
-    path('unsetHabitacio1', views.Modificar_EstadoHabitacion, name="Modificar_EstadoHabitacion"),
+    path('setHabitacioEstado', views.Modificar_EstadoHabitacion, name="Modificar_EstadoHabitacion"),
 
 ]

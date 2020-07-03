@@ -608,8 +608,8 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
 
 
-def GuardarNuevaHabitacion(request): 
-    
+def GuardarNuevaHabitacion(request):
+
     nuevoTipoHabitacion = HHabitacionTipo(
         habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
         descriptor= request.POST["nombre_tipo_habitacion"]
@@ -618,8 +618,8 @@ def GuardarNuevaHabitacion(request):
 
     return redirect(to="AdministracionHabitaciones")
 
-def AgregarHabitacion(request): 
-    
+def AgregarHabitacion(request):
+
     nuevaHabitacion = HHabitacion(
         habitacion_id = request.POST['HabitacionID'],
         rotulo = request.POST["NombreHabitacion"],
@@ -639,19 +639,25 @@ def AgregarHabitacion(request):
 
 def Modificar_EstadoHabitacion(request):
 
+    print(request.POST["estado"])
+
     sel=json.loads(request.POST["sel"])
+    estadoId=json.loads(request.POST["estado"])
     data = {}
 
     if len(sel) > 0:
 
+        habitacion_estado = HHabitacionEstado.objects.get(habitacion_estado_id=estadoId)
+
         for selId in sel:
 
             print("ID "+str(sel[selId]))
+
             habitacion = HHabitacion.objects.get(habitacion_id=sel[selId])
+            habitacion.habitacion_estado=habitacion_estado
             habitacion.save()
 
         data = {
-
             "status" : "success",
             "msg" : "selección Modificada."
         }
