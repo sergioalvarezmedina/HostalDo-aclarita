@@ -303,21 +303,34 @@ def CrearNuevoProovedor(request):
 
 def GuardarNuevoProvedor (request):
 
-    cliente = HOrganismo()
+    print(request.POST)
 
+    proveedorId = int(request.POST["proveedorId"]) if (request.POST["proveedorId"]!="") else 0
+    personaId = int(request.POST["personaId"]) if (request.POST["personaId"]!="") else 0
+
+    cliente = HOrganismo()
     usuario = HUsuario()
 
-    persona = HPersona(
-        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombre_persona"],
-        paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"]
-    )
+    if proveedorId > 0:
+
+        cliente=HOrganismo.objects.get(organismo_id=proveedorId)
+
+        persona = HPersona.objects.get(persona_id=personaId)
+        persona.nombres = request.POST["nombre_persona"],
+        persona.paterno = request.POST["Ap_paterno"],
+        persona.materno = request.POST["Ap_materno"]
+
+    else:
+        persona = HPersona(
+            persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+            nombres = request.POST["nombre_persona"],
+            paterno = request.POST["Ap_paterno"],
+            materno = request.POST["Ap_materno"]
+        )
 
     persona.save()
 
     print("Persona "+str(persona.persona_id))
-
 
     usuario.persona_id=persona.persona_id
 
@@ -341,9 +354,9 @@ def GuardarNuevoProvedor (request):
     #Direccion Usuario
 
     direccionP = HPersonaDireccion(
-    persona_direccion_id =getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
-    telefono = request.POST["Ptelefono"],
-    email =request.POST["Pemail"]
+        persona_direccion_id =getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        telefono = request.POST["Ptelefono"],
+        email =request.POST["Pemail"]
         )
     direccionP.persona_id = persona.persona_id
     direccionP.usuario_id = usuario.usuario_id
@@ -359,13 +372,14 @@ def GuardarNuevoProvedor (request):
         messages.error(request, "Rol de empresa ya se encuentra registrado.")
 
     cliente.proveedor_flag=1
-
     cliente.nombre_fantasia = request.POST["nombre_empresa"]
 
     if HOrganismo.objects.filter(nombre_fantasia=cliente.nombre_fantasia).count()>0:
+
         messages.error(request, "Nombre de empresa ya se encuentra registrado.")
 
     else:
+
         cliente.direccion = request.POST["direccion"]
         cliente.telefono = request.POST["telefono"]
 
@@ -378,12 +392,17 @@ def GuardarNuevoProvedor (request):
 
             cliente.save()
             messages.success(request, 'Registro Exitoso.')
+
         except Exception as e:
+
             messages.error(request, 'Ocurrió un error en el Registro.')
+
     #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
     proveedor=HOrganismo.objects.all()
     form = {
-    'proveedor':proveedor}
+        'proveedor':proveedor
+        }
+
     return render(request, "hostal/AdminProveedor.html",{'form':form})
 
 
@@ -431,7 +450,7 @@ def GuardarNuevoUsuario(request):
 
 def AdminProveedor(request):
 
-    
+
     queryset = request.GET.get('buscar')
     if queryset :
         proveedor = HOrganismo.objects.filter(
@@ -442,7 +461,7 @@ def AdminProveedor(request):
         form = {'proveedor':proveedor}
 
         return render (request, 'hostal/AdminProveedor.html',{'form':form} )
-    
+
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
     form = {'proveedor':proveedor}
 
@@ -454,7 +473,7 @@ def AdminProveedor(request):
   #  proveedor = HOrganismo.objects.filter(
    #     rut = rutProv ,
     #    proveedor_flag =1,
-         
+
       #  )
     #print(request.GET)
 
@@ -464,45 +483,30 @@ def AdminProveedor(request):
 def EditarProveedor(request,organismo_id):
 
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
-
-
+    print("Recuperando persona "+str(proveedor.persona_id))
+    persona = HPersona.objects.get(persona_id=proveedor.persona_id)
+    print("Encontrado "+persona.nombres)
     direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
 
-
-    if request.method == 'GET':
-        datosOrg ={'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
-        'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
-        'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
-        'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
-        'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
+    datosOrg ={
+        'proveedorId':proveedor.organismo_id,
+        'personaId':persona.persona_id,
+        'rol_empresa':proveedor.rut,
+        'nombre_empresa':proveedor.nombre_fantasia,
+        'razon_social':proveedor.razon_social,
+        'direccion':proveedor.direccion,
+        'telefono':proveedor.telefono,
+        'nombre_persona':proveedor.persona.nombres,
+        'Ap_paterno': proveedor.persona.paterno,
+        'Ap_materno': proveedor.persona.materno,
+        'username':proveedor.usuario.username,
+        'Ptelefono': direccionP.telefono,
         'Pemail':direccionP.email}
-        #verificar si funka
-        return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
-    
-    if request.method == 'POST':#para guardar los datos una vez modificados
-    
-        proveedor.rut = request.POST['rol_empresa']
-        proveedor.nombre_fantasia = request.POST ['nombre_empresa']
-        proveedor.razon_social = request.POST ['razon_social']
-        proveedor.direccion = request.POST ['direccion']
-        proveedor.telefono = request.POST ['telefono']
-        proveedor.persona.nombres = request.POST['nombre_persona']
-        proveedor.persona.paterno = request.POST['Ap_paterno']
-        proveedor.persona.materno = request.POST ['Ap_materno']
-        proveedor.usuario.username= request.POST['username']
-        direccionP.telefono = request.POST ['Ptelefono']
-        direccionP.email = request.POST ['Pemail']
+    print(datosOrg)
 
-        direccionP.save()
-        proveedor.save()
+    return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg })
 
-
-        proveedor=HOrganismo.objects.filter(proveedor_flag=1)
-        form = {
-        'proveedor':proveedor
-        }
-        return render (request, 'hostal/AdminProveedor.html', {'form':form})
 
 
 
