@@ -3,7 +3,7 @@
 {% block content %}
 <title>Administración Clientes</title>
 <body>
-    
+
 <div class="">
     <div class="wrapper wrapper--w960">
         <div class="card card-5">
@@ -29,7 +29,7 @@
                         </div>
                   </div>
                   <div class="btn align-self-center mr-5 pr-5 col-3">
-                    <button id="btnBuscarProvedor" class="btn text-light registro btn-space center-block" type="submit"  > 
+                    <button id="btnBuscarProvedor" class="btn text-light registro btn-space center-block" type="submit"  >
                         Buscar
                     </button>
                     </div>
@@ -40,6 +40,7 @@
 
                     <thead class="thead-dark">
                       <tr>
+                        <th scope="col">I#·</th>
                         <th scope="col">Rut</th>
                         <th scope="col">Empresa</th>
                         <th scope="col">Dirección</th>
@@ -50,9 +51,10 @@
                     <tbody>
                       {% for proveedor in form.proveedor %}
                       <tr>
+                        <th >#{{proveedor.organismo_id}}</th>
                         <th scope="row">{{proveedor.rut}}</th>
                         <td>{{proveedor.nombre_fantasia}}</td>
-                        <td>{% if proveedor.direccion == '' %} 
+                        <td>{% if proveedor.direccion == '' %}
                              <span class="text-danger">Sin datos</span>
                              {% else %}
 
@@ -64,10 +66,10 @@
                         <td >
 
                             <a href="/EditarProveedor/{{ proveedor.organismo_id }}">
-                            <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnEditarProveedor" class="btn text-light registro btn-space " type="button" > 
+                            <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnEditarProveedor" class="btn text-light registro btn-space " type="button" >
                             Editar
                            </button>
-                       </a> 
+                       </a>
                        </td>
                         </td>
                       </tr>
@@ -75,7 +77,7 @@
                     </tbody>
                   </table>
                 </div>
-                  
+
                   <div class="icono-accesos d-flex">
                     <a href="{% url 'CrearNuevoProovedor' %}">
                     <button class="iconosMenus ">
@@ -85,7 +87,7 @@
                         </div>
                     </button>
                 </a>
-                  </div>              
+                  </div>
             </div>
     </div>
 </div>
@@ -111,4 +113,3 @@
 </div>
 
 {% endblock %}
-

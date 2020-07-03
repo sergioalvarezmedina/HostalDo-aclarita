@@ -486,7 +486,21 @@ def EditarProveedor(request,organismo_id):
     print("Recuperando persona "+str(proveedor.persona_id))
     persona = HPersona.objects.get(persona_id=proveedor.persona_id)
     print("Encontrado "+persona.nombres)
-    direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
+    #direccionP = HPersonaDireccion.objects.filter(persona_id=persona.persona_id).order_by('-registro_fecha')
+
+    sqlDir="""
+        SELECT
+            dir.TELEFONO telefono,
+            dir.EMAIL mail
+        FROM
+            H_PERSONA_DIRECCION dir
+        WHERE
+            dir.PERSONA_ID='"""+str(persona.persona_id)+"""' AND
+            dir.REGISTRO_FECHA=(SELECT MAX(REGISTRO_FECHA) FROM H_PERSONA_DIRECCION WHERE PERSONA_ID='"""+str(persona.persona_id)+"""')
+            """
+
+    print ("Query : "+sqlDir)
+    direccionP = HPersonaDireccion.objects.raw(sqlDir)
 
     datosOrg ={
         'proveedorId':proveedor.organismo_id,
@@ -500,8 +514,8 @@ def EditarProveedor(request,organismo_id):
         'Ap_paterno': proveedor.persona.paterno,
         'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,
-        'Ptelefono': direccionP.telefono,
-        'Pemail':direccionP.email}
+        'Ptelefono': direccionP[0].telefono,
+        'Pemail':direccionP[0].email}
 
     print(datosOrg)
 

@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/"novalidate>
+                <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/" novalidate>
                   {% csrf_token %}
 
                   <input type="hidden" id="proveedorId" name="proveedorId" value="{{organismo.proveedorId}}">
