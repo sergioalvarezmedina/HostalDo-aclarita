@@ -396,26 +396,35 @@ def GuardarNuevoUsuario(request):
 
     persona = HPersona(
         persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombre_persona"],
+        nombres = request .POST["nombre_persona"],
         paterno = request.POST["Ap_paterno"],
         materno = request.POST["Ap_materno"]
     )
 
-    persona.save()
 
-    print("Persona "+str(persona.persona_id))
 
     usuario.persona_id=persona.persona_id
 
     usuario.username=request.POST["username"]
-    #validacion de que usuario ya existe! Aqui estoy trabajando
+    #validacion de que usuario ya existe! 
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
-        messages.error(request, "Nombre de Usuario ya existe.")
-        print("Usuario ", usuario.username, " ya existe")
 
-        return render (request,'hostal/CrearNuevoUsuario.html')
+
+        messages.error(request, "Nombre de Usuario ya existe.")
+
+        print("Usuario ", usuario.username, " ya existe")
+        print(persona.nombres+' '+ persona.paterno +' '+persona.materno)
+        
+        form = {
+        'persona':persona
+        }
+
+        return render (request,'hostal/CrearNuevoUsuario.html', {'form':form} )
 
     else:
+        persona.save()
+
+        print("Persona "+str(persona.persona_id))
         usuario.username=request.POST["username"]
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
@@ -426,6 +435,10 @@ def GuardarNuevoUsuario(request):
 
 
         usuario.save()
+        try:
+            messages.success(request, 'Usuario ha sido creado exitosamente.')
+        except Exception as e:
+            messages.error(request, 'Ocurrió un error al crear usuario.')
 
         return render (request, 'hostal/CrearNuevoUsuario.html')
 
@@ -436,7 +449,7 @@ def AdminProveedor(request):
     if queryset :
         proveedor = HOrganismo.objects.filter(
             Q(rut__icontains = queryset) |
-            Q(nombre_fantasia = queryset)
+            Q(nombre_fantasia__icontains = queryset)
             ).distinct()
         print(proveedor)
         form = {'proveedor':proveedor}
@@ -447,18 +460,6 @@ def AdminProveedor(request):
     form = {'proveedor':proveedor}
 
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
-
-#def BuscarProveedor(request):
-
- #   rutProv = request.GET.get('rut', '')
-  #  proveedor = HOrganismo.objects.filter(
-   #     rut = rutProv ,
-    #    proveedor_flag =1,
-         
-      #  )
-    #print(request.GET)
-
-    #return render (request, 'hostal/AdminProveedor.html',{'proveedor':proveedor})
 
 
 def EditarProveedor(request,organismo_id):
@@ -494,11 +495,13 @@ def EditarProveedor(request,organismo_id):
         direccionP.telefono = request.POST ['Ptelefono']
         direccionP.email = request.POST ['Pemail']
 
+       # proveedor =
+
         direccionP.save()
         proveedor.save()
 
 
-        proveedor=HOrganismo.objects.filter(proveedor_flag=1)
+        #proveedor=HOrganismo.objects.filter(proveedor_flag=1)
         form = {
         'proveedor':proveedor
         }

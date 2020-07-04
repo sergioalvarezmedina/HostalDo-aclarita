@@ -10,12 +10,21 @@
                 <div class="card-heading">
                     <h2 class="title">Crear Nuevo Usuario</h2>
                 </div>
+                <div class="center-block mt-5">
+                            {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-danger mt-1" role="alert">
+                                        {{message}}   
+                                    </div>
+                                     {% endfor %}
+                            {% endif %}
+                            </div>
                 <br>
                 <div class="datos-empresa">
                     <h3 class="title-empresa">Datos de Usuario</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="/GuardarNuevoUsuario/">
+                    <form method="POST" method="GET" action="/GuardarNuevoUsuario/">
                         {% csrf_token %}
                         <br>
                         <div class="form-row">
@@ -30,7 +39,7 @@
                             <div class="name">Apellido Paterno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_paterno">
+                                    <input class="input--style-5" type="text" name="Ap_paterno" value="{{request.GET.Ap_paterno}}">
                                 </div>
                             </div>
                         </div>
@@ -38,7 +47,7 @@
                             <div class="name">Apellido Materno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_materno">
+                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{request.GET.Ap_materno}}">
                                 </div>
                             </div>
                         </div>
@@ -46,7 +55,7 @@
                             <div class="name">Email</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="email" name="email">
+                                    <input class="input--style-5" type="email" name="email" value="{{request.GET.email}}">
                                 </div>
                             </div>
                         </div>
@@ -54,14 +63,7 @@
                             <div class="name">Nombre Usuario</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="username">
-                                    {% if messages %}
-                                    {% for message in messages %}
-                                    <div class="alert alert-danger mt-1" role="alert">
-                                        {{message}}   
-                                    </div>
-                                    {% endfor %}
-                                    {% endif %}
+                                    <input class="input--style-5" type="text" name="username" value="{{request.GET.username}}">
                                 </div>
                             </div>
                         </div>
