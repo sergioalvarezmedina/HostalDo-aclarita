@@ -24,14 +24,15 @@
                     <h3 class="title-empresa">Datos de Usuario</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" method="GET" action="/GuardarNuevoUsuario/">
+                    <form method="POST"  action="/GuardarNuevoUsuario/">
                         {% csrf_token %}
                         <br>
                         <div class="form-row">
                             <div class="name">Nombre</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="nombre_persona">
+                                    <input class="input--style-5" type="text" name="nombre_persona" 
+                                    value="{{form.persona.nombres}}">
                                 </div>
                             </div>
                         </div>
@@ -39,7 +40,7 @@
                             <div class="name">Apellido Paterno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_paterno" value="{{request.GET.Ap_paterno}}">
+                                    <input class="input--style-5" type="text" name="Ap_paterno" value="{{form.persona.paterno}}">
                                 </div>
                             </div>
                         </div>
@@ -47,7 +48,7 @@
                             <div class="name">Apellido Materno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{request.GET.Ap_materno}}">
+                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{form.persona.materno}}">
                                 </div>
                             </div>
                         </div>
@@ -55,7 +56,8 @@
                             <div class="name">Email</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="email" name="email" value="{{request.GET.email}}">
+                                    <input class="input--style-5" type="email" name="email" 
+                                    value="{{form.pDireccion.email}}">
                                 </div>
                             </div>
                         </div>
@@ -63,7 +65,7 @@
                             <div class="name">Nombre Usuario</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="username" value="{{request.GET.username}}">
+                                    <input class="input--style-5" type="text" name="username" value="{{form.Usuario.username}}">
                                 </div>
                             </div>
                         </div>

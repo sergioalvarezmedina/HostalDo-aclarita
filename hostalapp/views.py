@@ -420,6 +420,11 @@ def GuardarNuevoUsuario(request):
         materno = request.POST["Ap_materno"]
     )
 
+    pDireccion = HPersonaDireccion(
+        persona_direccion_id = getSecuenciaId("H_PERSONA_DIRECCION_PERSONA_DI"),
+        email = request.POST ["email"]
+
+        )
 
 
     usuario.persona_id=persona.persona_id
@@ -429,13 +434,14 @@ def GuardarNuevoUsuario(request):
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
 
 
-        messages.error(request, "Nombre de Usuario ya existe.")
+        messages.error(request, "Nombre de Usuario "+ usuario.username+" ya existe.")
 
         print("Usuario ", usuario.username, " ya existe")
         print(persona.nombres+' '+ persona.paterno +' '+persona.materno)
         
         form = {
-        'persona':persona
+        'persona':persona,
+        'pDireccion':pDireccion
         }
 
         return render (request,'hostal/CrearNuevoUsuario.html', {'form':form} )
@@ -480,8 +486,7 @@ def AdminProveedor(request):
 
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
 
-<<<<<<< HEAD
-=======
+
 #def BuscarProveedor(request):
 
  #   rutProv = request.GET.get('rut', '')
@@ -494,7 +499,6 @@ def AdminProveedor(request):
 
     #return render (request, 'hostal/AdminProveedor.html',{'proveedor':proveedor})
 
->>>>>>> 6e854144795d7111f29732553cf4bd888073a055
 
 def EditarProveedor(request,organismo_id):
 
@@ -529,15 +533,16 @@ def EditarProveedor(request,organismo_id):
         'nombre_persona':proveedor.persona.nombres,
         'Ap_paterno': proveedor.persona.paterno,
         'Ap_materno': proveedor.persona.materno,
-        'username':proveedor.usuario.username,
-        'Ptelefono': direccionP[0].telefono,
-        'Pemail':direccionP[0].email}
+        'username':proveedor.usuario.username
+        #'Ptelefono': direccionP[0].telefono,
+        #'Pemail':direccionP[0].email
+        }
 
     print(datosOrg)
 
     return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg })
 
-<<<<<<< HEAD
+
     if request.method == 'GET':
         datosOrg ={'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
         'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
@@ -574,8 +579,7 @@ def EditarProveedor(request,organismo_id):
         'proveedor':proveedor
         }
         return render (request, 'hostal/AdminProveedor.html', {'form':form})
-=======
->>>>>>> 6e854144795d7111f29732553cf4bd888073a055
+
 
 
 
