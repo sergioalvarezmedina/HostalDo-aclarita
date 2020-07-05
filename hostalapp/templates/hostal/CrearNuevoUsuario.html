@@ -10,7 +10,7 @@
                 <div class="card-heading">
                     <h2 class="title">Crear Nuevo Usuario</h2>
                 </div>
-                <div class="center-block mt-5">
+                <div class="center-block mt-3">
                             {% if messages %}
                                     {% for message in messages %}
                                     <div class="alert alert-danger mt-1" role="alert">
@@ -32,7 +32,7 @@
                             <div class="value">
                                 <div class="input-group">
                                     <input class="input--style-5" type="text" name="nombre_persona" 
-                                    value="{{form.persona.nombres}}">
+                                    value="{{form.persona.nombres}}" required>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                             <div class="name">Apellido Paterno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_paterno" value="{{form.persona.paterno}}">
+                                    <input class="input--style-5" type="text" name="Ap_paterno" value="{{form.persona.paterno}}" required>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                             <div class="name">Apellido Materno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{form.persona.materno}}">
+                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{form.persona.materno}}" required>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                             <div class="value">
                                 <div class="input-group">
                                     <input class="input--style-5" type="email" name="email" 
-                                    value="{{form.pDireccion.email}}">
+                                    value="{{form.pDireccion.email}}" required>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="name">Nombre Usuario</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="username" value="{{form.Usuario.username}}">
+                                    <input class="input--style-5" type="text" name="username" value="{{form.Usuario.username}}" required>
                                 </div>
                             </div>
                         </div>
@@ -73,21 +73,17 @@
                             <div class="name"> Contraseña</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="password"  name="contrasena">
+                                    <input class="input--style-5" type="password"  name="contrasena" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="name">Repetir Contraseña</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="password"  name="contrasena">
-                                </div>
-                            </div>
-                             <div class="botonesFormulario center-block mt-5">
+                        <div class="col text-center">
+                         <div class="botonesFormulario mt-5">
                         <button id="btn " class="btn text-light registro btn-space" type="submit" > 
                             Guardar Nuevo Usuario
                           </button>
+                        </div>
+                        </div>
                     </div>
                     </form>
                 </div>

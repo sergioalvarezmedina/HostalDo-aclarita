@@ -11,26 +11,21 @@
                 <h2 class="title">Editar Clientes</h2>
             </div>
                 <div class="contenedor  justify-content-around ">
-                    <div class="d-flex ">
-                    <div class="filtroClientes row">
-                        <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
-                            <div class="empresa mr-5"> Rol</div>
-                            <input class="buscarEmpresa form-control ml-5"></input>
+                    <form  method="GET" class="row form-inline mt-5 mb-5">
+                      <div class="center-block">
+                       
+                        <div class="form-group mx-sm-3 mb-2">
+                            <i class="fas fa-search mt-3" aria-hidden="true"></i>
+                            <input class=" form-control" name="buscar"  value="{{request.GET.buscar}}" placeholder="Buscar Cliente"></input>
                         </div>
-                        <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
-                            <div class="empresa mr-2"> Empresa</div>
-                            <input class="buscarEmpresa form-control ml-4"></input>
+
+                        <div class="btn align-self-center ">
+                          <button id="btnBuscarProvedor" class="btn text-light registro btn-space " type="submit"  >Buscar</button>
                         </div>
-                        <div class="titulos d-flex mt-3 mb-5 col-9 center-block ">
-                            <div class="empresa mr-4"> Región</div>
-                            <input class="buscarEmpresa form-control ml-3"></input>
-                        </div>
-                </div>
-                <div class="btn align-self-center mr-5 pr-5 col-3">
-                    <button id="btn " class="btn text-light registro btn-space center-block" type="button" >
-                        Buscar
-                    </button>
-                    </div>
+            
+
+                  </form>
+             
                 </div>
                 <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 <table class="table table-bordered table-striped mb-0">
@@ -45,13 +40,19 @@
                     </thead>
                     <tbody>
 
-                      {%for listadoClientes in listadoClientes %}
+                      {%for clientes in form.cliente %}
                       <tr>
-                        <th scope="row">{{listadoClientes.rut}}</th>
-                        <td>{{listadoClientes.nombre_fantasia}}</td>
-                        <td>{{listadoClientes.direccion}}</td>
+                        <th scope="row">{{clientes.rut}}</th>
+                        <td>{{clientes.nombre_fantasia}}</td>
+                        <td>{{clientes.direccion}}</td>
                         <td>Región</td>
-                        <td ><a href="/EditarCliente/{{ listadoClientes.organismo_id }}">Editar</a></td>
+                        <td >
+                          <a href="/EditarCliente/{{ cliente.organismo_id }}">
+                            <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnEditarProveedor" class="btn text-light registro btn-space " type="button" >
+                            Editar
+                           </button>
+
+                        </td>
 
                         </td>
                         </tr>
@@ -61,7 +62,7 @@
                   </table>
                   </div>
                   <div class="icono-accesos d-flex">
-                    <a href="{% url 'GuardarNuevoCliente' %}">
+                    <a href="{% url 'CrearNuevoCliente' %}">
                     <button class="iconosMenus "><i class="fa fa-user-plus"></i><div class="textoMenus"> Crear Nuevo Cliente </div></button>
                   </div>
                   </a>
