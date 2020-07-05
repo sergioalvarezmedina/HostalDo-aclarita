@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.db import connection
 from django.db.models import Q
 import sys
+from datetime import date
+from datetime import datetime
 
 WORDFISH = '1236545dasdas$'
 ayudaDb = HAsistente.objects.all()
@@ -303,13 +305,17 @@ def CrearNuevoProovedor(request):
 
 def GuardarNuevoProvedor (request):
 
-    print(request.POST)
+    proveedorId=0
+    personaId=0
+    try:
+        proveedorId = int(request.POST["proveedorId"])
+        personaId = request.POST["personaId"]
+    except:
+        proveedorId=0
+        personaId=0
 
-    proveedorId = int(request.POST["proveedorId"]) if (request.POST["proveedorId"]!="") else 0
-    personaId = int(request.POST["personaId"]) if (request.POST["personaId"]!="") else 0
-
-    cliente = HOrganismo()
-    usuario = HUsuario()
+    cliente = HOrganismo
+    usuario = HUsuario
 
     if proveedorId > 0:
 
@@ -338,15 +344,27 @@ def GuardarNuevoProvedor (request):
     usuario.username=request.POST["username"]
 
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
+
         messages.error(request, "Nombre de Usuario ya existe.")
         print("Usuario ", usuario.username, " ya existe")
 
     else:
-        usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-        usuario.vigencia=1
-        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
+
+        usuario.contrasena = encode(WORDFISH, request.POST["contrasena"])
+        usuario.vigencia = 1
+        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=4)
 
         usuario.usuario_perfil_id=perfil.usuario_perfil_id
+
+        usuario=HUsuario(
+            usuario_id = None,
+            persona = persona,
+            username = request.POST["username"],
+            contrasena = request.POST["contrasena"],
+            registro_fecha = date.today(),
+            usuario_perfil = perfil,
+            vigencia = 1
+        )
 
         usuario.save()
 
@@ -388,6 +406,8 @@ def GuardarNuevoProvedor (request):
         cliente.vigencia=1
 
         try:
+            # setear fecha actual
+            direccionP.registro_fecha=date.today()
             direccionP.save()
 
             cliente.save()
@@ -397,7 +417,6 @@ def GuardarNuevoProvedor (request):
 
             messages.error(request, 'Ocurrió un error en el Registro.')
 
-    #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
     proveedor=HOrganismo.objects.all()
     form = {
         'proveedor':proveedor
@@ -450,20 +469,42 @@ def GuardarNuevoUsuario(request):
 
 def AdminProveedor(request):
 
+    rut = request.GET.get('rut')
+    nombre = request.GET.get('nombre')
 
-    queryset = request.GET.get('buscar')
-    if queryset :
+    print(rut)
+    print(nombre)
+
+    if rut and nombre:
+
         proveedor = HOrganismo.objects.filter(
-            Q(rut__icontains = queryset) |
-            Q(nombre_fantasia = queryset)
+                Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
             ).distinct()
+
+    elif rut :
+
+        proveedor = HOrganismo.objects.filter(
+                Q(nombre_fantasia = queryset)
+            ).distinct()
+
+    elif nombre:
+
+        proveedor = HOrganismo.objects.filter(
+                Q(nombre_fantasia = nombre) | Q(razon_social = nombre)
+            ).distinct()
+
+
         print(proveedor)
-        form = {'proveedor':proveedor}
+
+        form = { "proveedor" : proveedor }
 
         return render (request, 'hostal/AdminProveedor.html',{'form':form} )
 
     proveedor = HOrganismo.objects.filter(proveedor_flag =1)
-    form = {'proveedor':proveedor}
+    form = {
+            "busqueda" : { "rut" : rut, "nombre" : nombre },
+            'proveedor' : proveedor
+        }
 
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
 
@@ -486,21 +527,9 @@ def EditarProveedor(request,organismo_id):
     print("Recuperando persona "+str(proveedor.persona_id))
     persona = HPersona.objects.get(persona_id=proveedor.persona_id)
     print("Encontrado "+persona.nombres)
-    #direccionP = HPersonaDireccion.objects.filter(persona_id=persona.persona_id).order_by('-registro_fecha')
-
-    sqlDir="""
-        SELECT
-            dir.TELEFONO telefono,
-            dir.EMAIL mail
-        FROM
-            H_PERSONA_DIRECCION dir
-        WHERE
-            dir.PERSONA_ID='"""+str(persona.persona_id)+"""' AND
-            dir.REGISTRO_FECHA=(SELECT MAX(REGISTRO_FECHA) FROM H_PERSONA_DIRECCION WHERE PERSONA_ID='"""+str(persona.persona_id)+"""')
-            """
-
-    print ("Query : "+sqlDir)
-    direccionP = HPersonaDireccion.objects.raw(sqlDir)
+    direccionP = HPersonaDireccion.objects.order_by('-registro_fecha')[0]
+    print(direccionP.telefono)
+    print(direccionP)
 
     datosOrg ={
         'proveedorId':proveedor.organismo_id,
@@ -514,8 +543,8 @@ def EditarProveedor(request,organismo_id):
         'Ap_paterno': proveedor.persona.paterno,
         'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,
-        'Ptelefono': direccionP[0].telefono,
-        'Pemail':direccionP[0].email}
+        'Ptelefono': direccionP.telefono,
+        'Pemail':direccionP.email}
 
     print(datosOrg)
 
