@@ -9,14 +9,23 @@
     <div class="wrapper wrapper--w960">
         <div class="card card-5">
             <div class="card-heading">
-                <h2 class="title">Registro Huespedes</h2>
+                <h2 class="title">Nuevo Cliente</h2>
+            </div>
+            <div class="center-block">
+                            {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-danger mt-1" role="alert">
+                                        {{message}}   
+                                    </div>
+                                     {% endfor %}
+                            {% endif %}
             </div>
             <div class="d-flex mb-3">
             <div class="center-block"><label for="" class="mt-4">Datos Empresa</label></div>
             <div class="center-block"><label for="" class="mt-4">Datos Contacto</label></div>
             </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form method="POST" action="/GuardarFormulario/">
+                <form method="POST" action="/GuardarNuevoCliente/">
                     {% csrf_token %}
                     <div class="row">
                 <div class="col ml-4 justify-content-around ">
@@ -24,7 +33,6 @@
                         <label for="validationCustom01" class="mr-3">Rol Empresa</label>
                         <input type="text" class="form-control col-lg-7 ml-5" name="rol_empresa"id="validationCustom01" value="" required>
                     </div>
-                    <input type="hidden" name="crearCliente" value="0">
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
                          <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombre_empresa" value="" required>
@@ -35,9 +43,9 @@
                     </div>
                     <div class="control-label form-inline mb-3">
                         <label for="validationCustom03" class="mr-5 pr-4">Región</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-5 pl-2">
-                                    <select name="region" for="regiones" id="regiones" class="form-control">
-                                        <option disabled="disabled" selected="selected" >-Seleccion Región-</option>
+                                <div class="rs-select2 js-select-simple select--no-search ml-5 pl-2 col-xs-2">
+                                    <select name="region" for="regiones" id="regiones" class="form-control col-xs-3">
+                                        <option disabled="disabled" selected="selected" class="" >-Seleccion Región-</option>
                                     </select>
                                     <div class="select-dropdown"></div>
                                 </div>

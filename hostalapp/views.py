@@ -237,10 +237,31 @@ def ModuloRegistrarHuesped(request):
     return render (request, 'hostal/RegistroHuespedes.html')
 
 def AdminClientesAgregar(request):
-    listadoClientes = HOrganismo.objects.all()
-    print(listadoClientes)
-    return render(request, 'hostal/AdminClientesAgregar.html',{'listadoClientes':listadoClientes})
 
+    queryset = request.GET.get('buscar')
+    
+    if queryset :
+        cliente = HOrganismo.objects.filter(
+            Q(rut__icontains = queryset) |
+            Q(nombre_fantasia__icontains = queryset)
+            ).distinct()
+        print(cliente)
+
+        form = {'cliente':cliente}
+
+        return render (request, 'hostal/AdminClientesAgregar.html', {'form':form} )
+
+    cliente = HOrganismo.objects.all().exclude(proveedor_flag=1)
+    form = {
+
+    'cliente':cliente
+    }
+
+    return render(request, 'hostal/AdminClientesAgregar.html',{'form':form})
+    print(cliente)
+
+
+    
 def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html')
 
@@ -257,45 +278,94 @@ def GuardarNuevoCliente(request):
         materno = request.POST["Ap_materno"]
     )
 
-    persona.save()
-
-    print("Persona "+str(persona.persona_id))
 
     usuario.persona_id=persona.persona_id
 
     usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
     usuario.username=request.POST["username"]
-    usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-    usuario.vigencia=1
 
-    perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
+    #Direccion Usuario
 
-    usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
-    usuario.save()
+
 
     cliente.usuario_id = usuario.usuario_id
     cliente.persona_id = usuario.persona_id
     cliente.razon_social = request.POST["razon_social"]
+
     cliente.rut = request.POST["rol_empresa"]
+
+    
+
+
     cliente.nombre_fantasia = request.POST["nombre_empresa"]
-    cliente.direccion = request.POST["direccion"]
-    cliente.telefono = request.POST["telefono"]
 
-    comuna = HComuna.objects.get(comuna_id=2)
-    cliente.comuna_id=comuna.comuna_id
-    cliente.vigencia=1
+    if HOrganismo.objects.filter(rut = cliente.rut).count()>0:
+        messages.error(request, "Rol de empresa ya se encuentra registrado.")
+
+        form = {
+        'persona':persona,
+        'usuario':usuario,
+        'cliente':cliente
+        }
+
+        return render(request, "hostal/CrearNuevoCliente.html",{'form':form})
 
 
-    cliente.save()
-    return render(request, "hostal/AdminClientesAgregar.html")
+    elif HOrganismo.objects.filter(nombre_fantasia=cliente.nombre_fantasia).count()>0:
+        messages.error(request, "Nombre de empresa ya se encuentra registrado.")
 
-#def EditarCliente(request, organismo_id):
+        form = {
+        'persona':persona,
+        'usuario':usuario,
+        'cliente':cliente
+        }
 
- #   organismo_id= request.GET("organismo_id")
-  #  cliente = HOrganismo.objects.filter(id=organismo_id)
+        return render(request, "hostal/CrearNuevoCliente.html",{'form':form})
+    elif HUsuario.objects.filter(username= usuario.username).count() > 0:
+        messages.error(request, "Nombre de Usuario ya existe.")
+        print("Usuario ", usuario.username, " ya existe")
 
-   # return render (request, 'hostal/EditarCliente.html')
+        form = {
+        'persona':persona,
+        'usuario':usuario,
+        'cliente':cliente
+        }
+
+        return render(request, "hostal/CrearNuevoCliente.html",{'form':form})
+       
+    else:
+
+
+        persona.save()
+        print("Persona "+str(persona.persona_id))
+        usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
+        usuario.vigencia=1
+        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
+
+        usuario.usuario_perfil_id=perfil.usuario_perfil_id
+
+        usuario.save()
+
+        cliente.direccion = request.POST["direccion"]
+        cliente.telefono = request.POST["telefono"]
+
+        comuna = HComuna.objects.get(comuna_id=2)
+        cliente.comuna_id=comuna.comuna_id
+        cliente.vigencia=1
+
+        try:
+            direccionP.save()
+
+            cliente.save()
+            messages.success(request, 'Registro Exitoso.')
+        except Exception as e:
+            messages.error(request, 'Ocurrió un error en el Registro.')
+    #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
+    cl=HOrganismo.objects.all()
+    form = {
+    'cl':cl}
+    return render(request, "hostal/CrearNuevoCliente.html",{'form':form})
 
 
 def CrearNuevoProovedor(request):
@@ -303,34 +373,19 @@ def CrearNuevoProovedor(request):
 
 def GuardarNuevoProvedor (request):
 
-    print(request.POST)
-
-    proveedorId = int(request.POST["proveedorId"]) if (request.POST["proveedorId"]!="") else 0
-    personaId = int(request.POST["personaId"]) if (request.POST["personaId"]!="") else 0
-
     cliente = HOrganismo()
+
     usuario = HUsuario()
 
-    if proveedorId > 0:
+    persona = HPersona(
+        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+        nombres = request.POST["nombre_persona"],
+        paterno = request.POST["Ap_paterno"],
+        materno = request.POST["Ap_materno"]
+    )
 
-        cliente=HOrganismo.objects.get(organismo_id=proveedorId)
 
-        persona = HPersona.objects.get(persona_id=personaId)
-        persona.nombres = request.POST["nombre_persona"],
-        persona.paterno = request.POST["Ap_paterno"],
-        persona.materno = request.POST["Ap_materno"]
 
-    else:
-        persona = HPersona(
-            persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-            nombres = request.POST["nombre_persona"],
-            paterno = request.POST["Ap_paterno"],
-            materno = request.POST["Ap_materno"]
-        )
-
-    persona.save()
-
-    print("Persona "+str(persona.persona_id))
 
     usuario.persona_id=persona.persona_id
 
@@ -341,7 +396,18 @@ def GuardarNuevoProvedor (request):
         messages.error(request, "Nombre de Usuario ya existe.")
         print("Usuario ", usuario.username, " ya existe")
 
+        form = {
+        'persona':persona,
+        'usuario':usuario,
+        'cliente':cliente
+        }
+
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+
+
     else:
+        persona.save()
+        print("Persona "+str(persona.persona_id))
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
         perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
@@ -354,9 +420,9 @@ def GuardarNuevoProvedor (request):
     #Direccion Usuario
 
     direccionP = HPersonaDireccion(
-        persona_direccion_id =getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
-        telefono = request.POST["Ptelefono"],
-        email =request.POST["Pemail"]
+    persona_direccion_id =getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+    telefono = request.POST["Ptelefono"],
+    email =request.POST["Pemail"]
         )
     direccionP.persona_id = persona.persona_id
     direccionP.usuario_id = usuario.usuario_id
@@ -371,15 +437,30 @@ def GuardarNuevoProvedor (request):
     if HOrganismo.objects.filter(rut = cliente.rut).count()>0:
         messages.error(request, "Rol de empresa ya se encuentra registrado.")
 
+        form = {
+        'persona':persona,
+        'usuario':usuario,
+        'cliente':cliente
+        }
+
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+
     cliente.proveedor_flag=1
+
     cliente.nombre_fantasia = request.POST["nombre_empresa"]
 
     if HOrganismo.objects.filter(nombre_fantasia=cliente.nombre_fantasia).count()>0:
-
         messages.error(request, "Nombre de empresa ya se encuentra registrado.")
 
-    else:
+        form = {
+        'persona':persona,
+        'usuario':usuario,
+        'cliente':cliente
+        }
 
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+
+    else:
         cliente.direccion = request.POST["direccion"]
         cliente.telefono = request.POST["telefono"]
 
@@ -392,24 +473,19 @@ def GuardarNuevoProvedor (request):
 
             cliente.save()
             messages.success(request, 'Registro Exitoso.')
-
         except Exception as e:
-
             messages.error(request, 'Ocurrió un error en el Registro.')
-
     #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
     proveedor=HOrganismo.objects.all()
     form = {
-        'proveedor':proveedor
-        }
-
-    return render(request, "hostal/AdminProveedor.html",{'form':form})
+    'proveedor':proveedor}
+    return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
 
 
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
 
-def GuardarNuevoUsuario(request):
+def GuardarNuevoUsuario(request): #Al parecer OK
 
     usuario = HUsuario()
 
@@ -486,18 +562,6 @@ def AdminProveedor(request):
 
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
 
-
-#def BuscarProveedor(request):
-
- #   rutProv = request.GET.get('rut', '')
-  #  proveedor = HOrganismo.objects.filter(
-   #     rut = rutProv ,
-    #    proveedor_flag =1,
-
-      #  )
-    #print(request.GET)
-
-    #return render (request, 'hostal/AdminProveedor.html',{'proveedor':proveedor})
 
 
 def EditarProveedor(request,organismo_id):
