@@ -241,7 +241,7 @@ def ModuloRegistrarHuesped(request):
 def AdminClientesAgregar(request):
 
     queryset = request.GET.get('buscar')
-    
+
     if queryset :
         cliente = HOrganismo.objects.filter(
             Q(rut__icontains = queryset) |
@@ -263,7 +263,7 @@ def AdminClientesAgregar(request):
     print(cliente)
 
 
-    
+
 def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html')
 
@@ -297,7 +297,7 @@ def GuardarNuevoCliente(request):
 
     cliente.rut = request.POST["rol_empresa"]
 
-    
+
 
 
     cliente.nombre_fantasia = request.POST["nombre_empresa"]
@@ -335,7 +335,7 @@ def GuardarNuevoCliente(request):
         }
 
         return render(request, "hostal/CrearNuevoCliente.html",{'form':form})
-       
+
     else:
 
 
@@ -375,7 +375,6 @@ def CrearNuevoProovedor(request):
 
 def GuardarNuevoProvedor (request):
 
-<<<<<<< HEAD
     proveedorId=0
     personaId=0
     try:
@@ -389,18 +388,13 @@ def GuardarNuevoProvedor (request):
     usuario = HUsuario
 
     if proveedorId > 0:
-=======
-    cliente = HOrganismo()
->>>>>>> master
 
-    usuario = HUsuario()
-
-    persona = HPersona(
-        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombre_persona"],
-        paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"]
-    )
+        persona = HPersona(
+            persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+            nombres = request.POST["nombre_persona"],
+            paterno = request.POST["Ap_paterno"],
+            materno = request.POST["Ap_materno"]
+        )
 
 
 
@@ -425,18 +419,17 @@ def GuardarNuevoProvedor (request):
 
 
     else:
-<<<<<<< HEAD
 
         usuario.contrasena = encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia = 1
         perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=4)
-=======
+
         persona.save()
         print("Persona "+str(persona.persona_id))
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
         perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
->>>>>>> master
+
 
         usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
@@ -513,11 +506,9 @@ def GuardarNuevoProvedor (request):
             messages.success(request, 'Registro Exitoso.')
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
-<<<<<<< HEAD
 
-=======
     #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
->>>>>>> master
+
     proveedor=HOrganismo.objects.all()
     form = {
     'proveedor':proveedor}
@@ -548,7 +539,7 @@ def GuardarNuevoUsuario(request): #Al parecer OK
     usuario.persona_id=persona.persona_id
 
     usuario.username=request.POST["username"]
-    #validacion de que usuario ya existe! 
+    #validacion de que usuario ya existe!
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
 
 
@@ -556,7 +547,7 @@ def GuardarNuevoUsuario(request): #Al parecer OK
 
         print("Usuario ", usuario.username, " ya existe")
         print(persona.nombres+' '+ persona.paterno +' '+persona.materno)
-        
+
         form = {
         'persona':persona,
         'pDireccion':pDireccion
@@ -587,49 +578,50 @@ def GuardarNuevoUsuario(request): #Al parecer OK
 
 def AdminProveedor(request):
 
-    rut = request.GET.get('rut')
-    nombre = request.GET.get('nombre')
+    rut = request.POST.get('buscarRut')
+    nombre = request.POST.get('buscarNombre')
 
-    print(rut)
-    print(nombre)
+    print("RUT "+rut)
 
     if rut and nombre:
+        try:
+            proveedorResult = HOrganismo.objects.filter(
+                    Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
+                ).filter(organismo_rut=rut)
 
-        proveedor = HOrganismo.objects.filter(
-                Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
-            ).distinct()
+            proveedor = { proveedorResult }
+        except:
+            proveedor = { }
 
     elif rut :
-
-        proveedor = HOrganismo.objects.filter(
-                Q(nombre_fantasia = queryset)
-            ).distinct()
+        try:
+            proveedorResult = HOrganismo.objects.get(rut=rut)
+            proveedor = { proveedorResult }
+        except:
+            proveedor = { }
 
     elif nombre:
+        try:
+            nombreLike="%"+nombre.upper()+"%"
+            sql = """SELECT * from h_organismo WHERE upper(nombre_fantasia) || ' ' || upper(razon_social) like %s"""
+            proveedor=HOrganismo.objects.raw(sql, [nombreLike])
+        except:
+            proveedor = { }
 
-        proveedor = HOrganismo.objects.filter(
-<<<<<<< HEAD
-                Q(nombre_fantasia = nombre) | Q(razon_social = nombre)
-=======
-            Q(rut__icontains = queryset) |
-            Q(nombre_fantasia__icontains = queryset)
->>>>>>> cdb67a3b131eb405e67e6730c40d9f47bd856f52
-            ).distinct()
+    else:
+        try:
+            proveedor = HOrganismo.objects.filter(proveedor_flag =1)
+        except:
+            proveedor = { }
 
+    print(proveedor)
 
-        print(proveedor)
-
-        form = { "proveedor" : proveedor }
-
-        return render (request, 'hostal/AdminProveedor.html',{'form':form} )
-
-    proveedor = HOrganismo.objects.filter(proveedor_flag =1)
     form = {
-            "busqueda" : { "rut" : rut, "nombre" : nombre },
+            "buscar" : { "rut" : rut, "nombre" : nombre },
             'proveedor' : proveedor
         }
 
-    return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
+    return render (request, 'hostal/AdminProveedor.html' , { 'form' : form })
 
 
 
@@ -654,16 +646,9 @@ def EditarProveedor(request,organismo_id):
         'nombre_persona':proveedor.persona.nombres,
         'Ap_paterno': proveedor.persona.paterno,
         'Ap_materno': proveedor.persona.materno,
-<<<<<<< HEAD
         'username':proveedor.usuario.username,
         'Ptelefono': direccionP.telefono,
         'Pemail':direccionP.email}
-=======
-        'username':proveedor.usuario.username
-        #'Ptelefono': direccionP[0].telefono,
-        #'Pemail':direccionP[0].email
-        }
->>>>>>> cdb67a3b131eb405e67e6730c40d9f47bd856f52
 
     print(datosOrg)
 
@@ -680,9 +665,9 @@ def EditarProveedor(request,organismo_id):
         #verificar si funka
         return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
-    
+
     if request.method == 'POST':#para guardar los datos una vez modificados
-    
+
         proveedor.rut = request.POST['rol_empresa']
         proveedor.nombre_fantasia = request.POST ['nombre_empresa']
         proveedor.razon_social = request.POST ['razon_social']
