@@ -434,26 +434,41 @@ def GuardarNuevoUsuario(request):
 
     persona = HPersona(
         persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombre_persona"],
+        nombres = request .POST["nombre_persona"],
         paterno = request.POST["Ap_paterno"],
         materno = request.POST["Ap_materno"]
     )
 
-    persona.save()
+    pDireccion = HPersonaDireccion(
+        persona_direccion_id = getSecuenciaId("H_PERSONA_DIRECCION_PERSONA_DI"),
+        email = request.POST ["email"]
 
-    print("Persona "+str(persona.persona_id))
+        )
+
 
     usuario.persona_id=persona.persona_id
 
     usuario.username=request.POST["username"]
-    #validacion de que usuario ya existe! Aqui estoy trabajando
+    #validacion de que usuario ya existe! 
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
-        messages.error(request, "Nombre de Usuario ya existe.")
-        print("Usuario ", usuario.username, " ya existe")
 
-        return render (request,'hostal/CrearNuevoUsuario.html')
+
+        messages.error(request, "Nombre de Usuario "+ usuario.username+" ya existe.")
+
+        print("Usuario ", usuario.username, " ya existe")
+        print(persona.nombres+' '+ persona.paterno +' '+persona.materno)
+        
+        form = {
+        'persona':persona,
+        'pDireccion':pDireccion
+        }
+
+        return render (request,'hostal/CrearNuevoUsuario.html', {'form':form} )
 
     else:
+        persona.save()
+
+        print("Persona "+str(persona.persona_id))
         usuario.username=request.POST["username"]
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
@@ -464,6 +479,10 @@ def GuardarNuevoUsuario(request):
 
 
         usuario.save()
+        try:
+            messages.success(request, 'Usuario ha sido creado exitosamente.')
+        except Exception as e:
+            messages.error(request, 'Ocurrió un error al crear usuario.')
 
         return render (request, 'hostal/CrearNuevoUsuario.html')
 
@@ -490,7 +509,12 @@ def AdminProveedor(request):
     elif nombre:
 
         proveedor = HOrganismo.objects.filter(
+<<<<<<< HEAD
                 Q(nombre_fantasia = nombre) | Q(razon_social = nombre)
+=======
+            Q(rut__icontains = queryset) |
+            Q(nombre_fantasia__icontains = queryset)
+>>>>>>> cdb67a3b131eb405e67e6730c40d9f47bd856f52
             ).distinct()
 
 
@@ -507,6 +531,7 @@ def AdminProveedor(request):
         }
 
     return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
+
 
 #def BuscarProveedor(request):
 
@@ -542,13 +567,58 @@ def EditarProveedor(request,organismo_id):
         'nombre_persona':proveedor.persona.nombres,
         'Ap_paterno': proveedor.persona.paterno,
         'Ap_materno': proveedor.persona.materno,
+<<<<<<< HEAD
         'username':proveedor.usuario.username,
         'Ptelefono': direccionP.telefono,
         'Pemail':direccionP.email}
+=======
+        'username':proveedor.usuario.username
+        #'Ptelefono': direccionP[0].telefono,
+        #'Pemail':direccionP[0].email
+        }
+>>>>>>> cdb67a3b131eb405e67e6730c40d9f47bd856f52
 
     print(datosOrg)
 
     return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg })
+
+
+    if request.method == 'GET':
+        datosOrg ={'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
+        'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
+        'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
+        'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
+        'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
+        'Pemail':direccionP.email}
+        #verificar si funka
+        return render (request, 'hostal/EditarProveedor.html', datosOrg)
+
+    
+    if request.method == 'POST':#para guardar los datos una vez modificados
+    
+        proveedor.rut = request.POST['rol_empresa']
+        proveedor.nombre_fantasia = request.POST ['nombre_empresa']
+        proveedor.razon_social = request.POST ['razon_social']
+        proveedor.direccion = request.POST ['direccion']
+        proveedor.telefono = request.POST ['telefono']
+        proveedor.persona.nombres = request.POST['nombre_persona']
+        proveedor.persona.paterno = request.POST['Ap_paterno']
+        proveedor.persona.materno = request.POST ['Ap_materno']
+        proveedor.usuario.username= request.POST['username']
+        direccionP.telefono = request.POST ['Ptelefono']
+        direccionP.email = request.POST ['Pemail']
+
+       # proveedor =
+
+        direccionP.save()
+        proveedor.save()
+
+
+        #proveedor=HOrganismo.objects.filter(proveedor_flag=1)
+        form = {
+        'proveedor':proveedor
+        }
+        return render (request, 'hostal/AdminProveedor.html', {'form':form})
 
 
 
