@@ -36,62 +36,60 @@
           </div>
 
         </form>
-                <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                      <table class="table table-bordered table-striped mb-0">
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-bordered table-striped mb-0">
 
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col">I#·</th>
-                        <th scope="col">Rut</th>
-                        <th scope="col">Empresa</th>
-                        <th scope="col">Dirección</th>
-                        <th scope="col">Región</th>
-                        <th scope="col">Modificar datos</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for proveedor in form.proveedor %}
-                      <tr>
-                        <th >#{{proveedor.organismo_id}}</th>
-                        <th scope="row">{{proveedor.rut}}</th>
-                        <td>{{proveedor.nombre_fantasia}}</td>
-                        <td>{% if proveedor.direccion == '' %}
-                             <span class="text-danger">Sin datos</span>
-                             {% else %}
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">I#·</th>
+                  <th scope="col">Rut</th>
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Dirección</th>
+                  <th scope="col">Región</th>
+                  <th scope="col">Modificar datos</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for proveedor in form.proveedor %}
+                <tr>
+                  <th >#{{proveedor.organismo_id}}</th>
+                  <th scope="row">{{proveedor.rut}}</th>
+                  <td>{{proveedor.nombre_fantasia}}</td>
+                  <td>{% if proveedor.direccion == '' %}
+                       <span class="text-danger">Sin datos</span>
+                       {% else %}
 
-                             {{proveedor.direccion}}
+                       {{proveedor.direccion}}
 
-                            {% endif %}
-                           </td>
-                        <td>{{proveedor.comuna.nombre}}</td>
-                        <td >
+                      {% endif %}
+                     </td>
+                  <td>{{proveedor.comuna.nombre}}</td>
+                  <td >
 
-                            <a href="/EditarProveedor/{{ proveedor.organismo_id }}">
-                            <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnEditarProveedor" class="btn text-light registro btn-space " type="button" >
-                            Editar
-                           </button>
-                       </a>
-                       </td>
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
+                      <a href="/EditarProveedor/{{ proveedor.organismo_id }}">
+                      <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnEditarProveedor" class="btn text-light registro btn-space " type="button" >
+                      Editar
+                     </button>
+                 </a>
+                 </td>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
 
-                  <div class="icono-accesos d-flex">
-                    <a href="{% url 'CrearNuevoProovedor' %}">
-                    <button class="iconosMenus ">
-                        <i class="fa fa-user-plus"></i>
-                        <div class="textoMenus"> Crear Nuevo Proveedor
-
-                        </div>
-                    </button>
-                </a>
-                  </div>
-            </div>
+          <div class="icono-accesos d-flex">
+            <a href="{% url 'CrearNuevoProovedor' %}">
+              <button class="iconosMenus ">
+                <i class="fa fa-user-plus"></i>
+                <div class="textoMenus"> Crear Nuevo Proveedor</div>
+              </button>
+            </a>
+          </div>
+        </div>
     </div>
-</div>
+  </div>
 </body>
 
             <!-- Modal Ayuda-->
@@ -112,5 +110,9 @@
     </div>
   </div>
 </div>
+
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 
 {% endblock %}

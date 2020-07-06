@@ -12,12 +12,12 @@
                 </div>
                 <div class="center-block">
                     {% if messages %}
-                                    {% for message in messages %}
-                                    <div class="alert alert-danger mt-1" role="alert">
-                                        {{message}}   
-                                    </div>
-                                     {% endfor %}
-                            {% endif %}
+                      {% for message in messages %}
+                      <div class="alert alert-danger mt-1" role="alert">
+                        {{message}}
+                      </div>
+                      {% endfor %}
+                    {% endif %}
 
                 </div>
                 <div class="d-flex mb-3">
@@ -113,12 +113,14 @@
                     </div>
                     </div>
                 <div class="center-block">
-                <div class="control-label form-inline mb-5">
-                    <label for="validationCustom03" class="mr-3">Datos Cuenta</label>
-                    <input type="text" class="form-control" value="" required>
+                <div class="control-label form-inline mb-12">
+                    <label for="validationCustom03" class="mr-3">Datos cuenta bancaria</label>
+                    <textarea name="cuenta" id="cuenta" rows="4" class="form-control"></textarea>
                 </div>
+                <br>
+
                 <div class="botonesFormulario ml-5 pl-5">
-                    <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" > 
+                    <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" >
                         Guardar Nuevo Proveedor
                       </button>
                 </div>
@@ -128,5 +130,9 @@
              </div>
       </div>
 </body>
+
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 
 {% endblock %}

@@ -371,12 +371,14 @@ def GuardarNuevoCliente(request):
 
 
 def CrearNuevoProovedor(request):
-    return render (request, 'hostal/CrearNuevoProveedor.html')
+
+    return render (request, 'hostal/CrearNuevoProveedor.html', { "nav":"/AdminProveedor/"})
 
 def GuardarNuevoProvedor (request):
 
     proveedorId=0
     personaId=0
+
     try:
         proveedorId = int(request.POST["proveedorId"])
         personaId = request.POST["personaId"]
@@ -397,53 +399,54 @@ def GuardarNuevoProvedor (request):
         )
 
 
+    # si el proveedor no existe, se crea usuario
+    if proveedorId==0:
+
+        usuario.persona_id=persona.persona_id
+
+        usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
+        usuario.username=request.POST["username"]
+
+        if HUsuario.objects.filter(username= usuario.username).count() > 0:
+
+            messages.error(request, "Nombre de Usuario ya existe.")
+            print("Usuario ", usuario.username, " ya existe")
+
+            form = {
+            'persona':persona,
+            'usuario':usuario,
+            'cliente':cliente
+            }
+
+            return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
 
 
-    usuario.persona_id=persona.persona_id
+        else:
 
-    usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
-    usuario.username=request.POST["username"]
+            usuario.contrasena = encode(WORDFISH, request.POST["contrasena"])
+            usuario.vigencia = 1
+            perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=4)
 
-    if HUsuario.objects.filter(username= usuario.username).count() > 0:
-
-        messages.error(request, "Nombre de Usuario ya existe.")
-        print("Usuario ", usuario.username, " ya existe")
-
-        form = {
-        'persona':persona,
-        'usuario':usuario,
-        'cliente':cliente
-        }
-
-        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+            persona.save()
+            print("Persona "+str(persona.persona_id))
+            usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
+            usuario.vigencia=1
+            perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
 
 
-    else:
+            usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
-        usuario.contrasena = encode(WORDFISH, request.POST["contrasena"])
-        usuario.vigencia = 1
-        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=4)
+            usuario=HUsuario(
+                usuario_id = None,
+                persona = persona,
+                username = request.POST["username"],
+                contrasena = request.POST["contrasena"],
+                registro_fecha = date.today(),
+                usuario_perfil = perfil,
+                vigencia = 1
+            )
 
-        persona.save()
-        print("Persona "+str(persona.persona_id))
-        usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-        usuario.vigencia=1
-        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
-
-
-        usuario.usuario_perfil_id=perfil.usuario_perfil_id
-
-        usuario=HUsuario(
-            usuario_id = None,
-            persona = persona,
-            username = request.POST["username"],
-            contrasena = request.POST["contrasena"],
-            registro_fecha = date.today(),
-            usuario_perfil = perfil,
-            vigencia = 1
-        )
-
-        usuario.save()
+            usuario.save()
 
 
     #Direccion Usuario
@@ -464,6 +467,7 @@ def GuardarNuevoProvedor (request):
     cliente.rut = request.POST["rol_empresa"]
 
     if HOrganismo.objects.filter(rut = cliente.rut).count()>0:
+
         messages.error(request, "Rol de empresa ya se encuentra registrado.")
 
         form = {
@@ -472,7 +476,7 @@ def GuardarNuevoProvedor (request):
         'cliente':cliente
         }
 
-        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
 
     cliente.proveedor_flag=1
 
@@ -487,7 +491,7 @@ def GuardarNuevoProvedor (request):
         'cliente':cliente
         }
 
-        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
 
     else:
         cliente.direccion = request.POST["direccion"]
@@ -507,12 +511,12 @@ def GuardarNuevoProvedor (request):
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
 
-    #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
-
     proveedor=HOrganismo.objects.all()
     form = {
-    'proveedor':proveedor}
-    return render(request, "hostal/CrearNuevoProveedor.html",{'form':form})
+        'proveedor':proveedor
+        }
+
+    return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
 
 
 def CrearNuevoUsuario(request):
@@ -581,8 +585,6 @@ def AdminProveedor(request):
     rut = request.POST.get('buscarRut')
     nombre = request.POST.get('buscarNombre')
 
-    print("RUT "+rut)
-
     if rut and nombre:
         try:
             proveedorResult = HOrganismo.objects.filter(
@@ -603,8 +605,8 @@ def AdminProveedor(request):
     elif nombre:
         try:
             nombreLike="%"+nombre.upper()+"%"
-            sql = """SELECT * from h_organismo WHERE upper(nombre_fantasia) || ' ' || upper(razon_social) like %s"""
-            proveedor=HOrganismo.objects.raw(sql, [nombreLike])
+            sql = """SELECT * FROM h_organismo WHERE UPPER(nombre_fantasia) LIKE %s OR UPPER(razon_social) LIKE %s"""
+            proveedor=HOrganismo.objects.raw(sql, [nombreLike, nombreLike])
         except:
             proveedor = { }
 
@@ -621,7 +623,7 @@ def AdminProveedor(request):
             'proveedor' : proveedor
         }
 
-    return render (request, 'hostal/AdminProveedor.html' , { 'form' : form })
+    return render (request, 'hostal/AdminProveedor.html' , { 'form' : form, "nav" : "/mainHostal/" })
 
 
 
@@ -636,23 +638,24 @@ def EditarProveedor(request,organismo_id):
     print(direccionP)
 
     datosOrg ={
-        'proveedorId':proveedor.organismo_id,
-        'personaId':persona.persona_id,
-        'rol_empresa':proveedor.rut,
-        'nombre_empresa':proveedor.nombre_fantasia,
-        'razon_social':proveedor.razon_social,
-        'direccion':proveedor.direccion,
-        'telefono':proveedor.telefono,
-        'nombre_persona':proveedor.persona.nombres,
-        'Ap_paterno': proveedor.persona.paterno,
-        'Ap_materno': proveedor.persona.materno,
-        'username':proveedor.usuario.username,
-        'Ptelefono': direccionP.telefono,
-        'Pemail':direccionP.email}
+            'proveedorId':proveedor.organismo_id,
+            'personaId':persona.persona_id,
+            'rol_empresa':proveedor.rut,
+            'nombre_empresa':proveedor.nombre_fantasia,
+            'razon_social':proveedor.razon_social,
+            'direccion':proveedor.direccion,
+            'telefono':proveedor.telefono,
+            'nombre_persona':proveedor.persona.nombres,
+            'Ap_paterno': proveedor.persona.paterno,
+            'Ap_materno': proveedor.persona.materno,
+            'username':proveedor.usuario.username,
+            'Ptelefono': direccionP.telefono,
+            'Pemail':direccionP.email
+        }
 
     print(datosOrg)
 
-    return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg })
+    return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg, "nav" : "/AdminProveedor/" } )
 
 
     if request.method == 'GET':
