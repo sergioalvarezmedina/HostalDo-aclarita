@@ -201,42 +201,27 @@ def Facturas(request):
     return render(request, 'hostal/Facturas.html')
 
 def RegistroHuespedes(request):
-    return render (request, 'hostal/RegistroHuespedes.html')
+    hpd = HPersona.objects.all()
+    print(hpd)
+    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})
 
-def ModuloRegistrarHuesped(request):
+def GuardarHuesped(request):
 
-    cliente = HOrganismo()
 
-    persona = HPersona(
+    hpd = HPersona(
         persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombr_persona"],
+        rut=request.POST["rut_empleado"],
+        nombres = request.POST["nombre_persona"],
         paterno = request.POST["Ap_paterno"],
+        materno = request.POST["Ap_materno"],
         cargo = request.POST["cargo"]
     )
 
-    persona.save()
+    hpd.save()
 
-    usuario = HUsuario()
-    usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
+    hpd = HPersona.objects.all()
 
-    usuario.save()
-
-    persona.usuario_id=usuario.usuario_id
-
-    cliente.rut = request.POST["rol_empresa"]
-    cliente.nombre_fantasia = request.POST["nombre_empresa"]
-    cliente.razon_social="Sin Registro"
-    cliente.vigencia=1
-
-    comuna = HComuna.objects.get(comuna_id=2)
-    cliente.comuna_id=comuna.comuna_id
-
-    cliente.persona_id = persona.persona_id
-    cliente.usuario_id = persona.usuario_id
-
-    cliente.save()
-
-    return render (request, 'hostal/RegistroHuespedes.html')
+    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})
 
 def AdminClientesAgregar(request):
 
@@ -449,6 +434,7 @@ def GuardarNuevoProvedor (request):
             usuario.save()
 
 
+
     #Direccion Usuario
 
     direccionP = HPersonaDireccion(
@@ -502,11 +488,15 @@ def GuardarNuevoProvedor (request):
         cliente.vigencia=1
 
         try:
+
+            direccionP.save().update(activate=True)
+
             # setear fecha actual
             direccionP.registro_fecha=date.today()
             direccionP.save()
 
-            cliente.save()
+
+            cliente.save().update(activate=True)
             messages.success(request, 'Registro Exitoso.')
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
@@ -630,6 +620,9 @@ def AdminProveedor(request):
 def EditarProveedor(request,organismo_id):
 
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
+
+    direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
+
     print("Recuperando persona "+str(proveedor.persona_id))
     persona = HPersona.objects.get(persona_id=proveedor.persona_id)
     print("Encontrado "+persona.nombres)
@@ -637,9 +630,11 @@ def EditarProveedor(request,organismo_id):
     print(direccionP.telefono)
     print(direccionP)
 
-    datosOrg ={
-            'proveedorId':proveedor.organismo_id,
-            'personaId':persona.persona_id,
+
+    if request.method == 'GET':
+
+        datosOrg ={
+            'organismo_id':organismo_id,
             'rol_empresa':proveedor.rut,
             'nombre_empresa':proveedor.nombre_fantasia,
             'razon_social':proveedor.razon_social,
@@ -650,8 +645,9 @@ def EditarProveedor(request,organismo_id):
             'Ap_materno': proveedor.persona.materno,
             'username':proveedor.usuario.username,
             'Ptelefono': direccionP.telefono,
-            'Pemail':direccionP.email
-        }
+
+
+            'Pemail':direccionP.email}
 
     print(datosOrg)
 
@@ -664,12 +660,19 @@ def EditarProveedor(request,organismo_id):
         'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
         'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
+
         'Pemail':direccionP.email}
         #verificar si funka
         return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
 
     if request.method == 'POST':#para guardar los datos una vez modificados
+
+        proveedor.organismo_id = HOrganismo.objects.get(organismo_id = organismo_id)
+
+
+    if request.method == 'POST':#para guardar los datos una vez modificados
+
 
         proveedor.rut = request.POST['rol_empresa']
         proveedor.nombre_fantasia = request.POST ['nombre_empresa']
@@ -683,17 +686,14 @@ def EditarProveedor(request,organismo_id):
         direccionP.telefono = request.POST ['Ptelefono']
         direccionP.email = request.POST ['Pemail']
 
-       # proveedor =
-
         direccionP.save()
         proveedor.save()
 
-
-        #proveedor=HOrganismo.objects.filter(proveedor_flag=1)
-        form = {
+        print(proveedor)
+    form = {
         'proveedor':proveedor
         }
-        return render (request, 'hostal/AdminProveedor.html', {'form':form})
+    return render (request, 'hostal/AdminProveedor.html', {'form':form})
 
 
 
@@ -952,7 +952,12 @@ def GuardarMenu(request):
     print(menu)
     menu.save()
 
-    return render(request, 'hostal/AdministracionMenu.html')
+    listaMenu= HMenu.objects.all()
+    form = {
+    'listaMenu':listaMenu
+    }
+    print(listaMenu)
+    return render(request, 'hostal/AdministracionMenu.html', {'form':form})
 ##############################################
 def GuardarMenu(request):
 

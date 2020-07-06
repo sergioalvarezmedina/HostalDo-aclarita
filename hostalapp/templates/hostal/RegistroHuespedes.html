@@ -12,17 +12,16 @@
                 <h2 class="title">Registro Huespedes</h2>
             </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form class="needs-validation row mt-5" method="POST" action="/ModuloRegistrarHuesped/">
+                <form class="needs-validation row mt-5" method="POST" action="/GuardarHuesped/">
                   {% csrf_token %}
-                  
                 <div class="col ml-4 justify-content-around form-inline">
-                    <div class="control-label form-inline mb-3">
+                     <!--<div class="control-label form-inline mb-3">
                         <label for="validationCustom01" class="mr-3">Rol</label>
                         <input type="text" class="form-control ml-4" id="validationCustom01" value="" name="rol_empresa" required>
-                    </div>
+                    </div>-->
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom02" class="mr-4">Rut</label>
-                         <input type="text" class="form-control ml-3" id="validationCustom02" value="" required>
+                         <input type="text" class="form-control ml-3" id="validationCustom02" name="rut_empleado" value="" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom03" class="mr-3">Cargo</label>
@@ -30,18 +29,24 @@
                     </div>
                 </div>
                     <div class="col ml-4 justify-content-around ">
+                      <!--  <div class="control-label form-inline mb-3">
+                            <label for="validationCustom01" class="mr-4 pr-2">Empresa</label>
+                            <input type="text" class="form-control ml-4" id="validationCustom01" value="" name="nombre_empresa" required>
+                        </div>-->
                         <div class="control-label form-inline mb-3">
-                            <label for="validationCustom01" class="mr-3">Empresa</label>
-                            <input type="text" class="form-control ml" id="validationCustom01" value="" name="nombre_empresa" required>
+                             <label for="validationCustom02" class="mr-4 pr-3">Nombre</label>
+                             <input type="text" class="form-control ml-4" id="validationCustom02" value="" name="nombre_persona" required>
                         </div>
                         <div class="control-label form-inline mb-3">
-                             <label for="validationCustom02" class="mr-4">Nombre</label>
-                             <input type="text" class="form-control" id="validationCustom02" value="" name="nombr_persona" required>
+                             <label for="validationCustom03" class="mr-4 pr-2">Ap Paterno</label>
+                             <input type="text" class="form-control" id="" value="" name="Ap_paterno" required>
                         </div>
                         <div class="control-label form-inline mb-3">
-                             <label for="validationCustom03" class="mr-4">Apellido</label>
-                             <input type="text" class="form-control" id="apellido" value="" name="Ap_paterno" required>
+                             <label for="validationCustom03" class="mr-4 pr-2">Ap Materno</label>
+                             <input type="text" class="form-control" id="" value="" name="Ap_materno" required>
                         </div>
+
+
                     </div>
                     <div class="botonesFormulario mr-5 pr-5">
                     <button class="btn text-light registro btn-space" type="submit" > 
@@ -60,8 +65,8 @@
                          Buscar
                     </button>
                 </div>
-
-                <table class="table">
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-bordered table-striped mb-0">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">Rut</th>
@@ -71,41 +76,12 @@
                       </tr>
                     </thead>
                     <tbody>
+                    {% for empleado in hpd %}
                       <tr>
-                        <th scope="row">17.480.866-k</th>
-                        <td>Mark</td>
-                        <td>Diseño</td>
-                        <td><select class="form-control">
-                             <option value="+47">Ejecutivo</option>
-                                <option value="+46">Vegetariano</option>
-                                <option value="+45">Vegano</option>
-                        </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">13.560.236-2</th>
-                        <td>Jonathan</td>
-                        <td>Gerente</td>
-                        <td><select class="form-control">
-                            <option value="+47">Ejecutivo</option>
-                               <option value="+46">Vegetariano</option>
-                               <option value="+45">Vegano</option>
-                       </select>
-                        </td>
-                      </tr>
-                      </tr>
-                      <tr>
-                        <th scope="row">15.120.161-6</th>
-                        <td>Hector</td>
-                        <td>Programador</td>
-                        <td><select class="form-control">
-                            <option value="+47">Ejecutivo</option>
-                               <option value="+46">Vegetariano</option>
-                               <option value="+45">Vegano</option>
-                       </select>
-                        </td>
-                      </tr>
-                      </tr>
+                        <th scope="row">{{empleado.rut}}</th>
+                        <td>{{empleado.nombres }}</td>
+                        <td>{{ empleado.cargo }}</td>      
+                {% endfor %}
                     </tbody>
                   </table>
 

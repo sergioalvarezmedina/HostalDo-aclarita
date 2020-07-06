@@ -4,6 +4,7 @@
 <title>Editar Proveedor</title>
 <body>
 
+<<<<<<< HEAD
   <div class="wrapper wrapper--w960">
     <div class="card card-5">
       <div class="card-heading">
@@ -89,11 +90,109 @@
                <label for="validationCustom03" class="mr-3">Numero Contacto</label>
                <input type="text" class="form-control" id="Ptelefono" name="Ptelefono" value="{{organismo.Ptelefono}}" required>
              </div>
+=======
+        <div class="wrapper wrapper--w960">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Editar Proveedor</h2>
+                </div>
+                <div class="d-flex mb-3">
+                  <div class="center-block"><label for="" class="mt-4">Datos Empresa</label>
+                    </div>
+                  <div class="center-block"><label for="" class="mt-4">Datos Contacto</label>
+                    </div>
+                </div>
+                <div class="contenedorFormulario form-row justify-content-around">
+                <form class="needs-validation" method="POST" action="/EditarProveedor/"novalidate>
+                  {% csrf_token %}
+                    <div class="row">
+                      <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="organismo_id" value="{{organismo_id}} " hidden>
+                <div class="col ml-4 justify-content-around ">
+                    <div class="control-label form-inline mb-3">
+                        <label for="validationCustom01" class="mr-3">Rol Empresa</label>
+                        <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="rol_empresa" value="{{rol_empresa}} " required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                         <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
+                         <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombre_empresa" value="{{nombre_empresa}}" required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                         <label for="validationCustom03" class="mr-3">Razon Social</label>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{razon_social}}" name="razon_social" required>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                        <label for="validationCustom03" class="mr-5 pr-4">Región</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-5 pl-2 col-xs-2">
+                                    <select name="region" for="regiones" id="regiones" class="form-control col-xs-3">
+                                        <option disabled="disabled" selected="selected" class="" >-Seleccion Región-</option>
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                        <label for="validationCustom03" class="mr-5 pr-4">Comuna</label>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                    <select name="comuna" for="comunas" id="comunas" class="form-control">
+                                        <option disabled="disabled" selected="selected" >-Seleccion Región-</option>
+                                    </select>
+                                    <div class="select-dropdown"></div>
+                                </div>
+                    </div>
+                    <div class="control-label form-inline mb-3">
+                        <label for="validationCustom03" class="mr-5 pr-5">Dirección</label>
+                        <input type="text" class="form-control ml-1" id="direccion" value="{{direccion}}" name="direccion" required>
+                   </div>
+                   <div class="control-label form-inline mb-3">
+                    <label for="validationCustom03" class="mr-5 pr-5">Telefono</label>
+                    <input type="text" class="form-control ml-3" id="telefono" name="telefono" value="{{telefono}}" required>
+                   </div>
+                   <div class="control-label form-inline mb-3">
+                    <label for="validationCustom03" class="mr-5 pr-5">Email</label>
+                    <input type="text" class="form-control ml-5" id="emai" value="" required>
+                   </div>
+                </div>
+                    <div class="col ml-4 justify-content-around ">
+                        <div class="col ml-4 justify-content-around ">
+                            <div class="control-label form-inline mb-3">
+                                <label for="validationCustom01" class="mr-5 pr-4">Nombre</label>
+                                <input type="text" class="form-control ml-5 " id="validationCustom01" name="nombre_persona" value="{{nombre_persona}}" required>
+                            </div>
+                            <div class="control-label form-inline mb-3">
+                                 <label for="validationCustom02" class="mr-3 pr-1">Apellido Paterno</label>
+                                 <input type="text" name="Ap_paterno" class="form-control ml-2" id="validationCustom02" value="{{Ap_paterno}}" required>
+                            </div>
+                            <div class="control-label form-inline mb-3">
+                                 <label for="validationCustom03" class="mr-4">Apellido Materno</label>
+                                 <input type="text" class="form-control" name="Ap_materno" id="razons" value="{{Ap_materno}}" required>
+                            </div>
+                            <div class="control-label form-inline mb-3">
+                                <label for="validationCustom03" class="mr-4 pr-1">Correo Contacto</label>
+                                <input type="text" class="form-control" id="razons" name="Pemail" value="{{Pemail}}" required>
+                           </div>
+                           <div class="control-label form-inline mb-3">
+                            <label for="validationCustom03" class="mr-3">Numero Contacto</label>
+                            <input type="text" class="form-control" id="Ptelefono" name="Ptelefono" value="{{Ptelefono}}" required>
+                            </div>
+<<<<<<< HEAD
+                            <div class="control-label form-inline mb-3">
+                                <label for="validationCustom03" class="mr-4 pr-2">Nombre Usuario</label>
+                                <input type="text" class="form-control" name="username" id="direccion" value="{{username}}" required>
+                           </div>
+                           <div class="control-label form-inline mb-3">
+                            <label for="validationCustom03" class="mr-5 pr-4">Contraseña</label>
+                            <input type="password" class="form-control ml-2" name="contrasena" id="telefono" value="" required>
+                           </div>
+                           <div class="control-label form-inline mb-3">
+                            <label for="validationCustom03" class="mr-2">Repetir Contraseña</label>
+                            <input type="password" class="form-control mr-2" id="emai" value="" required>
+
+>>>>>>> master
 
              <div class="control-label form-inline mb-3">
                <label for="validationCustom03" class="mr-3">Datos Cuenta</label>
                <input type="text" class="form-control" id="cuenta" value="" required>
 
+<<<<<<< HEAD
              </div>
             </div>
           </div>
@@ -107,6 +206,30 @@
       </div>
 
     </div>
+=======
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    </div>
+                    </div>
+                <div class="center-block">
+                <div class="control-label form-inline mb-5">
+                    <label for="validationCustom03" class="mr-3">Datos Cuenta</label>
+                    <input type="password" class="form-control" id="emai" value="" required>
+                </div>
+         
+
+                  </div>
+
+
+                <div class="botonesFormulario center-block">
+                    <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" >
+                        Guardar cambios
+                      </button>
+                </div>
+>>>>>>> master
 
 
   </body>
