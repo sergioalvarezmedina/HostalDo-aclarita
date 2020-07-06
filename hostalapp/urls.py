@@ -53,8 +53,8 @@ urlpatterns = [
     path('GuardarNuevaHabitacion/', views.GuardarNuevaHabitacion, name="GuardarNuevaHabitacion"),
     path('AgregarHabitacion/', views.AgregarHabitacion, name="AgregarHabitacion"),
 
-    #path('BuscarProveedor/', views.BuscarProveedor, name="BuscarProveedor"),
     path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
+    path('EditarProveedor/', views.EditarProveedor, name="EditarProveedor"),
 
     path('ModuloRegistrarHuesped/', views.ModuloRegistrarHuesped, name="ModuloRegistrarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
