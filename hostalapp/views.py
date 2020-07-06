@@ -201,42 +201,27 @@ def Facturas(request):
     return render(request, 'hostal/Facturas.html')
 
 def RegistroHuespedes(request):
-    return render (request, 'hostal/RegistroHuespedes.html')
+    hpd = HPersona.objects.all()
+    print(hpd)
+    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})
 
-def ModuloRegistrarHuesped(request):
+def GuardarHuesped(request):
 
-    cliente = HOrganismo()
 
-    persona = HPersona(
+    hpd = HPersona(
         persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombr_persona"],
+        rut=request.POST["rut_empleado"],
+        nombres = request.POST["nombre_persona"],
         paterno = request.POST["Ap_paterno"],
+        materno = request.POST["Ap_materno"],
         cargo = request.POST["cargo"]
     )
 
-    persona.save()
+    hpd.save()
 
-    usuario = HUsuario()
-    usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
+    hpd = HPersona.objects.all()
 
-    usuario.save()
-
-    persona.usuario_id=usuario.usuario_id
-
-    cliente.rut = request.POST["rol_empresa"]
-    cliente.nombre_fantasia = request.POST["nombre_empresa"]
-    cliente.razon_social="Sin Registro"
-    cliente.vigencia=1
-
-    comuna = HComuna.objects.get(comuna_id=2)
-    cliente.comuna_id=comuna.comuna_id
-
-    cliente.persona_id = persona.persona_id
-    cliente.usuario_id = persona.usuario_id
-
-    cliente.save()
-
-    return render (request, 'hostal/RegistroHuespedes.html')
+    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})
 
 def AdminClientesAgregar(request):
 

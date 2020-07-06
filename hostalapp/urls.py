@@ -56,7 +56,7 @@ urlpatterns = [
     path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
     path('EditarProveedor/', views.EditarProveedor, name="EditarProveedor"),
 
-    path('ModuloRegistrarHuesped/', views.ModuloRegistrarHuesped, name="ModuloRegistrarHuesped"),
+    path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
 
     path('getOCEmpleados', views.getOCEmpleados, name="getOCEmpleados"),
