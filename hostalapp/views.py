@@ -433,9 +433,9 @@ def GuardarNuevoProvedor (request):
 
         usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
-<<<<<<< HEAD
+
         usuario.save().update(activate=True)
-=======
+
         usuario=HUsuario(
             usuario_id = None,
             persona = persona,
@@ -447,7 +447,7 @@ def GuardarNuevoProvedor (request):
         )
 
         usuario.save()
->>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
+
 
 
     #Direccion Usuario
@@ -502,13 +502,13 @@ def GuardarNuevoProvedor (request):
         cliente.vigencia=1
 
         try:
-<<<<<<< HEAD
+
             direccionP.save().update(activate=True)
-=======
+
             # setear fecha actual
             direccionP.registro_fecha=date.today()
             direccionP.save()
->>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
+
 
             cliente.save().update(activate=True)
             messages.success(request, 'Registro Exitoso.')
@@ -636,17 +636,17 @@ def AdminProveedor(request):
 def EditarProveedor(request,organismo_id):
 
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
-<<<<<<< HEAD
+
     direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
 
-=======
+
     print("Recuperando persona "+str(proveedor.persona_id))
     persona = HPersona.objects.get(persona_id=proveedor.persona_id)
     print("Encontrado "+persona.nombres)
     direccionP = HPersonaDireccion.objects.order_by('-registro_fecha')[0]
     print(direccionP.telefono)
     print(direccionP)
->>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
+
 
     if request.method == 'GET':
         datosOrg ={
@@ -661,8 +661,8 @@ def EditarProveedor(request,organismo_id):
         'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,
         'Ptelefono': direccionP.telefono,
-<<<<<<< HEAD
-=======
+
+
         'Pemail':direccionP.email}
 
     print(datosOrg)
@@ -676,20 +676,20 @@ def EditarProveedor(request,organismo_id):
         'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
         'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
->>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
+
         'Pemail':direccionP.email}
         #verificar si funka
         return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
-<<<<<<< HEAD
+
     if request.method == 'POST':#para guardar los datos una vez modificados
 
         proveedor.organismo_id = HOrganismo.objects.get(organismo_id = organismo_id)
-=======
+
 
     if request.method == 'POST':#para guardar los datos una vez modificados
 
->>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
+
         proveedor.rut = request.POST['rol_empresa']
         proveedor.nombre_fantasia = request.POST ['nombre_empresa']
         proveedor.razon_social = request.POST ['razon_social']
