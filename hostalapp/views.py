@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.db import connection
 from django.db.models import Q
 import sys
+from datetime import date
+from datetime import datetime
 
 WORDFISH = '1236545dasdas$'
 ayudaDb = HAsistente.objects.all()
@@ -239,7 +241,7 @@ def ModuloRegistrarHuesped(request):
 def AdminClientesAgregar(request):
 
     queryset = request.GET.get('buscar')
-    
+
     if queryset :
         cliente = HOrganismo.objects.filter(
             Q(rut__icontains = queryset) |
@@ -261,7 +263,7 @@ def AdminClientesAgregar(request):
     print(cliente)
 
 
-    
+
 def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html')
 
@@ -295,7 +297,7 @@ def GuardarNuevoCliente(request):
 
     cliente.rut = request.POST["rol_empresa"]
 
-    
+
 
 
     cliente.nombre_fantasia = request.POST["nombre_empresa"]
@@ -333,7 +335,7 @@ def GuardarNuevoCliente(request):
         }
 
         return render(request, "hostal/CrearNuevoCliente.html",{'form':form})
-       
+
     else:
 
 
@@ -373,16 +375,26 @@ def CrearNuevoProovedor(request):
 
 def GuardarNuevoProvedor (request):
 
-    cliente = HOrganismo()
+    proveedorId=0
+    personaId=0
+    try:
+        proveedorId = int(request.POST["proveedorId"])
+        personaId = request.POST["personaId"]
+    except:
+        proveedorId=0
+        personaId=0
 
-    usuario = HUsuario()
+    cliente = HOrganismo
+    usuario = HUsuario
 
-    persona = HPersona(
-        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        nombres = request.POST["nombre_persona"],
-        paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"]
-    )
+    if proveedorId > 0:
+
+        persona = HPersona(
+            persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+            nombres = request.POST["nombre_persona"],
+            paterno = request.POST["Ap_paterno"],
+            materno = request.POST["Ap_materno"]
+        )
 
 
 
@@ -393,6 +405,7 @@ def GuardarNuevoProvedor (request):
     usuario.username=request.POST["username"]
 
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
+
         messages.error(request, "Nombre de Usuario ya existe.")
         print("Usuario ", usuario.username, " ya existe")
 
@@ -406,15 +419,35 @@ def GuardarNuevoProvedor (request):
 
 
     else:
+
+        usuario.contrasena = encode(WORDFISH, request.POST["contrasena"])
+        usuario.vigencia = 1
+        perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=4)
+
         persona.save()
         print("Persona "+str(persona.persona_id))
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
         usuario.vigencia=1
         perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
 
+
         usuario.usuario_perfil_id=perfil.usuario_perfil_id
 
+<<<<<<< HEAD
         usuario.save().update(activate=True)
+=======
+        usuario=HUsuario(
+            usuario_id = None,
+            persona = persona,
+            username = request.POST["username"],
+            contrasena = request.POST["contrasena"],
+            registro_fecha = date.today(),
+            usuario_perfil = perfil,
+            vigencia = 1
+        )
+
+        usuario.save()
+>>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
 
 
     #Direccion Usuario
@@ -469,13 +502,21 @@ def GuardarNuevoProvedor (request):
         cliente.vigencia=1
 
         try:
+<<<<<<< HEAD
             direccionP.save().update(activate=True)
+=======
+            # setear fecha actual
+            direccionP.registro_fecha=date.today()
+            direccionP.save()
+>>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
 
             cliente.save().update(activate=True)
             messages.success(request, 'Registro Exitoso.')
         except Exception as e:
             messages.error(request, 'Ocurrió un error en el Registro.')
+
     #return HttpResponseRedirect('/GuardarNuevoProvedor/AdminProveedor')
+
     proveedor=HOrganismo.objects.all()
     form = {
     'proveedor':proveedor}
@@ -506,7 +547,7 @@ def GuardarNuevoUsuario(request): #Al parecer OK
     usuario.persona_id=persona.persona_id
 
     usuario.username=request.POST["username"]
-    #validacion de que usuario ya existe! 
+    #validacion de que usuario ya existe!
     if HUsuario.objects.filter(username= usuario.username).count() > 0:
 
 
@@ -514,7 +555,7 @@ def GuardarNuevoUsuario(request): #Al parecer OK
 
         print("Usuario ", usuario.username, " ya existe")
         print(persona.nombres+' '+ persona.paterno +' '+persona.materno)
-        
+
         form = {
         'persona':persona,
         'pDireccion':pDireccion
@@ -545,30 +586,67 @@ def GuardarNuevoUsuario(request): #Al parecer OK
 
 def AdminProveedor(request):
 
+    rut = request.POST.get('buscarRut')
+    nombre = request.POST.get('buscarNombre')
 
-    queryset = request.GET.get('buscar')
-    if queryset :
-        proveedor = HOrganismo.objects.filter(
-            Q(rut__icontains = queryset) |
-            Q(nombre_fantasia__icontains = queryset)
-            ).distinct()
-        print(proveedor)
-        form = {'proveedor':proveedor}
+    print("RUT "+rut)
 
-        return render (request, 'hostal/AdminProveedor.html',{'form':form} )
+    if rut and nombre:
+        try:
+            proveedorResult = HOrganismo.objects.filter(
+                    Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
+                ).filter(organismo_rut=rut)
 
-    proveedor = HOrganismo.objects.filter(proveedor_flag =1)
-    form = {'proveedor':proveedor}
+            proveedor = { proveedorResult }
+        except:
+            proveedor = { }
 
-    return render (request, 'hostal/AdminProveedor.html' ,{'form':form})
+    elif rut :
+        try:
+            proveedorResult = HOrganismo.objects.get(rut=rut)
+            proveedor = { proveedorResult }
+        except:
+            proveedor = { }
+
+    elif nombre:
+        try:
+            nombreLike="%"+nombre.upper()+"%"
+            sql = """SELECT * from h_organismo WHERE upper(nombre_fantasia) || ' ' || upper(razon_social) like %s"""
+            proveedor=HOrganismo.objects.raw(sql, [nombreLike])
+        except:
+            proveedor = { }
+
+    else:
+        try:
+            proveedor = HOrganismo.objects.filter(proveedor_flag =1)
+        except:
+            proveedor = { }
+
+    print(proveedor)
+
+    form = {
+            "buscar" : { "rut" : rut, "nombre" : nombre },
+            'proveedor' : proveedor
+        }
+
+    return render (request, 'hostal/AdminProveedor.html' , { 'form' : form })
 
 
 
 def EditarProveedor(request,organismo_id):
 
     proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
+<<<<<<< HEAD
     direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
 
+=======
+    print("Recuperando persona "+str(proveedor.persona_id))
+    persona = HPersona.objects.get(persona_id=proveedor.persona_id)
+    print("Encontrado "+persona.nombres)
+    direccionP = HPersonaDireccion.objects.order_by('-registro_fecha')[0]
+    print(direccionP.telefono)
+    print(direccionP)
+>>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
 
     if request.method == 'GET':
         datosOrg ={
@@ -583,13 +661,35 @@ def EditarProveedor(request,organismo_id):
         'Ap_materno': proveedor.persona.materno,
         'username':proveedor.usuario.username,
         'Ptelefono': direccionP.telefono,
+<<<<<<< HEAD
+=======
+        'Pemail':direccionP.email}
+
+    print(datosOrg)
+
+    return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg })
+
+
+    if request.method == 'GET':
+        datosOrg ={'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
+        'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
+        'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
+        'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
+        'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
+>>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
         'Pemail':direccionP.email}
         #verificar si funka
         return render (request, 'hostal/EditarProveedor.html', datosOrg)
 
+<<<<<<< HEAD
     if request.method == 'POST':#para guardar los datos una vez modificados
 
         proveedor.organismo_id = HOrganismo.objects.get(organismo_id = organismo_id)
+=======
+
+    if request.method == 'POST':#para guardar los datos una vez modificados
+
+>>>>>>> 5e5223035c4064cc53e269c3b08e152d99442dd3
         proveedor.rut = request.POST['rol_empresa']
         proveedor.nombre_fantasia = request.POST ['nombre_empresa']
         proveedor.razon_social = request.POST ['razon_social']

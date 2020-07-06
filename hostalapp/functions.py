@@ -33,3 +33,8 @@ def getSecuenciaId(seq):
     row = cursor.fetchone()
 
     return row[0]
+
+# simulacion de validaciòn ISSET de php, verifica si variable existe
+def isset(variable):
+
+	return variable in locals() or variable in globals()
