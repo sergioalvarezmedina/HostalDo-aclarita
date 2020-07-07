@@ -1,126 +1,133 @@
 {% extends 'hostal/base.html' %}
 
+{% load static %}
 {% block content %}
-<title>Crear Nuevo Cliente</title>
-
+<title>Editar Cliente</title>
 <body>
-    <div class="CabeceraModulo">
-        <div class="btonAyuda ml-4 mr-4">
-            <button type="button" class="" ><i class="far fa-question-circle iconoAyuda "></i>
-            </button>
-        </div>
-    </div>
-<div class="">
+
+  <form method="POST" action="/UpdateCliente/" onsubmit="return validaOrganismo();">
+
     <div class="wrapper wrapper--w960">
-        <div class="card card-5">
-            <div class="card-heading">
-                <h2 class="title">Editar Huespedes</h2>
-            </div>
-            <div class="d-flex mb-3">
-            <div class="center-block"><label for="" class="mt-4">Datos Empresa</label></div>
-            <div class="center-block"><label for="" class="mt-4">Datos Contacto</label></div>
-            </div>
-                <div class="contenedorFormulario form-row justify-content-around">
-                <form method="POST" >
-                    {% csrf_token %}
-                    <div class="row">
-                <div class="col ml-4 justify-content-around ">
-                    <div class="control-label form-inline mb-3">
-                        <label for="validationCustom01" class="mr-3">Rol Empresa</label>
-                        <input type="text" class="form-control col-lg-7 ml-5" name="rol_empresa"id="validationCustom01" value="" required>
-                    </div>
-                    <input type="hidden" name="crearCliente" value="1">
-                    <div class="control-label form-inline mb-3">
-                         <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
-                         <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombre_empresa" value="" required>
-                    </div>
-                    <div class="control-label form-inline mb-3">
-                         <label for="validationCustom03" class="mr-3">Razon Social</label>
-                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" name="razon_social" value="" required>
-                    </div>
-                    <div class="control-label form-inline mb-3">
-                        <label for="validationCustom03" class="mr-5 pr-4">Región</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-5 pl-2">
-                                    <select name="region" for="regiones" id="regiones" class="form-control">
-                                        <option disabled="disabled" selected="selected" >-Seleccion Región-</option>
-                                    </select>
-                                    <div class="select-dropdown"></div>
-                                </div>
-                    </div>
-                    <div class="control-label form-inline mb-3">
-                        <label for="validationCustom03" class="mr-5 pr-4">Comuna</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-                                    <select name="region" for="comuna" id="comuna" class="form-control">
-                                        <option disabled="disabled" selected="selected" >-Seleccion Región-</option>
-                                    </select>
-                                    <div class="select-dropdown"></div>
-                                </div>
-                    </div>
-                    <div class="control-label form-inline mb-3">
-                        <label for="validationCustom03" class="mr-5 pr-5">Dirección</label>
-                        <input type="text" class="form-control ml-1" name="direccion" id="direccion" value="" required>
-                   </div>
-                   <div class="control-label form-inline mb-3">
-                    <label for="validationCustom03" class="mr-5 pr-5">Telefono</label>
-                    <input type="text" class="form-control ml-3" name="telefono" id="telefono" value="" required>
-                   </div>
-                   <div class="control-label form-inline mb-3">
-                    <label for="validationCustom03" class="mr-5 pr-5">Email</label>
-                    <input type="text" class="form-control ml-5 input-xs" id="emai" value="" required>
-                   </div>
+      <div class="card card-5">
+        <div class="card-heading">
+          <h2 class="title">Editar Cliente</h2>
+        </div>
+        <div class="d-flex mb-3">
+          <div class="center-block">
+            <label for="" class="mt-4">Datos Empresa</label>
+          </div>
+          <div class="center-block">
+            <label for="" class="mt-4">Datos Contacto</label>
+          </div>
+        </div>
+
+        <span class="text text-success">
+          {% if form.msg != '' %}
+            {{form.msg}}
+          {% endif %}
+        </span>
+
+        <div class="contenedorFormulario form-row justify-content-around">
+
+          {% csrf_token %}
+
+          <input type="hidden" id="clienteId" name="clienteId" value="{{organismo.clienteId}}">
+          <input type="hidden" id="personaId" name="personaId" value="{{ organismo.personaId }}">
+
+          <div class="row">
+            <div class="col ml-4 justify-content-around ">
+              <div class="control-label form-inline mb-3">
+                  <label for="validationCustom01" class="mr-3">Rol Empresa</label>
+                  <input type="text" class="form-control col-lg-7 ml-5" id="rol_empresa" name="rol_empresa" value="{{form.organismo.rut}} " readonly>
+              </div>
+              <div class="control-label form-inline mb-3">
+                   <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
+                   <input type="text" class="form-control col-lg-7" id="nombre_fantasia" name="nombre_fantasia" value="{{form.organismo.nombre_fantasia}}">
+              </div>
+              <div class="control-label form-inline mb-3">
+                   <label for="validationCustom03" class="mr-3">Razon Social</label>
+                   <input type="text" class="form-control col-lg-7 ml-5" id="razon_social" value="{{form.organismo.razon_social}}" name="razon_social">
+              </div>
+              <div class="control-label form-inline mb-3">
+                <label for="validationCustom03" class="mr-5 pr-4">Región</label>
+                <div class="rs-select2 js-select-simple select--no-search ml-5 pl-2 col-xs-2">
+                  <select name="regionId" for="regiones" id="regionId" class="form-control col-xs-3">
+                    <option value="0">-Seleccione región-</option>
+                    {% for r in form.regiones %}
+                    <option value="{{r.region_id}}" {% if r.region_id == form.regionId %}selected{% endif %}>{{r.nombre}}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="select-dropdown"></div>
                 </div>
-                    <div class="col ml-4 justify-content-around ">
-                        <div class="col ml-4 justify-content-around ">
-                            <div class="control-label form-inline mb-3">
-                                <label for="validationCustom01" class="mr-5 pr-4">Nombre</label>
-                                <input type="text" class="form-control ml-5 " name="nombre_persona"id="validationCustom01" value="" required>
-                            </div>
-                            <div class="control-label form-inline mb-3">
-                                 <label for="validationCustom02" class="mr-3 pr-1">Apellido Paterno</label>
-                                 <input type="text" class="form-control ml-2" name="Ap_paterno" id="validationCustom02" value="" required>
-                            </div>
-                            <div class="control-label form-inline mb-3">
-                                 <label for="validationCustom03" class="mr-4">Apellido Materno</label>
-                                 <input type="text" class="form-control" name="Ap_materno" id="razons" value="" required>
-                            </div>
-                            <div class="control-label form-inline mb-3">
-                                <label for="validationCustom03" class="mr-4 pr-1">Correo Contacto</label>
-                                <input type="text" class="form-control" id="razons" value="" required>
-                           </div>
-                           <div class="control-label form-inline mb-3">
-                            <label for="validationCustom03" class="mr-3">Numero Contacto</label>
-                            <input type="text" class="form-control" id="razons" value="" required>
-                            </div>
-                            <div class="control-label form-inline mb-3">
-                                <label for="validationCustom03" class="mr-4 pr-2">Nombre Usuario</label>
-                                <input type="text" class="form-control" name="username" id="direccion" value="" required>
-                           </div>
-                           <div class="control-label form-inline mb-3">
-                            <label for="validationCustom03" class="mr-5 pr-4">Contraseña</label>
-                            <input type="password" class="form-control ml-2" name="contrasena" id="contrasena" value="" required>
-                           </div>
-                           <div class="control-label form-inline mb-3">
-                            <label for="validationCustom03" class="mr-2">Repetir Contraseña</label>
-                            <input type="password" class="form-control mr-2" id="emai" value="" require>
-                           </div>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
-                    <div class="center-block">
-                    <div class="control-label form-inline mt-4 mb-4">
-                        <label for="validationCustom03" class="mr-3">Datos Cuenta</label>
-                        <input type="password" class="form-control" id="emai" value="" required>
-                    </div>
-                    <div class="botonesFormulario center-block">
-                        <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" >
-                            Guardar Nuevo Cliente
-                        </button>
-                    </div>
-                    </div>
-                </form>
-                
+              </div>
+              <div class="control-label form-inline mb-3">
+                <label for="validationCustom03" class="mr-5 pr-4">Comuna</label>
+                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                  <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                    <option selected="selected" name="comuna" >-Seleccione región-</option>
+                    {% for c in form.comuna %}
+                    <option value="{{c.comuna_id}}" {% if c.comuna_id == form.comunaId %}selected{% endif %}>{{c.nombre}}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="select-dropdown"></div>
+                </div>
+              </div>
+              <div class="control-label form-inline mb-3">
+                <label for="validationCustom03" class="mr-5 pr-5">Dirección</label>
+                <input type="text" class="form-control ml-1" id="direccion" value="{{form.organismo.direccion}}" name="direccion" required>
+              </div>
+             <div class="control-label form-inline mb-3">
+              <label for="validationCustom03" class="mr-5 pr-5">Telefono</label>
+              <input type="text" class="form-control ml-3" id="telefono" name="telefono" value="{{form.organismo.telefono}}" required>
+             </div>
+           </div>
+          <div class="col ml-4 justify-content-around ">
+            <div class="col ml-4 justify-content-around ">
+              <div class="control-label form-inline mb-3">
+                <label for="validationCustom01" class="mr-5 pr-4">Nombre</label>
+                <input type="text" class="form-control ml-5 " id="nombre_persona" name="nombre_persona" value="{{form.persona.nombres}}" required>
+              </div>
+              <div class="control-label form-inline mb-3">
+                <label for="paterno" class="mr-3 pr-1">Apellido Paterno</label>
+                <input type="text" name="Ap_paterno" class="form-control ml-2" id="Ap_paterno" value="{{form.persona.paterno}}" required>
+              </div>
+              <div class="control-label form-inline mb-3">
+                 <label for="materno" class="mr-4">Apellido Materno</label>
+                 <input type="text" class="form-control" name="materno" id="materno" value="{{form.persona.materno}}" required>
+              </div>
+              <div class="control-label form-inline mb-3">
+                <label for="email" class="mr-4 pr-1">Correo Contacto</label>
+                <input type="text" class="form-control" id="email" name="Pemail" value="{{form.personaDireccion.email}}" required>
+             </div>
+
+             <div class="control-label form-inline mb-3">
+               <label for="telefono" class="mr-3">N&uacute;mero Contacto</label>
+               <input type="text" class="form-control" id="telefono" name="Ptelefono" value="{{form.personaDireccion.telefono}}" required>
+             </div>
+
+              <div class="control-label form-inline mb-3">
+                <label for="cuenta" class="mr-3">Datos Cuenta</label>
+                <textarea class="form-control" id="cuenta" name="cuenta">{{form.organismo.cuenta_datos}}</textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="botonesFormulario center-block">
+        <button id="btn " class="btn text-light registro btn-space mb-3" type="submit" >Guardar cambios</button>
+      </div>
+    </div>
+
+  </form>
 
 </body>
+
+<script src="{% static 'js/hostal.js' %}"></script>
+
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 
 {% endblock %}

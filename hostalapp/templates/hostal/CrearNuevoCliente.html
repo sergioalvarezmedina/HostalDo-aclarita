@@ -1,5 +1,5 @@
 {% extends 'hostal/base.html' %}
-
+{% load static %}
 {% block content %}
 <title>Crear Nuevo Cliente</title>
 
@@ -44,7 +44,7 @@
                     <div class="control-label mb-3">
                       <label for="validationCustom03" class="">Región</label>
                         <div class="rs-select2 js-select-simple select--no-search   ">
-                          <select name="regionId" for="regiones" id="regionId" class="form-control col-xs-3" onchange="getComuna($(this).val(), 'comunaId')">
+                          <select name="region" for="regiones" id="regionId" class="form-control col-xs-3" onchange="getComuna($(this).val(), 'comunaId')">
                             <option value="0">-Seleccione región-</option>
                             {% for r in form.region %}
                             <option value="{{r.region_id}}" {% if r.region_id == form.datos.region_id %}selected{% endif %}>{{r.nombre}}</option>
@@ -56,7 +56,7 @@
                     <div class="control-label mb-3">
                           <label for="validationCustom03" class="">Comuna (*)</label>
                           <div class="rs-select2 js-select-simple select--no-search ">
-                            <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                            <select name="comuna" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
                               <option disabled="disabled" selected="selected" name="comuna" >-Seleccione región-</option>
                             </select>
                             <div class="select-dropdown" name ="comuna"></div>
@@ -116,8 +116,12 @@
                     </div>
                     </div>
                 </form>
-                
-
 </body>
 
+<script src="{% static 'js/hostal.js' %}">
+    
+</script>
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 {% endblock %}

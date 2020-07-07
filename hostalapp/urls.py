@@ -50,13 +50,16 @@ urlpatterns = [
     path('GuardarNuevoCliente/', views.GuardarNuevoCliente, name="GuardarNuevoCliente"),
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
     path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
-    path('UpdateProveedor/', views.UpdateProveedor, name="UpdateProveedor"),
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
     path('GuardarNuevaHabitacion/', views.GuardarNuevaHabitacion, name="GuardarNuevaHabitacion"),
     path('AgregarHabitacion/', views.AgregarHabitacion, name="AgregarHabitacion"),
 
     path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
     path('EditarProveedor/', views.EditarProveedor, name="EditarProveedor"),
+    path('UpdateProveedor/', views.UpdateProveedor, name="UpdateProveedor"),
+    path('EditarCliente/<int:organismo_id>/', views.EditarCliente, name="EditarCliente"),
+    path('EditarCliente/', views.EditarCliente, name="EditarCliente"),
+    path('UpdateCliente/', views.UpdateCliente, name="UpdateCliente"),
 
     path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
