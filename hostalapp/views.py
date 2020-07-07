@@ -772,7 +772,10 @@ def UpdateProveedor (request):
 def OrdenDePedidos(request):
     ordenPedido = HOrdenPedido.objects.all()
     print(ordenPedido)
-    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido})
+    form= {  
+        "ayuda" : ayuda[3]
+        }
+    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido, "form": form})
 
 
 def mainHostal(request):
