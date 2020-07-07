@@ -21,6 +21,12 @@
           </div>
         </div>
 
+        <span class="text text-success">
+          {% if form.msg != '' %}
+            {{form.msg}}
+          {% endif %}
+        </span>
+
         <div class="contenedorFormulario form-row justify-content-around">
 
           {% csrf_token %}
@@ -72,7 +78,7 @@
               </div>
              <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-5 pr-5">Telefono</label>
-              <input type="text" class="form-control ml-3" id="telefono" name="Ptelefono" value="{{form.organismo.telefono}}" required>
+              <input type="text" class="form-control ml-3" id="telefono" name="telefono" value="{{form.organismo.telefono}}" required>
              </div>
            </div>
           <div class="col ml-4 justify-content-around ">
@@ -95,8 +101,8 @@
              </div>
 
              <div class="control-label form-inline mb-3">
-               <label for="telefono" class="mr-3">Numero Contacto</label>
-               <input type="text" class="form-control" id="telefono" name="telefono" value="{{form.personaDireccion.telefono}}" required>
+               <label for="telefono" class="mr-3">N&uacute;mero Contacto</label>
+               <input type="text" class="form-control" id="telefono" name="Ptelefono" value="{{form.personaDireccion.telefono}}" required>
              </div>
 
               <div class="control-label form-inline mb-3">

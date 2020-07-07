@@ -441,7 +441,7 @@ def GuardarNuevoProvedor (request):
         persona = persona,
         usuario = usuarioActual(), # 56 - Usuario en sesión
         registro_fecha = datetime.now(),
-        registro_hora = (now.minute*100)+now.second
+        registro_hora = (now.hour*100)+now.minute
     )
     direccionP.save()
 
@@ -650,7 +650,7 @@ def AdminProveedor(request):
 
 
 
-def EditarProveedor(request,organismo_id):
+def EditarProveedor(request, organismo_id):
 
     request.session["organismo_id"] = str(organismo_id)
 
@@ -664,8 +664,6 @@ def EditarProveedor(request,organismo_id):
     comunaList = HComuna.objects.filter(region_id=regionId)
     persona = HPersona.objects.get(persona_id=organismo.persona_id)
     personaDireccion = HPersonaDireccion.objects.filter(persona_id=persona.persona_id).order_by('-registro_fecha', '-registro_hora')[0]
-
-    request.session["persona_tmp"]=persona
 
     for r in regionList:
         print(str(r.region_id)+" "+r.nombre)
@@ -684,11 +682,13 @@ def EditarProveedor(request,organismo_id):
 
 def UpdateProveedor (request):
 
-    organismo_id=request.session["organismo_id"];
-    personaTmp=request.session["persona_tmp"]
-    organismo=HOrganismo.objects.get(organismo_id=organismo_id)
+    now = datetime.now()
 
-    if personaTmp.nombres!=request.POST["nombre_persona"] or personaTmp.paterno!=request.POST["Ap_paterno"]:
+    organismo=HOrganismo.objects.get(organismo_id=request.session["organismo_id"]);
+    persona=HPersona.objects.get(persona_id=organismo.persona_id)
+    personaDireccion=HPersonaDireccion.objects.filter(persona_id=persona.persona_id).order_by("-registro_fecha")[0]
+
+    if persona.nombres!=request.POST["nombre_persona"] or persona.paterno!=request.POST["Ap_paterno"]:
 
         persona=HPersona(
             persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
@@ -698,37 +698,64 @@ def UpdateProveedor (request):
         )
         persona.save()
 
+        organismo.persona_id=persona.persona_id
+
         personaDireccion=HPersonaDireccion(
             persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
             telefono = request.POST["Ptelefono"],
-            email =request.POST["Pemail"],
+            email = request.POST["Pemail"],
             persona = persona,
             usuario = usuarioActual(), # 56 - Usuario en sesión
             registro_fecha = datetime.now(),
-            registro_hora = (now.minute*100)+now.second
+            registro_hora = (now.hour*100)+now.minute
         )
+        personaDireccion.save()
 
+    elif personaDireccion.email!=request.POST["Pemail"] or personaDireccion.telefono!=request.POST["Ptelefono"]:
+
+        personaDireccion=HPersonaDireccion(
+            persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+            telefono = request.POST["Ptelefono"],
+            email = request.POST["Pemail"],
+            persona = persona,
+            usuario = usuarioActual(), # 56 - Usuario en sesión
+            registro_fecha = datetime.now(),
+            registro_hora = (now.hour*100)+now.minute
+        )
+        personaDireccion.save()
 
     comuna=HComuna.objects.get(comuna_id=request.POST["comunaId"])
+    persona=HPersona.objects.get(persona_id=organismo.persona_id)
 
-    organismo.razon_social = request.POST["razon_social"],
-    organismo.rut = request.POST["rol_empresa"],
-    organismo.nombre_fantasia = request.POST["nombre_fantasia"],
-    organismo.direccion = request.POST["direccion"],
-    organismo.telefono = request.POST["telefono"],
-    organismo.cuenta_datos = request.POST["cuenta"],
-    #organismo.persona = persona,
-    organismo.usuario = usuarioActual(),
-    organismo.registro_fecha = datetime.now(),
-    organismo.proveedor_flag = 1,
-    organismo.comuna = comuna,
-    organismo.vigencia = 1
+    organismo.razon_social = request.POST["razon_social"]
+    organismo.rut = request.POST["rol_empresa"]
+    organismo.nombre_fantasia = request.POST["nombre_fantasia"]
+    organismo.direccion = request.POST["direccion"]
+    organismo.telefono = request.POST["telefono"]
+    organismo.cuenta_datos = request.POST["cuenta"]
+    organismo.persona = persona
+    organismo.usuario = usuarioActual()
+    organismo.registro_fecha = datetime.now()
+    organismo.comuna = comuna
 
     organismo.save()
 
+    comunaId=organismo.comuna_id
+    regionId=comuna.region_id
+
+    regionList = HRegion.objects.all()
+    comunaList = HComuna.objects.filter(region_id=regionId)
+
     form = {
-        "request":organismo
-    }
+            'organismo':organismo,
+            'persona':persona,
+            'personaDireccion':personaDireccion,
+            'regiones':regionList,
+            'comuna':comunaList,
+            'comunaId':comunaId,
+            'regionId':regionId,
+            'msg':"Datos actualizados."
+        }
 
     return render (request, 'hostal/EditarProveedor.html', { "form": form, "nav":"/AdminProveedor/"})
 
