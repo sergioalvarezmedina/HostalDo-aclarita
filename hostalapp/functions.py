@@ -38,3 +38,9 @@ def getSecuenciaId(seq):
 def isset(variable):
 
 	return variable in locals() or variable in globals()
+
+def usuarioActual():
+
+    usuario=HUsuario.objects.get(usuario_id=56)
+
+    return usuario

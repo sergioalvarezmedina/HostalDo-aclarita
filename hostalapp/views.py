@@ -1,7 +1,7 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
-HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato,HPersonaDireccion)
+HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato,HPersonaDireccion, HUsuario)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
-from .functions import encode, decode, checkSession, getSecuenciaId
+from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual
 import json
 from django.contrib import messages
 from django.db import connection
@@ -359,10 +359,7 @@ def CrearNuevoProovedor(request):
 
     return render (request, 'hostal/CrearNuevoProveedor.html', { "nav":"/AdminProveedor/"})
 
-def GuardarNuevoProvedor (request):
-
-    proveedorId=0
-    personaId=0
+def UpdateProvedor (request):
 
     try:
         proveedorId = int(request.POST["proveedorId"])
@@ -371,142 +368,98 @@ def GuardarNuevoProvedor (request):
         proveedorId=0
         personaId=0
 
-    cliente = HOrganismo
-    usuario = HUsuario
-
-    if proveedorId > 0:
-
-        persona = HPersona(
-            persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-            nombres = request.POST["nombre_persona"],
-            paterno = request.POST["Ap_paterno"],
-            materno = request.POST["Ap_materno"]
-        )
-
-
-    # si el proveedor no existe, se crea usuario
     if proveedorId==0:
 
-        usuario.persona_id=persona.persona_id
-
-        usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
-        usuario.username=request.POST["username"]
-
-        if HUsuario.objects.filter(username= usuario.username).count() > 0:
-
-            messages.error(request, "Nombre de Usuario ya existe.")
-            print("Usuario ", usuario.username, " ya existe")
-
-            form = {
-            'persona':persona,
-            'usuario':usuario,
-            'cliente':cliente
-            }
-
-            return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
-
-
-        else:
-
-            usuario.contrasena = encode(WORDFISH, request.POST["contrasena"])
-            usuario.vigencia = 1
-            perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=4)
-
-            persona.save()
-            print("Persona "+str(persona.persona_id))
-            usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-            usuario.vigencia=1
-            perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
-
-
-            usuario.usuario_perfil_id=perfil.usuario_perfil_id
-
-            usuario=HUsuario(
-                usuario_id = None,
-                persona = persona,
-                username = request.POST["username"],
-                contrasena = request.POST["contrasena"],
-                registro_fecha = date.today(),
-                usuario_perfil = perfil,
-                vigencia = 1
-            )
-
-            usuario.save()
+        form = {
+            "msg":"Invocación inconsistente"
+        }
+        return render(request, "hostal/AdminProveedor.html", {'form':form, 'nav':'/mainHosstal/'} )
 
 
 
-    #Direccion Usuario
+def GuardarNuevoProvedor (request):
 
+    username = request.POST["username"]
+    rutEmpresa = request.POST["rol_empresa"]
+
+    if HUsuario.objects.filter(username = username).count() > 0:
+
+        messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
+        print("Usuario ", usuario.username, " ya existe")
+
+        form = {
+            "datos" : request.POST,
+        }
+
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/AdminProveedor/'})
+
+    # PERSONA
+    persona = HPersona(
+        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+        nombres = request.POST["nombre_persona"],
+        paterno = request.POST["Ap_paterno"],
+        materno = request.POST["Ap_materno"]
+    )
+    persona.save()
+
+    # DIRECCION
     direccionP = HPersonaDireccion(
-    persona_direccion_id =getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
-    telefono = request.POST["Ptelefono"],
-    email =request.POST["Pemail"]
-        )
-    direccionP.persona_id = persona.persona_id
-    direccionP.usuario_id = usuario.usuario_id
+        persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        telefono = request.POST["Ptelefono"],
+        email =request.POST["Pemail"],
+        persona = persona,
+        usuario = usuarioActual(), # 56 - Usuario en sesión
+    )
+    direccionP.save()
 
-
-    cliente.usuario_id = usuario.usuario_id
-    cliente.persona_id = usuario.persona_id
-    cliente.razon_social = request.POST["razon_social"]
-
-    cliente.rut = request.POST["rol_empresa"]
+    # USUARIO
+    perfil=HUsuarioPerfil.objects.get(usuario_perfil_id=4)
+    usuario = HUsuario(
+        usuario_id = None,
+        persona=persona,
+        username = request.POST["username"],
+        contrasena = encode(WORDFISH, request.POST["contrasena"]),
+        registro_fecha = date.today(),
+        usuario_perfil = perfil,
+        vigencia = 1
+    )
+    usuario.save()
 
     if HOrganismo.objects.filter(rut = cliente.rut).count()>0:
 
-        messages.error(request, "Rol de empresa ya se encuentra registrado.")
+        messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
 
         form = {
-        'persona':persona,
-        'usuario':usuario,
-        'cliente':cliente
+            'datos':request.POST,
         }
 
-        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
+        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/AdminProveedor/'})
 
-    cliente.proveedor_flag=1
+    comuna=HComuna.objects.get(comuna_id=request.POST["comuna_id"])
 
-    cliente.nombre_fantasia = request.POST["nombre_empresa"]
+    # ORGANISMO
+    organismo = HOrganismo(
+        organismo_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        razon_social = request.POST["razon_social"],
+        rut = request.POST["rol_empresa"],
+        nombre_fantasia = request.POST["nombre_fantasia"],
+        giro = request.POST["giro"],
+        direccion = request.POST["direccion"],
+        telefono = request.POST["telefono"],
+        cuenta_datos = request.POST["cuenta"],
+        persona = persona,
+        usuario = usuario,
+        registro_fecha = date.today(),
+        proveedor_flag = 1,
+        comuna = comuna,
+        vigencia = 1
+    )
 
-    if HOrganismo.objects.filter(nombre_fantasia=cliente.nombre_fantasia).count()>0:
-        messages.error(request, "Nombre de empresa ya se encuentra registrado.")
-
-        form = {
-        'persona':persona,
-        'usuario':usuario,
-        'cliente':cliente
-        }
-
-        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
-
-    else:
-        cliente.direccion = request.POST["direccion"]
-        cliente.telefono = request.POST["telefono"]
-
-        comuna = HComuna.objects.get(comuna_id=2)
-        cliente.comuna_id=comuna.comuna_id
-        cliente.vigencia=1
-
-        try:
-
-            direccionP.save().update(activate=True)
-
-            # setear fecha actual
-            direccionP.registro_fecha=date.today()
-            direccionP.save()
-
-
-            cliente.save().update(activate=True)
-            messages.success(request, 'Registro Exitoso.')
-        except Exception as e:
-            messages.error(request, 'Ocurrió un error en el Registro.')
-
-    proveedor=HOrganismo.objects.all()
     form = {
-        'proveedor':proveedor
-        }
+        "msg":"Proveedor creado exitosamente.",
+    }
 
-    return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/mainHostal/'})
+    return render(request, "hostal/AdminProveedor.html", { 'form':form, 'nav':'/AdminProveedor/' })
 
 
 def CrearNuevoUsuario(request):
@@ -577,11 +530,39 @@ def AdminProveedor(request):
 
     if rut and nombre:
         try:
-            proveedorResult = HOrganismo.objects.filter(
-                    Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
-                ).filter(organismo_rut=rut)
 
-            proveedor = { proveedorResult }
+            nombreLike="%"+nombre.upper()+"%"
+            rutLike="%"+rut.upper()+"%"
+            sql = """
+                SELECT
+                    ORGANISMO_ID,
+                    RAZON_SOCIAL,
+                    RUT,
+                    NOMBRE_FANTASIA,
+                    GIRO,
+                    DIRECCION,
+                    TELEFONO,
+                    CUENTA_DATOS,
+                    PERSONA_ID,
+                    USUARIO_ID,
+                    TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                    PROVEEDOR_FLAG,
+                    COMUNA_ID,
+                    VIGENCIA
+
+                FROM h_organismo
+                WHERE
+                    (UPPER(nombre_fantasia) LIKE %s OR
+                    UPPER(nombre_fantasia) LIKE %s) AND
+                    RUT LIKE %s"""
+
+            proveedor = HOrganismo.objects.raw(sql, [nombreLike, nombreLike,rutLike])
+
+            """proveedorResult = HOrganismo.objects.filter(
+                    Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
+                ).filter(organismo_rut=rut)"""
+
+            #proveedor = { proveedorResult }
         except:
             proveedor = { }
 
@@ -595,7 +576,12 @@ def AdminProveedor(request):
     elif nombre:
         try:
             nombreLike="%"+nombre.upper()+"%"
-            sql = """SELECT * FROM h_organismo WHERE UPPER(nombre_fantasia) LIKE %s OR UPPER(razon_social) LIKE %s"""
+            sql = """
+                SELECT *
+                FROM h_organismo
+                WHERE
+                    UPPER(nombre_fantasia) LIKE %s OR
+                    UPPER(razon_social) LIKE %s"""
             proveedor=HOrganismo.objects.raw(sql, [nombreLike, nombreLike])
         except:
             proveedor = { }
