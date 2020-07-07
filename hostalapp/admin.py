@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import HRegion, HComuna, HModulo, HAsistente
 
 class AsistenteAdmin(admin.ModelAdmin):
-	readonly_fields = ('vigencia_flag','vigencia')
 	list_display = ('asistente_id','contenido',)
 	search_fields = ('asistente_id','contenido')
 

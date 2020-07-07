@@ -172,9 +172,11 @@ def GuardarFormulario(request):
         return render(request, "hostal/AdministracionCliente.html")
 
 
-
 def SolicitarServicio(request):
-    return render(request, 'hostal/SolicitarServicio.html')
+    form = {
+            "ayuda" : ayuda[9]
+        }
+    return render(request, 'hostal/SolicitarServicio.html', { "form" : form })
 
 def misDatos(request):
     return render(request, 'hostal/misDatos.html')
@@ -220,7 +222,7 @@ def AdministracionOrdenesCompra(request):
 
     form = {
         "id" : "login",
-        "ayuda" : ayuda[3],
+        "ayuda" : ayuda[2],
         }
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form })
@@ -262,14 +264,18 @@ def AdminClientesAgregar(request):
             ).distinct()
         print(cliente)
 
-        form = {'cliente':cliente}
+        form = {'cliente':cliente,
+                "ayuda" : ayuda[8]
+            }
 
         return render (request, 'hostal/AdminClientesAgregar.html', {'form':form} )
+
 
     cliente = HOrganismo.objects.all().exclude(proveedor_flag=1)
     form = {
 
-    'cliente':cliente
+    'cliente':cliente,
+    "ayuda" : ayuda[8]
     }
 
     return render(request, 'hostal/AdminClientesAgregar.html',{'form':form})
@@ -495,7 +501,10 @@ def GuardarNuevoProvedor (request):
     return render(request, "hostal/AdminProveedor.html", { 'form':form, 'nav':'/mainHostal/' })
 
 def CrearNuevoUsuario(request):
-    return render (request, 'hostal/CrearNuevoUsuario.html')
+    form = {
+            "ayuda" : ayuda[7]
+        }
+    return render (request, 'hostal/CrearNuevoUsuario.html', { "form" : form })
 
 def GuardarNuevoUsuario(request): #Al parecer OK
 
@@ -643,7 +652,8 @@ def AdminProveedor(request):
 
     form = {
             "buscar" : { "rut" : rut, "nombre" : nombre },
-            'proveedor' : proveedor
+            'proveedor' : proveedor,
+            "ayuda" : ayuda[5]
         }
 
     return render (request, 'hostal/AdminProveedor.html' , { 'form' : form, "nav" : "/mainHostal/" })
@@ -761,12 +771,19 @@ def UpdateProveedor (request):
 
 def OrdenDePedidos(request):
     ordenPedido = HOrdenPedido.objects.all()
-    print(ordenPedido)
-    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido})
+    form = {
+            "ordenPedido" : ordenPedido,
+            "ayuda" : ayuda[3]
+        }
+    return render(request, 'hostal/OrdenDePedidos.html',{ "form" : form } )
+
 
 def mainHostal(request):
 
-    form={ "id" : "menu", "ayuda" : ayuda[1]}
+    form= { 
+        "id" : "menu", 
+        "ayuda" : ayuda[1]
+        }
 
     return render(request, 'hostal/menu.html', { "form": form })
 
@@ -884,7 +901,7 @@ def AdministracionHabitaciones(request): #template 37 -43
             "listaHabitaciones" : listaHabitaciones,
             "estadoHabitacion" : estadoHabitacion,
             "tipoHabitacion" : tipoHabitacion,
-            "ayuda" : ayuda[3]
+            "ayuda" : ayuda[6]
         }
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
 
@@ -998,7 +1015,7 @@ def AdministracionMenu(request):
 
     form = {
             "listaMenu" : listaMenu,
-            "ayuda" : ayuda[3] # poner el ìndice de la ayuda para esta pantalla
+            "ayuda" : ayuda[4] # poner el ìndice de la ayuda para esta pantalla
         }
 
     return render(request, 'hostal/AdministracionMenu.html', { "form" : form })
@@ -1035,7 +1052,10 @@ def GuardarMenu(request):
 #URL PROVEEDOR
 
 def ProveedorOrdenDePedidos(request):
-    return render(request, 'hostal/ProveedorOrdenDePedidos.html')
+    form = {
+            "ayuda" : ayuda[10]
+        }
+    return render(request, 'hostal/ProveedorOrdenDePedidos.html', { "form" : form })
 
 def AdministracionProductos(request):
     return render(request, 'hostal/AdministracionProductos.html')
