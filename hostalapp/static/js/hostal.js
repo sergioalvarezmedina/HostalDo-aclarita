@@ -431,3 +431,78 @@ function setHabitacionEstado(habitacionId) {
   );
 
 }
+
+function getComuna(regionId, objId) {
+
+  var dataIn =
+    {
+      regionId : regionId,
+    };
+
+  $.post(
+    "/getComunaList",
+    {
+      data : JSON.stringify(dataIn),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    function (data) {
+
+      try {
+
+        var rec = JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          $("#"+objId).html(rec.html);
+
+        } else {
+
+          showMessage(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+  )
+  .fail(
+    function (jqXHR, textStatus, errorThrown) {
+      console.log("Error "+jqXHR.responseText);
+      alert("Se ha producido una excepción.");
+    }
+  );
+
+}
+
+function validaOrganismo() {
+
+  var error='';
+
+  if ($.trim($("#rol_empresa").val())=="") {
+    error='- Rut empresa es obligatorio.';
+  }
+  if ($("#comunaId").val()=="0" || $("#regionId").val()=="0") {
+    error='- Comuna de la empresa es obligatorio.';
+  }
+  if ($.trim($("#nombre_fantasia").val())=="") {
+    error='- Rut empresa es obligatorio.';
+  }
+  if ($.trim($("#nombre_persona").val())=="") {
+    error='- Nombre de contacto es obligatorio.';
+  }
+  if ($.trim($("#Ap_paterno").val())=="") {
+    error='- Apellido paterno contacto es obligatorio.';
+  }
+
+  if (error!='') {
+
+    alert('Se han encontrado los siguientes problemas de validación:\n'+error);
+    return false;
+
+  }
+
+}

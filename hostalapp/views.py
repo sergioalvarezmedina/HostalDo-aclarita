@@ -1,5 +1,5 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
-HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato,HPersonaDireccion, HUsuario)
+HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual
 import json
@@ -18,6 +18,34 @@ ayuda = {}
 for a in ayudaDb:
     ayuda[a.modulo_id]=a.contenido
 
+def getComuna(request):
+
+    data = json.loads(request.POST["data"]);
+
+    try:
+
+        comuna=HComuna.objects.filter(region_id=data["regionId"]);
+        html=''
+        for c in comuna:
+            html = html + '<option value="'+str(c.comuna_id)+'">'+c.nombre+'</option>'
+
+        if html == '':
+            html='<option value="0">-Seleccione Región- (Sin comunas)</option>'
+
+        data = {
+            'status':'success',
+            'html':html,
+        }
+
+    except HComuna.DoesNotExist:
+
+        data = {
+            'status':'error',
+            'html':'html',
+            'msg':'La regiòn no tiene comunas asociadas',
+        }
+
+    return HttpResponse(json.dumps(data))
 
 def InicioSesion(request):
 
@@ -245,9 +273,6 @@ def AdminClientesAgregar(request):
     }
 
     return render(request, 'hostal/AdminClientesAgregar.html',{'form':form})
-    print(cliente)
-
-
 
 def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html')
@@ -357,41 +382,47 @@ def GuardarNuevoCliente(request):
 
 def CrearNuevoProovedor(request):
 
-    return render (request, 'hostal/CrearNuevoProveedor.html', { "nav":"/AdminProveedor/"})
+    region = []
+    for r in HRegion.objects.all():
+        region.append(r)
 
-def UpdateProvedor (request):
+    form =  {
+        "region" : region
+    }
 
-    try:
-        proveedorId = int(request.POST["proveedorId"])
-        personaId = request.POST["personaId"]
-    except:
-        proveedorId=0
-        personaId=0
-
-    if proveedorId==0:
-
-        form = {
-            "msg":"Invocación inconsistente"
-        }
-        return render(request, "hostal/AdminProveedor.html", {'form':form, 'nav':'/mainHosstal/'} )
-
-
+    return render (request, 'hostal/CrearNuevoProveedor.html', { "form": form, "nav":"/AdminProveedor/"})
 
 def GuardarNuevoProvedor (request):
 
     username = request.POST["username"]
     rutEmpresa = request.POST["rol_empresa"]
 
+    # VALIDANDO NOMRBE DE USUARIO
     if HUsuario.objects.filter(username = username).count() > 0:
 
         messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
-        print("Usuario ", usuario.username, " ya existe")
 
+        region = []
+        for r in HRegion.objects.all():
+            region.append(r)
         form = {
             "datos" : request.POST,
+            "region" : region
         }
-
         return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/AdminProveedor/'})
+
+    # VALIDANDO RUT DEL ORGANISMO
+    if HOrganismo.objects.filter(rut = rutEmpresa).count()>0:
+
+        messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
+        region = []
+        for r in HRegion.objects.all():
+            region.append(r)
+        form = {
+            'datos':request.POST,
+            "region" : region
+        }
+        return render(request, "hostal/CrearNuevoProveedor.html", {'form':form, 'nav':'/AdminProveedor/'})
 
     # PERSONA
     persona = HPersona(
@@ -409,58 +440,59 @@ def GuardarNuevoProvedor (request):
         email =request.POST["Pemail"],
         persona = persona,
         usuario = usuarioActual(), # 56 - Usuario en sesión
+        registro_fecha = datetime.now(),
+        registro_hora = (now.minute*100)+now.second
     )
     direccionP.save()
 
     # USUARIO
     perfil=HUsuarioPerfil.objects.get(usuario_perfil_id=4)
     usuario = HUsuario(
-        usuario_id = None,
+        usuario_id = getSecuenciaId ("H_USUARIO_USUARIO_ID_SEQ"),
         persona=persona,
         username = request.POST["username"],
         contrasena = encode(WORDFISH, request.POST["contrasena"]),
-        registro_fecha = date.today(),
+        registro_fecha = datetime.now(),
         usuario_perfil = perfil,
         vigencia = 1
     )
     usuario.save()
 
-    if HOrganismo.objects.filter(rut = cliente.rut).count()>0:
-
-        messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
-
-        form = {
-            'datos':request.POST,
-        }
-
-        return render(request, "hostal/CrearNuevoProveedor.html",{'form':form, 'nav':'/AdminProveedor/'})
-
-    comuna=HComuna.objects.get(comuna_id=request.POST["comuna_id"])
+    comuna=HComuna.objects.get(comuna_id=request.POST["comunaId"])
 
     # ORGANISMO
     organismo = HOrganismo(
-        organismo_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        organismo_id = getSecuenciaId ("H_ORGANISMO_ORGANISMO_ID_SEQ"),
         razon_social = request.POST["razon_social"],
         rut = request.POST["rol_empresa"],
         nombre_fantasia = request.POST["nombre_fantasia"],
-        giro = request.POST["giro"],
+        giro = "", #request.POST["giro"],
         direccion = request.POST["direccion"],
         telefono = request.POST["telefono"],
         cuenta_datos = request.POST["cuenta"],
         persona = persona,
-        usuario = usuario,
-        registro_fecha = date.today(),
+        usuario = usuarioActual(),
+        registro_fecha = datetime.now(),
         proveedor_flag = 1,
         comuna = comuna,
         vigencia = 1
     )
+    organismo.save()
 
     form = {
         "msg":"Proveedor creado exitosamente.",
     }
 
-    return render(request, "hostal/AdminProveedor.html", { 'form':form, 'nav':'/AdminProveedor/' })
+    try:
+        proveedor = HOrganismo.objects.filter(proveedor_flag =1)
+    except:
+        proveedor = { }
 
+    form = {
+            'proveedor' : proveedor
+        }
+
+    return render(request, "hostal/AdminProveedor.html", { 'form':form, 'nav':'/mainHostal/' })
 
 def CrearNuevoUsuario(request):
     return render (request, 'hostal/CrearNuevoUsuario.html')
@@ -577,8 +609,23 @@ def AdminProveedor(request):
         try:
             nombreLike="%"+nombre.upper()+"%"
             sql = """
-                SELECT *
-                FROM h_organismo
+                SELECT
+                    ORGANISMO_ID,
+                    RAZON_SOCIAL,
+                    RUT,
+                    NOMBRE_FANTASIA,
+                    GIRO,
+                    DIRECCION,
+                    TELEFONO,
+                    CUENTA_DATOS,
+                    PERSONA_ID,
+                    USUARIO_ID,
+                    TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                    PROVEEDOR_FLAG,
+                    COMUNA_ID,
+                    VIGENCIA
+                FROM
+                    h_organismo
                 WHERE
                     UPPER(nombre_fantasia) LIKE %s OR
                     UPPER(razon_social) LIKE %s"""
@@ -605,84 +652,85 @@ def AdminProveedor(request):
 
 def EditarProveedor(request,organismo_id):
 
-    proveedor = HOrganismo.objects.get(organismo_id = organismo_id)
+    request.session["organismo_id"] = str(organismo_id)
 
-    direccionP = HPersonaDireccion.objects.get( usuario_id = proveedor.usuario.usuario_id)
+    organismo = HOrganismo.objects.get(organismo_id = organismo_id)
 
-    print("Recuperando persona "+str(proveedor.persona_id))
-    persona = HPersona.objects.get(persona_id=proveedor.persona_id)
-    print("Encontrado "+persona.nombres)
-    direccionP = HPersonaDireccion.objects.order_by('-registro_fecha')[0]
-    print(direccionP.telefono)
-    print(direccionP)
+    comunaId=organismo.comuna_id
+    comuna = HComuna.objects.get(comuna_id=organismo.comuna_id)
+    regionId=comuna.region_id
 
+    regionList = HRegion.objects.all()
+    comunaList = HComuna.objects.filter(region_id=regionId)
+    persona = HPersona.objects.get(persona_id=organismo.persona_id)
+    personaDireccion = HPersonaDireccion.objects.filter(persona_id=persona.persona_id).order_by('-registro_fecha', '-registro_hora')[0]
 
-    if request.method == 'GET':
+    request.session["persona_tmp"]=persona
 
-        datosOrg ={
-            'organismo_id':organismo_id,
-            'rol_empresa':proveedor.rut,
-            'nombre_empresa':proveedor.nombre_fantasia,
-            'razon_social':proveedor.razon_social,
-            'direccion':proveedor.direccion,
-            'telefono':proveedor.telefono,
-            'nombre_persona':proveedor.persona.nombres,
-            'Ap_paterno': proveedor.persona.paterno,
-            'Ap_materno': proveedor.persona.materno,
-            'username':proveedor.usuario.username,
-            'Ptelefono': direccionP.telefono,
+    for r in regionList:
+        print(str(r.region_id)+" "+r.nombre)
 
-
-            'Pemail':direccionP.email}
-
-    print(datosOrg)
-
-    return render (request, 'hostal/EditarProveedor.html', { "organismo" : datosOrg, "nav" : "/AdminProveedor/" } )
-
-
-    if request.method == 'GET':
-        datosOrg ={'rol_empresa':proveedor.rut,'nombre_empresa':proveedor.nombre_fantasia,
-        'razon_social':proveedor.razon_social,'direccion':proveedor.direccion,
-        'telefono':proveedor.telefono,'nombre_persona':proveedor.persona.nombres,
-        'Ap_paterno': proveedor.persona.paterno,'Ap_materno': proveedor.persona.materno,
-        'username':proveedor.usuario.username,'Ptelefono': direccionP.telefono,
-
-        'Pemail':direccionP.email}
-        #verificar si funka
-        return render (request, 'hostal/EditarProveedor.html', datosOrg)
-
-
-    if request.method == 'POST':#para guardar los datos una vez modificados
-
-        proveedor.organismo_id = HOrganismo.objects.get(organismo_id = organismo_id)
-
-
-    if request.method == 'POST':#para guardar los datos una vez modificados
-
-
-        proveedor.rut = request.POST['rol_empresa']
-        proveedor.nombre_fantasia = request.POST ['nombre_empresa']
-        proveedor.razon_social = request.POST ['razon_social']
-        proveedor.direccion = request.POST ['direccion']
-        proveedor.telefono = request.POST ['telefono']
-        proveedor.persona.nombres = request.POST['nombre_persona']
-        proveedor.persona.paterno = request.POST['Ap_paterno']
-        proveedor.persona.materno = request.POST ['Ap_materno']
-        proveedor.usuario.username= request.POST['username']
-        direccionP.telefono = request.POST ['Ptelefono']
-        direccionP.email = request.POST ['Pemail']
-
-        direccionP.save()
-        proveedor.save()
-
-        print(proveedor)
     form = {
-        'proveedor':proveedor
+            'organismo':organismo,
+            'persona':persona,
+            'personaDireccion':personaDireccion,
+            'regiones':regionList,
+            'comuna':comunaList,
+            'comunaId':comunaId,
+            'regionId':regionId,
         }
-    return render (request, 'hostal/AdminProveedor.html', {'form':form})
+
+    return render (request, 'hostal/EditarProveedor.html', { "form" : form, "nav" : "/AdminProveedor/" } )
+
+def UpdateProveedor (request):
+
+    organismo_id=request.session["organismo_id"];
+    personaTmp=request.session["persona_tmp"]
+    organismo=HOrganismo.objects.get(organismo_id=organismo_id)
+
+    if personaTmp.nombres!=request.POST["nombre_persona"] or personaTmp.paterno!=request.POST["Ap_paterno"]:
+
+        persona=HPersona(
+            persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+            nombres = request.POST["nombre_persona"],
+            paterno = request.POST["Ap_paterno"],
+            materno = request.POST["Ap_materno"]
+        )
+        persona.save()
+
+        personaDireccion=HPersonaDireccion(
+            persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+            telefono = request.POST["Ptelefono"],
+            email =request.POST["Pemail"],
+            persona = persona,
+            usuario = usuarioActual(), # 56 - Usuario en sesión
+            registro_fecha = datetime.now(),
+            registro_hora = (now.minute*100)+now.second
+        )
 
 
+    comuna=HComuna.objects.get(comuna_id=request.POST["comunaId"])
 
+    organismo.razon_social = request.POST["razon_social"],
+    organismo.rut = request.POST["rol_empresa"],
+    organismo.nombre_fantasia = request.POST["nombre_fantasia"],
+    organismo.direccion = request.POST["direccion"],
+    organismo.telefono = request.POST["telefono"],
+    organismo.cuenta_datos = request.POST["cuenta"],
+    #organismo.persona = persona,
+    organismo.usuario = usuarioActual(),
+    organismo.registro_fecha = datetime.now(),
+    organismo.proveedor_flag = 1,
+    organismo.comuna = comuna,
+    organismo.vigencia = 1
+
+    organismo.save()
+
+    form = {
+        "request":organismo
+    }
+
+    return render (request, 'hostal/EditarProveedor.html', { "form": form, "nav":"/AdminProveedor/"})
 
 def OrdenDePedidos(request):
     ordenPedido = HOrdenPedido.objects.all()

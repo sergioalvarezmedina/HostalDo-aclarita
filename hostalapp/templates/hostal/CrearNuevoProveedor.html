@@ -1,5 +1,5 @@
 {% extends 'hostal/base.html' %}
-
+{% load static %}
 {% block content %}
 <title>Crear Nuevo Proveedor</title>
 
@@ -27,87 +27,86 @@
           </div>
       </div>
       <div class="contenedorFormulario form-row justify-content-around">
-      <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/"novalidate>
+      <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/" novalidate onsubmit="return validaOrganismo();">
         {% csrf_token %}
         <div class="row">
           <div class="col ml-4 justify-content-around ">
             <div class="control-label form-inline mb-3">
-                <label for="validationCustom01" class="mr-3">Rut empresa</label>
-                <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="rol_empresa" value="" required>
+                <label for="validationCustom01" class="mr-3">Rut empresa (*)</label>
+                <input type="text" class="form-control col-lg-7 ml-5" id="rol_empresa" name="rol_empresa" value="{{form.datos.rol_empresa}}" required>
             </div>
             <div class="control-label form-inline mb-3">
-                 <label for="validationCustom02" class="mr-3">Nombre Empresa</label>
-                 <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombre_fantasia" value="{{cliente.nombre_fantasia}}" required>
+                 <label for="validationCustom02" class="mr-3">Nombre fantas&iacute;a (*)</label>
+                 <input type="text" class="form-control col-lg-7" id="nombre_fantasia" name="nombre_fantasia" value="{{form.datos.nombre_fantasia}}" required>
             </div>
             <div class="control-label form-inline mb-3">
                  <label for="validationCustom03" class="mr-3">Razon Social</label>
-                 <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="" name="razon_social" required>
+                 <input type="text" class="form-control col-lg-7 ml-5" id="razon_social" value="{{form.datos.razon_social}}" name="razon_social" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-5 pr-4">Región</label>
                 <div class="rs-select2 js-select-simple select--no-search ml-5 pl-2 col-xs-2">
-                  <select name="region" for="regiones" id="regiones" class="form-control col-xs-3">
-                    <option disabled="disabled" selected="selected" class="" >-Seleccion Región-</option>
+                  <select name="regionId" for="regiones" id="regionId" class="form-control col-xs-3" onchange="getComuna($(this).val(), 'comunaId')">
+                    <option value="0">-Seleccione región-</option>
+                    {% for r in form.region %}
+                    <option value="{{r.region_id}}" {% if r.region_id == form.datos.region_id %}selected{% endif %}>{{r.nombre}}</option>
+                    {% endfor %}
                   </select>
                   <div class="select-dropdown"></div>
                 </div>
             </div>
             <div class="control-label form-inline mb-3">
-              <label for="validationCustom03" class="mr-5 pr-4">Comuna</label>
+              <label for="validationCustom03" class="mr-5 pr-4">Comuna (*)</label>
               <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-                <select name="comuna" for="comunas" id="comunas" value="{{comuna}}" class="form-control">
-                  <option disabled="disabled" selected="selected" name="comuna" >-Seleccion Región-</option>
+                <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                  <option disabled="disabled" selected="selected" name="comuna" >-Seleccione región-</option>
                 </select>
                 <div class="select-dropdown" name ="comuna"></div>
               </div>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-5 pr-5">Dirección</label>
-              <input type="text" class="form-control ml-1" id="direccion" value="" name="direccion" required>
+              <input type="text" class="form-control ml-1" id="direccion" value="{{form.datos.direccion}}" name="direccion" required>
            </div>
            <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-5 pr-5">Telefono</label>
-              <input type="text" class="form-control ml-3" id="telefono" name="telefono" value="" required>
-           </div>
-           <div class="control-label form-inline mb-3">
-              <label for="validationCustom03" class="mr-5 pr-5">Email</label>
-              <input type="text" class="form-control ml-5" id="emai" value="" required>
+              <input type="text" class="form-control ml-3" id="telefono" name="telefono" value="{{form.datos.telefono}}" required>
            </div>
         </div>
 
         <div class="col ml-4 justify-content-around ">
           <div class="col ml-4 justify-content-around ">
             <div class="control-label form-inline mb-3">
-              <label for="validationCustom01" class="mr-5 pr-4">Nombre</label>
-              <input type="text" class="form-control ml-5 " id="validationCustom01" name="nombre_persona" value="" required>
+              <label for="validationCustom01" class="mr-5 pr-4">Nombre (*)</label>
+              <input type="text" class="form-control ml-5 " id="nombre_persona" name="nombre_persona" value="{{form.datos.nombre_persona}}" required>
             </div>
             <div class="control-label form-inline mb-3">
-              <label for="validationCustom02" class="mr-3 pr-1">Apellido Paterno</label>
-              <input type="text" name="Ap_paterno" class="form-control ml-2" id="validationCustom02" value="" required>
+              <label for="validationCustom02" class="mr-3 pr-1">Apellido Paterno (*)</label>
+              <input type="text" name="Ap_paterno" class="form-control ml-2" id="Ap_paterno" value="{{form.datos.Ap_paterno}}" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-4">Apellido Materno</label>
-              <input type="text" class="form-control" name="Ap_materno" id="razons" value="" required>
+              <input type="text" class="form-control" name="Ap_materno" id="Ap_materno" value="{{form.datos.Ap_materno}}" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-4 pr-1">Correo Contacto</label>
-              <input type="text" class="form-control" id="razons" name="Pemail" value="{{Pemail}}" required>
+              <input type="text" class="form-control" id="razons" name="Pemail" value="{{form.datos.Pemail}}" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-3">Numero Contacto</label>
-              <input type="text" class="form-control" id="razons" name="Ptelefono" value="{{Ptelefono}}" required>
+              <input type="text" class="form-control" id="razons" name="Ptelefono" value="{{form.datos.Ptelefono}}" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-4 pr-2">Nombre Usuario</label>
-              <input type="text" class="form-control" name="username" id="direccion" value=" {{form.usuario.username}}" required>
+              <input type="text" class="form-control" name="username" id="direccion" value=" {{form.datos.username}}" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-5 pr-4">Contraseña</label>
-              <input type="password" class="form-control ml-2" name="contrasena" id="telefono" value="" required>
+              <input type="password" class="form-control ml-2" name="contrasena" id="telefono" value="{{form.datos.telefono}}" required>
             </div>
             <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-2">Repetir Contraseña</label>
-              <input type="password" class="form-control mr-2" id="emai" value="" required>
+              <input type="password" class="form-control mr-2" id="emai" value="{{form.datos.cuenta}}" required>
             </div>
           </div>
         </div>
@@ -115,7 +114,7 @@
         <div class="center-block">
           <div class="control-label form-inline mb-12">
             <label for="validationCustom03" class="mr-3">Datos cuenta bancaria</label>
-            <textarea name="cuenta" id="cuenta" rows="4" class="form-control"></textarea>
+            <textarea name="cuenta" id="cuenta" rows="4" class="form-control">{{form.datos.cuenta}}</textarea>
           </div>
 
           <br>
@@ -129,8 +128,10 @@
     </div>
   </div>
 
+
 </body>
 
+<script src="{% static 'js/hostal.js' %}"></script>
 <script>
   $("#navigationForm").prop("action", "{{nav}}");
 </script>

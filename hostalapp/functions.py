@@ -1,6 +1,7 @@
 import base64
 import cx_Oracle
 from django.db import connection
+from .models import HUsuario
 
 def encode(key, clear):
     enc = []
@@ -42,5 +43,4 @@ def isset(variable):
 def usuarioActual():
 
     usuario=HUsuario.objects.get(usuario_id=56)
-
     return usuario

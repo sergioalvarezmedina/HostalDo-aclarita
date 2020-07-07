@@ -342,6 +342,7 @@ class HPersonaDireccion(models.Model):
     persona = models.ForeignKey(HPersona, models.DO_NOTHING)
     usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
     registro_fecha = models.DateField(blank=True, null=True)
+    registro_hora = models.FloatField(max_length=4, blank=True, null=True)
 
     class Meta:
         managed = False

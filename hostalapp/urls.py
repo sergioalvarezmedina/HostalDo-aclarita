@@ -11,6 +11,7 @@ urlpatterns = [
 
     # jquery , post
     path('setLogin', views.setLogin, name="setLogin"), #1
+    path('getComunaList', views.getComuna, name="getComuna"), #1
     path('mainHostal/', views.mainHostal, name="mainHostal"), #12
 
     path('Formulario/', views.Formulario, name="Formulario"), #3 4 5
@@ -49,7 +50,7 @@ urlpatterns = [
     path('GuardarNuevoCliente/', views.GuardarNuevoCliente, name="GuardarNuevoCliente"),
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
     path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
-    path('UpdateProvedor/', views.UpdateProvedor, name="UpdateProvedor"),
+    path('UpdateProveedor/', views.UpdateProveedor, name="UpdateProveedor"),
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
     path('GuardarNuevaHabitacion/', views.GuardarNuevaHabitacion, name="GuardarNuevaHabitacion"),
     path('AgregarHabitacion/', views.AgregarHabitacion, name="AgregarHabitacion"),
