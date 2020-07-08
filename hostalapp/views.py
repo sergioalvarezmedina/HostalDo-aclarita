@@ -969,6 +969,8 @@ def OrdenDePedidos(request):
 
 def mainHostal(request):
 
+    print (ayuda[1])
+
     form= {
         "id" : "menu",
         "ayuda" : ayuda[1]
@@ -1199,6 +1201,7 @@ def Eliminar_habitacion(request):
 ############ MODULO MENU
 
 def AdministracionMenu(request):
+
     listaMenu = HMenu.objects.all()
     print(listaMenu)
 
@@ -1207,7 +1210,7 @@ def AdministracionMenu(request):
             "ayuda" : ayuda[4] # poner el ìndice de la ayuda para esta pantalla
         }
 
-    return render(request, 'hostal/AdministracionMenu.html', { "form" : form })
+    return render(request, 'hostal/AdministracionMenu.html', { "form" : form, "nav":"/mainHostal/" })
 
 def GuardarMenu(request):
 
