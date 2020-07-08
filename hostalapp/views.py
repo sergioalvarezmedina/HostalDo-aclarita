@@ -554,7 +554,7 @@ def UpdateCliente (request):
 
     organismo=HOrganismo.objects.get(organismo_id=request.session["organismo_id"]);
     persona=HPersona.objects.get(persona_id=organismo.persona_id)
-    personaDireccion=HPersonaDireccion.objects.filter(persona_id=persona.persona_id)#.order_by("-registro_fecha")[0]
+    personaDireccion=HPersonaDireccion.objects.filter(persona_id=persona.persona_id).order_by("-registro_fecha")[0]
 
     if persona.nombres!=request.POST["nombre_persona"] or persona.paterno!=request.POST["Ap_paterno"]:
 
