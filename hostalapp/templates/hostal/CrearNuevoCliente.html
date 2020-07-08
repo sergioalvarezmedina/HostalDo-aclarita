@@ -44,7 +44,7 @@
                     <div class="control-label mb-3">
                       <label for="validationCustom03" class="">Región</label>
                         <div class="rs-select2 js-select-simple select--no-search   ">
-                          <select name="region" for="regiones" id="regionId" class="form-control col-xs-3" onchange="getComuna($(this).val(), 'comunaId')">
+                          <select name="regionId" for="regiones" id="regionId" class="form-control col-xs-3" onchange="getComuna($(this).val(), 'comunaId')">
                             <option value="0">-Seleccione región-</option>
                             {% for r in form.region %}
                             <option value="{{r.region_id}}" {% if r.region_id == form.datos.region_id %}selected{% endif %}>{{r.nombre}}</option>

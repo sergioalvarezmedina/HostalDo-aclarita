@@ -255,33 +255,110 @@ def GuardarHuesped(request):
 
 def AdminClientesAgregar(request):
 
-    queryset = request.GET.get('buscar')
+    rut = request.POST.get('buscarRut')
+    nombre = request.POST.get('buscarNombre')
 
-    if queryset :
-        cliente = HOrganismo.objects.filter(
-            Q(rut__icontains = queryset) |
-            Q(nombre_fantasia__icontains = queryset)
-            ).distinct()
-        print(cliente)
+    if rut and nombre:
+        try:
 
-        form = {'cliente':cliente,
-                "ayuda" : ayuda[8]
-            }
+            nombreLike="%"+nombre.upper()+"%"
+            rutLike="%"+rut.upper()+"%"
+            sql = """
+                SELECT
+                    ORGANISMO_ID,
+                    RAZON_SOCIAL,
+                    RUT,
+                    NOMBRE_FANTASIA,
+                    GIRO,
+                    DIRECCION,
+                    TELEFONO,
+                    CUENTA_DATOS,
+                    PERSONA_ID,
+                    USUARIO_ID,
+                    TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                    PROVEEDOR_FLAG,
+                    COMUNA_ID,
+                    VIGENCIA
 
-        return render (request, 'hostal/AdminClientesAgregar.html', {'form':form} )
+                FROM h_organismo
+                WHERE
+                    (UPPER(nombre_fantasia) LIKE %s OR
+                    UPPER(nombre_fantasia) LIKE %s) AND
+                    RUT LIKE %s"""
 
+            cliente = HOrganismo.objects.raw(sql, [nombreLike, nombreLike,rutLike])
 
-    cliente = HOrganismo.objects.all().exclude(proveedor_flag=1)
+            """proveedorResult = HOrganismo.objects.filter(
+                    Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
+                ).filter(organismo_rut=rut)"""
+
+            #proveedor = { proveedorResult }
+        except:
+            cliente = { }
+
+    elif rut :
+        try:
+            clienteResult = HOrganismo.objects.get(rut=rut)
+            cliente = { clienteResult }
+        except:
+            cliente = { }
+
+    elif nombre:
+        try:
+            nombreLike="%"+nombre.upper()+"%"
+            sql = """
+                SELECT
+                    ORGANISMO_ID,
+                    RAZON_SOCIAL,
+                    RUT,
+                    NOMBRE_FANTASIA,
+                    GIRO,
+                    DIRECCION,
+                    TELEFONO,
+                    CUENTA_DATOS,
+                    PERSONA_ID,
+                    USUARIO_ID,
+                    TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                    PROVEEDOR_FLAG,
+                    COMUNA_ID,
+                    VIGENCIA
+                FROM
+                    h_organismo
+                WHERE
+                    UPPER(nombre_fantasia) LIKE %s OR
+                    UPPER(razon_social) LIKE %s"""
+            cliente=HOrganismo.objects.raw(sql, [nombreLike, nombreLike])
+        except:
+            cliente = { }
+
+    else:
+        try:
+            cliente = HOrganismo.objects.exclude(proveedor_flag=1)
+        except:
+            cliente = { }
+
+    print(cliente)
+
     form = {
+            "buscar" : { "rut" : rut, "nombre" : nombre },
+            'cliente' : cliente,
+            "ayuda" : ayuda[5]
+        }
 
-    'cliente':cliente,
-    "ayuda" : ayuda[8]
-    }
+    return render (request, 'hostal/AdminClientesAgregar.html' , { 'form' : form, "nav" : "/mainHostal/" })
 
-    return render(request, 'hostal/AdminClientesAgregar.html',{'form':form})
 
 def CrearNuevoCliente(request):
-    return render (request, 'hostal/CrearNuevoCliente.html')
+
+    region = []
+    for r in HRegion.objects.all():
+        region.append(r)
+
+    form =  {
+        "region" : region
+    }
+
+    return render (request, 'hostal/CrearNuevoCliente.html', {'form':form, 'nav':'/AdminClientesAgregar/'})
 
 def GuardarNuevoCliente(request):
 
