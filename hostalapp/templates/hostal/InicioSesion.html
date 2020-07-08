@@ -33,9 +33,11 @@
           <div class="input-group">
             <input type="password" class="input--style-5" placeholder="Ingrese su Contraseña" id="password">
           </div>
-          <div class="form-group mx-sm-4 text-light olvideContraseña" >
+          <!--<div class="form-group mx-sm-4 text-light olvideContraseña" >
             <span class=""><a href="#" class="olvide">Olvide mi Contraseña</a></span>
-          </div>
+          </div>-->
+
+          <div class="text-center mt-4">
           <div class="btnsInicio">
           <button id="entrar" type="button" onclick="setLogin($('#usuario').val(), $('#password').val());"  class="btn text-light registro btn-space">
             Entrar
@@ -43,6 +45,7 @@
           <button type="summit" class="btn text-light registro btn-space mt-4" onclick="$('#formLogin').prop('action','{% url 'Formulario' %}');">
             Soy un nuevo cliente
             </button>
+          </div>
           </div>
         </form>
       </div>

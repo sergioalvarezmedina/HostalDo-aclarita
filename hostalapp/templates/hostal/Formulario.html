@@ -25,7 +25,14 @@
 </head>
 
 <body>
-    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+    <div class="page-wrapper bg-gra-03 p-t-5 p-b-50">
+ 
+          <div class="btonAyuda ml-4 mr-4">
+            <a href="{% url 'InicioSesion' %}" class="btn btn-info" onclick="$('#navigationForm').submit();">
+              <i class="fa fa-chevron-left"></i> Volver Atrás
+            </a>
+    </div>
+
         <div class="wrapper wrapper--w790">
             <div class="card card-5">
                 <div class="card-heading">
@@ -35,14 +42,23 @@
                 <div class="datos-empresa">
                     <h3 class="title-empresa">Datos Empresa</h3>
                 </div>
+                <div class="center-text">
+                  {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger mt-1" role="alert">
+                      {{message}}
+                    </div>
+                    {% endfor %}
+                  {% endif %}
+                </div>
                 <div class="card-body">
-                    <form method="POST" action="/GuardarFormulario/">
+                    <form method="POST" action="/GuardarFormulario/" >
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="name">Nombre Empresa</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="nombre_empresa">
+                                    <input class="input--style-5" type="text" name="nombre_fantasia" value="{{form.datos.rol_empresa}}" required>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +67,7 @@
                             <div class="name">Rol Empresa</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="rol_empresa" >
+                                    <input class="input--style-5" type="text" name="rol_empresa" value="{{form.datos.rol_empresa}}" required>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +75,7 @@
                             <div class="name">Razon Social</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="razon_social" >
+                                    <input class="input--style-5" type="text" value="{{form.datos.razon_social}}" name="razon_social" required>
                                 </div>
                             </div>
                         </div>
@@ -68,23 +84,27 @@
                             <div class="value">
                                 <div class="input-group">
                                     <div class="rs-select2 js-select-simple select--no-search">
-                                        <select name="region" for="regiones" id="regiones">
-                                            <option disabled="disabled" selected="selected" >-Seleccion Región-</option>
-                                        </select>
+                                        <select name="regionId" for="regiones" id="regionId" class="form-control col-xs-3" onchange="getComuna($(this).val(), 'comunaId')">
+                                             <option value="0">-Seleccione región-</option>
+                                            {% for r in form.region %}
+                                            <option value="{{r.region_id}}" {% if r.region_id == form.datos.region_id %}selected{% endif %}>{{r.nombre}}</option>
+                                            {% endfor %}
+                                          </select>
                                         <div class="select-dropdown"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-row">
                             <div class="name" >Comuna</div>
                             <div class="value">
                                 <div class="input-group">
                                     <div class="rs-select2 js-select-simple select--no-search">
-                                        <select name="comuna" for="comunas"id="comunas">
-                                            <option disabled="disabled" selected="selected">-Selecciona Comuna-</option>
-                                        </select>
-                                        <div class="select-dropdown"></div>
+                                    <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                                    <option disabled="disabled" selected="selected" name="comuna" >-Seleccione región-</option>
+                                    </select>
+                                    <div class="select-dropdown" name ="comuna"></div>
                                     </div>
                                 </div>
                             </div>
@@ -93,23 +113,7 @@
                             <div class="name">Dirección</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="direccion">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Telefono</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="telefono" name="telefono">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="name">Email</div>
-                            <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="email" name="email">
+                                    <input class="input--style-5" type="text" value="{{form.datos.direccion}}" name="direccion" required>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +125,7 @@
                             <div class="name">Nombre</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="nombre_persona">
+                                    <input class="input--style-5" type="text"  name="nombre_persona" value="{{form.datos.nombre_persona}}" required>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +133,7 @@
                             <div class="name">Apellido Paterno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_paterno">
+                                    <input class="input--style-5" type="text" id="Ap_paterno" name="Ap_paterno" value="{{form.datos.Ap_paterno}}" required>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +141,15 @@
                             <div class="name">Apellido Materno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_materno">
+                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{form.datos.Ap_materno}}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="name">Telefono</div>
+                            <div class="value">
+                                <div class="input-group">
+                                    <input class="input--style-5" type="telefono" name="Ptelefono" value="{{form.datos.Ptelefono}}" required>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +157,7 @@
                             <div class="name">Email</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="email" name="Pemail">
+                                    <input class="input--style-5" type="email" name="Pemail" value="{{form.datos.Pemail}}" required>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +165,7 @@
                             <div class="name">Nombre Usuario</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="username">
+                                    <input class="input--style-5" type="text" name="username" value=" {{form.datos.username}}" required>
                                 </div>
                             </div>
                         </div>
@@ -161,15 +173,15 @@
                             <div class="name"> Contraseña</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="password"  name="contrasena">
+                                    <input class="input--style-5" type="password"  name="contrasena" value="{{form.datos.contrasena}}" required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="name">Repetir Contraseña</div>
+                            <div class="name">Datos cuenta</div>
                             <div class="value">
-                                <div class="input-group">
-                                    <input class="input--style-5" type="password"  name="repetir-contraseña">
+                                <div class="input-group ">
+                                    <input type="" name="cuenta" id="cuenta" rows="4" class=" input--style-5">{{form.datos.cuenta}}</input>
                                 </div>
                             </div>
                         </div class="boton">
@@ -186,7 +198,7 @@
         {% if insert == 1 %}
         alert('Registro guardado exitosamente');
         location.repace("/");
-        {% endif %}}
+        {% endif %}
     </script>
 
    <!-- Jquery JS-->
@@ -195,6 +207,11 @@
     <script src="{% static 'vendor/select2/select2.min.js' %}"></script>
     <script src="{% static 'vendor/datepicker/moment.min.js' %}"></script>
     <script src="{% static 'vendor/datepicker/daterangepicker.js' %}"></script>
+
+    <script src="{% static 'js/hostal.js' %}"></script>
+    <script>
+      $("#navigationForm").prop("action", "{{nav}}");
+    </script>
 
     
     <script src="{% static 'js/global.js' %}"></script>

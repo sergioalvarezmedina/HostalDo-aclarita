@@ -117,60 +117,114 @@ def setLogin(request):
     return HttpResponse(json.dumps(data))
 
 def Formulario(request):
-    return render(request, "hostal/Formulario.html")
+    region = []
+    for r in HRegion.objects.all():
+        region.append(r)
+
+    form =  {
+        "region" : region
+    }
+    return render(request, "hostal/Formulario.html", {'form':form, 'nav':'/InicioSesion/'})
 
 def GuardarFormulario(request):
+    now = datetime.now()
 
-    cliente = HOrganismo()
+    username = request.POST["username"]
+    rutEmpresa = request.POST["rol_empresa"]
 
-    usuario = HUsuario()
+    # VALIDANDO NOMRBE DE USUARIO
+    if HUsuario.objects.filter(username = username).count() > 0:
 
+        messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
+
+        region = []
+        for r in HRegion.objects.all():
+            region.append(r)
+        form = {
+            "datos" : request.POST,
+            "region" : region
+        }
+        return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+
+    # VALIDANDO RUT DEL ORGANISMO
+    if HOrganismo.objects.filter(rut = rutEmpresa).count()>0:
+
+        messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
+        region = []
+        for r in HRegion.objects.all():
+            region.append(r)
+        form = {
+            'datos':request.POST,
+            "region" : region
+        }
+        return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+
+    # PERSONA
     persona = HPersona(
         persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
         nombres = request.POST["nombre_persona"],
         paterno = request.POST["Ap_paterno"],
         materno = request.POST["Ap_materno"]
     )
-
     persona.save()
 
-    print("Persona "+str(persona.persona_id))
+    # DIRECCION
+    direccionP = HPersonaDireccion(
+        persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        telefono = request.POST["Ptelefono"],
+        email =request.POST["Pemail"],
+        persona = persona,
+        usuario = usuarioActual(), # 56 - Usuario en sesión
+        registro_fecha = datetime.now(),
+        registro_hora = (now.hour*100)+now.minute
+    )
+    direccionP.save()
 
-    usuario.persona_id=persona.persona_id
-
-    usuario.usuario_id=getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ")
-    usuario.username=request.POST["username"]
-    usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
-    usuario.vigencia=1
-
-    comuna= HComuna()
-
-    perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=3)
-
-    usuario.usuario_perfil_id=perfil.usuario_perfil_id
-
-
+    # USUARIO
+    perfil=HUsuarioPerfil.objects.get(usuario_perfil_id=4)
+    usuario = HUsuario(
+        usuario_id = getSecuenciaId ("H_USUARIO_USUARIO_ID_SEQ"),
+        persona=persona,
+        username = request.POST["username"],
+        contrasena = encode(WORDFISH, request.POST["contrasena"]),
+        registro_fecha = datetime.now(),
+        usuario_perfil = perfil,
+        vigencia = 1
+    )
     usuario.save()
-    cliente.usuario_id = usuario.usuario_id
-    cliente.persona_id = usuario.persona_id
-    cliente.razon_social = request.POST["razon_social"]
-    cliente.rut = request.POST["rol_empresa"]
-    cliente.nombre_fantasia = request.POST["nombre_empresa"]
-    cliente.direccion = request.POST["direccion"]
-    cliente.telefono = request.POST["telefono"]
 
-    comuna = HComuna.objects.get(comuna_id=2)
-    cliente.comuna_id=comuna.comuna_id
-    cliente.vigencia=1
+    comuna=HComuna.objects.get(comuna_id=request.POST["comunaId"])
 
+    # ORGANISMO
+    organismo = HOrganismo(
+        organismo_id = getSecuenciaId ("H_ORGANISMO_ORGANISMO_ID_SEQ"),
+        razon_social = request.POST["razon_social"],
+        rut = request.POST["rol_empresa"],
+        nombre_fantasia = request.POST["nombre_fantasia"],
+        giro = "", #request.POST["giro"],
+        direccion = request.POST["direccion"],
+        persona = persona,
+        usuario = usuarioActual(),
+        registro_fecha = datetime.now(),
+        comuna = comuna,
+        vigencia = 1
+    )
+    organismo.save()
 
-    cliente.save()
+    form = {
+        "msg":"Cliente creado exitosamente.",
+    }
 
-    if request.POST["crearCliente"] == 1:
-        return render(request, "hostal/Formulario.html",{'insert':1})
-    else:
-        return render(request, "hostal/AdministracionCliente.html")
+    try:
+        cliente = HOrganismo.objects.distinct(proveedor_flag =1)
+    except:
+        cliente = { }
 
+    form = {
+            'cliente' : cliente
+        }
+
+    return render(request, "hostal/InicioSesion.html",{'form':form, 'nav':'/InicioSesion/'})
 
 def SolicitarServicio(request):
     form = {
@@ -333,7 +387,7 @@ def AdminClientesAgregar(request):
 
     else:
         try:
-            cliente = HOrganismo.objects.exclude(proveedor_flag=1)
+            cliente = HOrganismo.objects.all().exclude(proveedor_flag=1)
         except:
             cliente = { }
 
