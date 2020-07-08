@@ -1,4 +1,5 @@
 {% extends 'hostal/base.html' %}
+{% load static %}
 
 {% block content %}
 <title>Orden de Pedidos</title>
@@ -42,14 +43,14 @@
                                   <td></td>-->
                                   </tr>
                                 {% endfor %}
-                                
+
                             </tbody>
                           </table>
                          </div>
                      <div class="icono-accesos d-flex justify-content-around ">
                         <a href="{% url 'AdminProveedor' %}">
                         <button class="iconosMenus  text-light registro btn-space "><i class="fa fa-truck"></i><div class="textoMenus">Proveedores </div></button>
-                        
+
                         <a href="{% url 'generarOrdenDePedidos' %}">
                         <button class="iconosMenus  text-light registro btn-space ">
                           <i class="fas fa-play"></i></i>
@@ -140,5 +141,10 @@
     </div>
   </div>
 </div>
+
+<script src="{% static 'js/hostal.js' %}"></script>
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 
 {% endblock %}
