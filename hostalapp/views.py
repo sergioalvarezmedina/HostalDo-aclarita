@@ -216,16 +216,18 @@ def AdministracionCliente(request):
     print ("Query : "+sql)
     oc = HOrdenCompra.objects.raw(sql);
 
-    return render(request, 'hostal/AdministracionCliente.html', { "oc" : oc})
+    return render(request, 'hostal/AdministracionCliente.html', { "oc" : oc, "nav":"/mainHostal/"})
 
 def AdministracionOrdenesCompra(request):
+
+    print(ayuda[2])
 
     form = {
         "id" : "login",
         "ayuda" : ayuda[2],
         }
 
-    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form })
+    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form})
 
 def Facturas(request):
     return render(request, 'hostal/Facturas.html')
@@ -955,18 +957,20 @@ def UpdateProveedor (request):
     return render (request, 'hostal/EditarProveedor.html', { "form": form, "nav":"/AdminProveedor/"})
 
 def OrdenDePedidos(request):
+
     ordenPedido = HOrdenPedido.objects.all()
     print(ordenPedido)
-    form= {  
+
+    form= {
         "ayuda" : ayuda[3]
-        }
-    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido, "form": form})
+    }
+    return render(request, 'hostal/OrdenDePedidos.html',{'ordenPedido':ordenPedido, "form": form, "nav":"/mainHostal/"})
 
 
 def mainHostal(request):
 
-    form= { 
-        "id" : "menu", 
+    form= {
+        "id" : "menu",
         "ayuda" : ayuda[1]
         }
 
