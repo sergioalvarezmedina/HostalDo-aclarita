@@ -12,14 +12,13 @@
                 <h2 class="title">Registro Cliente</h2>
             </div>
             <div class="center-block">
-                            {% if messages %}
-                                    {% for message in messages %}
-                                    <div class="alert alert-danger mt-1" role="alert">
-                                        {{message}}   
-                                    </div>
-                                     {% endfor %}
-                            {% endif %}
-            </div>
+                  {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger mt-1" role="alert">
+                      {{message}}
+                    </div>
+                    {% endfor %}
+                  {% endif %}
             <div class="d-flex mb-3">
             <div class="center-block"><label for="" class="mt-4">Datos Empresa</label></div>
             <div class="center-block"><label for="" class="mt-4">Datos Contacto</label></div>
@@ -56,12 +55,13 @@
                     <div class="control-label mb-3">
                           <label for="validationCustom03" class="">Comuna (*)</label>
                           <div class="rs-select2 js-select-simple select--no-search ">
-                            <select name="comuna" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                            <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
                               <option disabled="disabled" selected="selected" name="comuna" >-Seleccione región-</option>
                             </select>
                             <div class="select-dropdown" name ="comuna"></div>
                           </div>
                     </div>
+
                     <div class="control-label  mb-3">
                       <label for="validationCustom03" class="mr-5 pr-5">Dirección</label>
                       <input type="text" class="form-control ml-1" id="direccion" value="{{form.datos.direccion}}" name="direccion" required>
@@ -117,7 +117,7 @@
                     </div>
                 </form>
 </body>
-
+s
 <script src="{% static 'js/hostal.js' %}">
     
 </script>

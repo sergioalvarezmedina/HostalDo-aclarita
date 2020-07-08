@@ -361,6 +361,7 @@ def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html', {'form':form, 'nav':'/AdminClientesAgregar/'})
 
 def GuardarNuevoCliente(request):
+    now = datetime.now()
 
     username = request.POST["username"]
     rutEmpresa = request.POST["rol_empresa"]
@@ -459,7 +460,7 @@ def GuardarNuevoCliente(request):
             'cliente' : cliente
         }
 
-    return render(request, "hostal/AdminClientesAgregar.html", { 'form':form, 'nav':'/mainHostal/' })
+    return render(request, "hostal/CrearNuevoCliente.html", { 'form':form, 'nav':'/mainHostal/' })
 
 def EditarCliente(request, organismo_id):
     request.session["organismo_id"] = str(organismo_id)
@@ -582,6 +583,7 @@ def CrearNuevoProovedor(request):
     return render (request, 'hostal/CrearNuevoProveedor.html', { "form": form, "nav":"/AdminProveedor/"})
 
 def GuardarNuevoProvedor (request):
+    now = datetime.now()
 
     username = request.POST["username"]
     rutEmpresa = request.POST["rol_empresa"]
