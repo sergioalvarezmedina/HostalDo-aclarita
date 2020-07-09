@@ -1,6 +1,7 @@
 {% extends 'hostal/base.html' %}
 
 {% block content %}
+{% load static %}
 <title>Crear Nuevo Usuario</title>
 
 <body>
@@ -109,5 +110,11 @@
     </div>
   </div>
 </div>
+<script src="{% static 'js/hostal.js' %}"></script>
+
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
+
 
 {%endblock%}

@@ -745,10 +745,10 @@ def CrearNuevoUsuario(request):
     form = {
             "ayuda" : ayuda[7]
         }
-    return render (request, 'hostal/CrearNuevoUsuario.html', { "form" : form })
+    return render (request, 'hostal/CrearNuevoUsuario.html', { "form" : form, 'nav' : '/mainHostal/' })
 
 def GuardarNuevoUsuario(request): #Al parecer OK
-
+    now = datetime.now()
     usuario = HUsuario()
 
     persona = HPersona(
@@ -782,14 +782,16 @@ def GuardarNuevoUsuario(request): #Al parecer OK
         'pDireccion':pDireccion
         }
 
-        return render (request,'hostal/CrearNuevoUsuario.html', {'form':form} )
+        return render (request,'hostal/CrearNuevoUsuario.html', {'form':form, 'nav' : '/mainHostal/'} )
 
     else:
         persona.save()
 
         print("Persona "+str(persona.persona_id))
+
         usuario.username=request.POST["username"]
         usuario.contrasena=encode(WORDFISH, request.POST["contrasena"])
+        usuario.registro_fecha = datetime.now()
         usuario.vigencia=1
 
         perfil = HUsuarioPerfil.objects.get(usuario_perfil_id=2)
@@ -803,7 +805,7 @@ def GuardarNuevoUsuario(request): #Al parecer OK
         except Exception as e:
             messages.error(request, 'Ocurrió un error al crear usuario.')
 
-        return render (request, 'hostal/CrearNuevoUsuario.html')
+        return render (request, 'hostal/CrearNuevoUsuario.html',{'nav' : '/mainHostal/'})
 
 def AdminProveedor(request):
 
