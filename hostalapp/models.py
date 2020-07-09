@@ -120,7 +120,7 @@ class DjangoSession(models.Model):
 
 class HAsistente(models.Model):
     asistente_id = models.FloatField(primary_key=True)
-    contenido = models.CharField(max_length=4000)
+    contenido = models.TextField(max_length=4000)
     vigencia_flag = models.FloatField()
     modulo = models.ForeignKey('HModulo', models.DO_NOTHING)
     vigencia = models.FloatField()

@@ -281,10 +281,13 @@ def AdministracionOrdenesCompra(request):
         "ayuda" : ayuda[2],
         }
 
-    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form})
+    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form, "nav":"/AdministracionOrdenesCompra/"})
 
 def Facturas(request):
-    return render(request, 'hostal/Facturas.html')
+    form = {
+        "ayuda" : ayuda[2],
+        }
+    return render(request, 'hostal/Facturas.html',{ 'form' : form, "nav":"/mainHostal/"})
 
 def RegistroHuespedes(request):
     hpd = HPersona.objects.all()
@@ -1150,7 +1153,7 @@ def AdministracionHabitaciones(request): #template 37 -43
             "tipoHabitacion" : tipoHabitacion,
             "ayuda" : ayuda[6]
         }
-    return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form } )
+    return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form, "nav":"/mainHostal/"} )
 
 def Editarhab(request, habitacion_id):
     habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
