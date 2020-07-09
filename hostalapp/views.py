@@ -235,9 +235,6 @@ def SolicitarServicio(request):
 def misDatos(request):
     return render(request, 'hostal/misDatos.html')
 
-def Editarhab(request, habitacion_id):
-    habitacion = HHabitacion.objects.get(habitacion_id=habitacion_id)
-    return render(request, 'hostal/Editarhab.html')
 
 def AdministracionCliente(request):
 
@@ -292,7 +289,10 @@ def Facturas(request):
 def RegistroHuespedes(request):
     hpd = HPersona.objects.all()
     print(hpd)
-    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})
+    form = {
+        "ayuda" : ayuda[2],
+        }
+    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd, "form" : form})
 
 def GuardarHuesped(request):
 
@@ -401,7 +401,7 @@ def AdminClientesAgregar(request):
     form = {
             "buscar" : { "rut" : rut, "nombre" : nombre },
             'cliente' : cliente,
-            "ayuda" : ayuda[5]
+            "ayuda" : ayuda[8]
         }
 
     return render (request, 'hostal/AdminClientesAgregar.html' , { 'form' : form, "nav" : "/mainHostal/" })
@@ -414,7 +414,8 @@ def CrearNuevoCliente(request):
         region.append(r)
 
     form =  {
-        "region" : region
+        "region" : region,
+        "ayuda" : ayuda[8]
     }
 
     return render (request, 'hostal/CrearNuevoCliente.html', {'form':form, 'nav':'/AdminClientesAgregar/'})
@@ -636,7 +637,8 @@ def CrearNuevoProovedor(request):
         region.append(r)
 
     form =  {
-        "region" : region
+        "region" : region,
+        "ayuda" : ayuda[5]
     }
 
     return render (request, 'hostal/CrearNuevoProveedor.html', { "form": form, "nav":"/AdminProveedor/"})
@@ -932,6 +934,7 @@ def EditarProveedor(request, organismo_id):
             'comuna':comunaList,
             'comunaId':comunaId,
             'regionId':regionId,
+            "ayuda" : ayuda[5]
         }
 
     return render (request, 'hostal/EditarProveedor.html', { "form" : form, "nav" : "/AdminProveedor/" } )
@@ -1137,8 +1140,10 @@ def getOrdenCompra(request):
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "oc" : oc, "status" : "success"})
 
 def generarOrdenDePedidos(request): #template 30
-
-    return render(request, 'hostal/generarOrdenDePedidos.html')
+    form = {
+            "ayuda" : ayuda[3]
+        }
+    return render(request, 'hostal/generarOrdenDePedidos.html', { "form" : form, "nav":"/OrdenDePedidos/"})
 
 ############ MODULO HABITACIONES
 
@@ -1157,7 +1162,6 @@ def AdministracionHabitaciones(request): #template 37 -43
 
 def Editarhab(request, habitacion_id):
     habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
-
     if request.method == 'GET':
         datosOrg ={'idHabitacion':habitacion.habitacion_id,'nombreHabitacion':habitacion.rotulo,
                    'precioHabitacion':habitacion.precio,'camasHabitacion':habitacion.camas,'accesoriosHabitacion':habitacion.accesorios}
