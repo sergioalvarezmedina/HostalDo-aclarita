@@ -40,12 +40,11 @@
       </div>
       <div class="form-inline">
       <label for="validationCustom04" class="mr-3">Menu</label>
-       <select class="form-control">
-        {% for r in form.region %}
-                 <option value="+{{m.menu_id}}">{m.nombre}}</option>
-                
+       <select class="form-control" name="menu" for="menu" id="menu">
+        {% for m in form.menu %}
+                 <option value="{{m.menu}}">{{m.menu.nombre}}</option>
         {% endfor %}
-            </select>
+      </select>
       </div>
     </div>
     <div class="botonesUsuario">

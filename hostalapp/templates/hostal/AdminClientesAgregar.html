@@ -18,6 +18,7 @@
           {% csrf_token %}
           <div class="d-flex ">
             <div class="filtroClientes row">
+              <div class="text-center">
               <div class="titulos d-flex mt-3 mb-3 col-9 center-block ">
                 <div class="empresa mr-5"> Rut</div>
                 <input class="buscarEmpresa form-control ml-5" name="buscarRut"  value="{{form.buscar.rut}}" placeholder="TODO" onfocus="this.select()">
@@ -27,7 +28,7 @@
                 <div class="empresa mr-2"> Nombre</div>
                 <input class="buscarEmpresa form-control ml-4" name="buscarNombre" value="{{form.buscar.nombre}}" placeholder="TODO" onfocus="this.select()">
               </div>
-
+              </div>
               <div class="btn align-self-center ">
                 <button id="btnBuscarProvedor" class="btn text-light registro btn-space " type="submit"  >Buscar</button>
               </div>

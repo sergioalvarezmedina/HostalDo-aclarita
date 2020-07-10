@@ -47,21 +47,25 @@ urlpatterns = [
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
-    path('GuardarNuevoCliente/', views.GuardarNuevoCliente, name="GuardarNuevoCliente"),
+    
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
-    path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
+    
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
+    path('ordenCompraHuespedes/', views.ordenCompraHuespedes, name="ordenCompraHuespedes"),
     path('GuardarNuevaHabitacion/', views.GuardarNuevaHabitacion, name="GuardarNuevaHabitacion"),
     path('AgregarHabitacion/', views.AgregarHabitacion, name="AgregarHabitacion"),
-
+    #PROVEEDOR
     path('EditarProveedor/<int:organismo_id>/', views.EditarProveedor, name="EditarProveedor"),
     path('EditarProveedor/', views.EditarProveedor, name="EditarProveedor"),
     path('UpdateProveedor/', views.UpdateProveedor, name="UpdateProveedor"),
+    path('GuardarNuevoProvedor/', views.GuardarNuevoProvedor, name="GuardarNuevoProvedor"),
+    #CLIENTE
     path('EditarCliente/<int:organismo_id>/', views.EditarCliente, name="EditarCliente"),
     path('EditarCliente/', views.EditarCliente, name="EditarCliente"),
     path('UpdateCliente/', views.UpdateCliente, name="UpdateCliente"),
+    path('GuardarNuevoCliente/', views.GuardarNuevoCliente, name="GuardarNuevoCliente"),
 
-    path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
+    #path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
     path('getOrdenCompra/', views.getOrdenCompra, name="getOrdenCompra"),
 
     path('getOCEmpleados', views.getOCEmpleados, name="getOCEmpleados"),

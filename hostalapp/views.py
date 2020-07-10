@@ -301,7 +301,7 @@ def RegistroHuespedes(request):
         }
     return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd, "form" : form})
 
-def GuardarHuesped(request):
+"""def GuardarHuesped(request):
 
 
     hpd = HPersona(
@@ -317,7 +317,7 @@ def GuardarHuesped(request):
 
     hpd = HPersona.objects.all()
 
-    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})
+    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})"""
 
 def AdminClientesAgregar(request):
 
@@ -353,6 +353,13 @@ def AdminClientesAgregar(request):
                     RUT LIKE %s"""
 
             cliente = HOrganismo.objects.raw(sql, [nombreLike, nombreLike,rutLike])
+            print(cliente)
+
+            form = {
+                'cliente':cliente
+            }
+
+            return render (request, 'hostal/AdminClientesAgregar.html' , { 'form' : form, "nav" : "/mainHostal/" })
 
             """proveedorResult = HOrganismo.objects.filter(
                     Q(rut__icontains = rut) | Q(nombre_fantasia__containts = nombre) | Q(razon_social__containts = nombre)
@@ -366,6 +373,7 @@ def AdminClientesAgregar(request):
         try:
             clienteResult = HOrganismo.objects.get(rut=rut)
             cliente = { clienteResult }
+
         except:
             cliente = { }
 
@@ -1047,18 +1055,18 @@ def mainHostal(request):
 
     return render(request, 'hostal/menu.html', { "form": form })
 
-"""def ordenCompraHuespedes(request):
+def ordenCompraHuespedes(request):
 
     now = datetime.now()
 
-    menu=Hmenu.objects.get(menu_id=request.POST["menuId"])
+    menu=HMenu.objects.get(menu_id=request.POST["menu"])
 
     persona = HPersona(
         persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
         rut = request.POST["rut_emp"],
         nombres = request.POST["nombre_persona"],
         paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"]
+        materno = request.POST["Ap_materno"],
         cargo = request.POST["cargo"]
     )
     persona.save()
@@ -1081,7 +1089,7 @@ def mainHostal(request):
 
     return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/" })
 
-        """
+        
 
 
 def getOrdenCompra(request):
