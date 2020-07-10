@@ -229,7 +229,8 @@ def GuardarFormulario(request):
 def SolicitarServicio(request):
 
     menu = []
-    for m in Hmenu.objects.all():
+
+    for m in HMenu.objects.all():
         menu.append(m)
 
     form = {
@@ -1320,32 +1321,53 @@ def AdministracionMenu(request):
 
 def GuardarMenu(request):
 
+    now = datetime.now()
+
+    nombre_menu = request.POST["nombre_menu"]
+
+    if HMenu.objects.filter(nombre = nombre_menu).count() > 0:
+        messages.error(request, "El nombre del Menu ya se encuentra en la lista.")
+        listaMenu= HMenu.objects.all()
+
+        form = {
+        "datos" : request.POST,
+        'listaMenu':listaMenu,
+        "ayuda" : ayuda[4]
+        }
+
+        return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+
+
     menu = HMenu(
         menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
         nombre = request.POST["nombre_menu"],
+        registro_fecha = datetime.now(),
         vigencia= 1
     )
-    print(menu)
+
     menu.save()
 
     listaMenu= HMenu.objects.all()
+
     form = {
-    'listaMenu':listaMenu
+    'listaMenu':listaMenu,
+    "ayuda" : ayuda[4]
     }
+
     print(listaMenu)
-    return render(request, 'hostal/AdministracionMenu.html', {'form':form})
+    return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 ##############################################
-def GuardarMenu(request):
+#def GuardarMenu(request):
 
-    menu = HMenu(
-        menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
-        nombre = request.POST["nombre_menu"],
-        vigencia= 1
-    )
-    print(menu)
-    menu.save()
+ #   menu = HMenu(
+  #      menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
+   #     nombre = request.POST["nombre_menu"],
+    #    vigencia= 1
+    #)
+    #print(menu)
+    #menu.save()
 
-    return render(request, 'hostal/AdministracionMenu.html')
+    #return render(request, 'hostal/AdministracionMenu.html')
 
 #URL PROVEEDOR
 

@@ -15,7 +15,15 @@
           <h2 class="title">Administración Menu</h2>
         </div>
         <div class="botonesParteuno center-block">
-          <br>
+          <div class="center-text">
+                  {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger mt-3 text-center" role="alert">
+                      {{message}}
+                    </div>
+                    {% endfor %}
+                  {% endif %}
+                </div>
           <div class="control-label form-inline mb-3">
               <label for="validationCustom03" class="mr-10 pr-2">Menu</label>
             <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
@@ -79,6 +87,7 @@
         </div>
         <form method="POST" action="/GuardarMenu/">
           {% csrf_token %}
+
           <div class="modal-body">
            <div class="control-label form-inline justify-content-center">
              <label for="validationCustom01" class="mr-3">Nombre</label>
