@@ -239,11 +239,12 @@ def SolicitarServicio(request):
         }
     return render(request, 'hostal/SolicitarServicio.html', { "form" : form, 'nav':'/AdministracionCliente/'})
 
-def misDatos(request):
+def misDatos(request): # DATOS PERSONALES DEL CLIENTE
+
     return render(request, 'hostal/misDatos.html')
 
 
-def AdministracionCliente(request):
+def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
 
     usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
 
@@ -274,18 +275,48 @@ def AdministracionCliente(request):
     print ("Query : "+sql)
     oc = HOrdenCompra.objects.raw(sql);
 
-    return render(request, 'hostal/AdministracionCliente.html', { "oc" : oc, "nav":"/mainHostal/"})
+    form = {
+        "oc" : oc,
+    }
 
-def AdministracionOrdenesCompra(request):
+    return render(request, 'hostal/AdministracionCliente.html', { "form" : form, "nav":"/" })
+
+def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINISTRADOR.
 
     print(ayuda[2])
 
+    sql="""
+            SELECT
+                oc.orden_compra_id orden_compra_id,
+                TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                NVL(o.razon_social, 'S/D') organismo_razon_social,
+                NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                oc.servicio_fin-oc.servicio_inicio dias,
+                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+            FROM
+                h_orden_compra oc
+            INNER JOIN
+                h_usuario u
+                ON
+                    oc.usuario_id=u.usuario_id
+            INNER JOIN
+                h_organismo o
+                ON
+                    oc.organismo_id=o.organismo_id
+        """
+
+    print ("Query : "+sql)
+    oc = HOrdenCompra.objects.raw(sql);
+
     form = {
         "id" : "login",
+        "oc" : oc,
         "ayuda" : ayuda[2],
         }
 
-    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form, "nav":"/AdministracionOrdenesCompra/"})
+    return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form, "nav":"/mainHostal/"})
 
 def Facturas(request):
     form = {
@@ -1047,42 +1078,16 @@ def mainHostal(request):
 
     return render(request, 'hostal/menu.html', { "form": form })
 
-"""def ordenCompraHuespedes(request):
+def ordenCompraHuespedes(request):
 
-    now = datetime.now()
-
-    menu=Hmenu.objects.get(menu_id=request.POST["menuId"])
-
-    persona = HPersona(
-        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        rut = request.POST["rut_emp"],
-        nombres = request.POST["nombre_persona"],
-        paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"]
-        cargo = request.POST["cargo"]
-    )
-    persona.save()
-
-
-    Ocompra= HocHuesped(
-        oc_huesped_id  = getSecuenciaId("H_OC_HUESPED_OC_HUESPED_ID_SEQ"),
-        orden_compra= getSecuenciaId(H_ORDEN_COMPRA_ORDEN_COMPRA_ID),
-        persona = persona,
-        recepcion_flag = 0
-        )
-    
-    Ocompra.save()
+    datos={
+    }
 
     form = {
-    "menu":menu,
-    "persona":persona,
-    "Ocompra":Ocompra
+        "datos":datos
     }
 
     return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/" })
-
-        """
-
 
 def getOrdenCompra(request):
 

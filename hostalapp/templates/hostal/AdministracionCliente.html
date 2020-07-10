@@ -1,9 +1,9 @@
 {% extends 'hostal/base.html' %}
-
+{% load static %}
 {% block content %}
 <title>Administracion Clientes</title>
 <body>
-    
+
     <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
         <div class="wrapper wrapper--w960">
             <div class="card card-5">
@@ -15,6 +15,7 @@
                     <h2 class="title-admin">Mis Solicitudes </h2>
                 </div>
                 <div class="tabla-contenidos">
+
                 <table class="table text-center " >
                     <thead class="thead-dark text-center">
                       <tr >
@@ -27,37 +28,27 @@
                       </tr>
                     </thead>
                     <tbody>
+                      {% if not form.oc.count %}
                       <tr>
-                        <th class="text-center"scope="row">01</th>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>24/08/19</td>
-                        <td>26/08/29</td>
-                         <!-- Ejemplo Modal-->
-                         <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" > 
-                         2
-                        </button></td>
+                        <td colspan="6">No se encontraron &oacute;rdenes de compra.</td>
                       </tr>
-                      <tr>
-                        <th class="text-center"scope="row">02</th>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>24/08/19</td>
-                        <td>26/08/29</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                         2
-                        </button></td>
-                      </tr>
-                      <tr>
-                        <th class="text-center"scope="row">03</th>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>24/08/19</td>
-                        <td>26/08/29</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                         3
-                        </button></td>
-                      </tr>
+                      {% else %}
+                        {% for oc in form.oc %}
+                        <tr>
+                          <th class="text-center"scope="row">01</th>
+                          <td>{{oc.orden_compra_id}}</td>
+                          <td>{{oc.dias}}</td>
+                          <td>{{oc.total}}</td>
+                          <td>{{oc.servicio_inicio}}</td>
+                          <td>{{oc.servicio_fin}}</td>
+                           <td >
+                             <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
+                               {{oc.empleados_cantidad}}
+                             </button>
+                           </td>
+                        </tr>
+                        {% endfor %}
+                      {% endif %}
                     </tbody>
                   </table>
                 </div>
@@ -68,7 +59,7 @@
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-     
+
        <table class="table">
         <thead class="thead-dark">
           <tr>
@@ -111,8 +102,8 @@
   </div>
 </div>
     <div class="icono-accesos">
-        <a href="{% url 'SolicitarServicio' %}" class="icono1">Solicitar Servicio</a>
-        <a href="{% url 'misDatos' %}"  class="icono1">Mis datos</a> 
+        <a href="{% url 'SolicitarServicio' %}" class="icono1"><i class="fa fa-thumbs-up fa-2x"></i><br> Solicitar Servicio</a>
+        <a href="{% url 'misDatos' %}"  class="icono1">Mis datos</a>
     </div>
 
             <!-- Modal Ayuda-->
@@ -133,4 +124,10 @@
     </div>
   </div>
 </div>
+
+<script src="{% static 'js/hostal.js' %}"></script>
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
+
 {% endblock %}
