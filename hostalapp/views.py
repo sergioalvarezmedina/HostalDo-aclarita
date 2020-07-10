@@ -228,15 +228,18 @@ def GuardarFormulario(request):
 
 def SolicitarServicio(request):
 
+    request.session["oc_empleados"]=[]
+    emp = []
+
     menu = []
 
-    for m in HMenu.objects.all():
-        menu.append(m)
-
     form = {
-            "menu":menu,
-            "ayuda" : ayuda[9]
-        }
+        "emp":emp,
+        "menu":HMenu.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "ayuda" : ayuda[9]
+    }
+
     return render(request, 'hostal/SolicitarServicio.html', { "form" : form, 'nav':'/AdministracionCliente/'})
 
 def misDatos(request): # DATOS PERSONALES DEL CLIENTE
@@ -1078,16 +1081,96 @@ def mainHostal(request):
 
     return render(request, 'hostal/menu.html', { "form": form })
 
-def ordenCompraHuespedes(request):
+def removeOCEmpleado(request):
 
-    datos={
-    }
+    try:
+        emp=request.session["oc_empleados"]
+    except:
+        emp = []
+
+    menu=HMenu.objects.all()
+    habitacion=HHabitacion.objects.all()
+
+    empTmp=[]
+
+    for e in emp:
+
+        if str(e["id"]) == request.POST["unsetEmpleado"]:
+            print("Excluyendo "+str(e["id"]) )
+        else:
+            empTmp.append(e)
+
+    request.session["oc_empleados"]=empTmp
 
     form = {
-        "datos":datos
+        "emp":empTmp,
+        "menu":HMenu.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
     }
 
+    return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/", "nav":"/AdministracionCliente/" })
+
+def ordenCompraHuespedes(request):
+
+    try:
+        emp=request.session["oc_empleados"]
+    except:
+        emp = []
+
+    menu=HMenu.objects.get(menu_id=request.POST["menu"])
+    habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
+
+    empleado={
+        "id":len(emp)+1,
+        "rut":request.POST["rut_emp"],
+        "nombres":request.POST["nombre_persona"],
+        "apellido":request.POST["Ap_paterno"],
+        "cargo":request.POST["cargo"],
+        "habitacionId":request.POST["habitacion"],
+        "habitacionRotulo":habitacion.rotulo,
+        "menuId":request.POST["menu"],
+        "menuNombre":menu.nombre,
+    }
+
+    emp.append(empleado)
+    request.session["oc_empleados"]=emp
+
+    form = {
+        "emp":emp,
+        "menu":HMenu.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
+    }
+
+    print(emp)
+
     return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/" })
+
+def OrdenCompraEnviar(request):
+
+    emp=request.session["oc_empleados"]
+
+    now = datetime.now()
+
+    oc=HOrdenCompra(
+        orden_compra_id=getSecuenciaId("H_ORDEN_COMPRA_ORDEN_COMPRA_ID"),
+        servicio_inicio=datetime.now(),
+        servicio_fin=datetime.now(),
+        organismo_id=190,
+        revision_usuario_id=1,
+        visacion_usuario_id=1,
+        factura_emision_flag=0,
+        factura_usuario_id=1,
+        usuario_id=1,
+        registro_fecha=datetime.now(),
+        nulo_usuario_id=1)
+
+    oc.save()
+
+    for e in emp:
+
+        persona=HPersona.objects.get(rut=e.rut)
+
+    return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
 
 def getOrdenCompra(request):
 
@@ -1492,5 +1575,30 @@ def setMenuPlatosSel(request):
     print(request.POST["data"])
 
     data = {}
+
+    return HttpResponse(json.dumps(data))
+
+def getClienteRut(request):
+
+    dataUser = json.loads(request.POST["data"]);
+
+    print("Rut "+dataUser["rut"])
+    rut=dataUser["rut"]
+
+    try:
+
+        persona=HPersona.objects.get(rut=rut)
+        data = {
+            "status":"success",
+            "nombres":persona.nombres,
+            "paterno":persona.paterno,
+            "materno":persona.materno,
+            "cargo":persona.cargo
+        }
+
+    except:
+        data = {
+            "status":"error",
+        }
 
     return HttpResponse(json.dumps(data))

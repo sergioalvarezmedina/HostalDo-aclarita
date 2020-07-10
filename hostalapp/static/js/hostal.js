@@ -506,3 +506,80 @@ function validaOrganismo() {
   }
 
 }
+
+function getClienteRut(rut) {
+
+  $("#rut").prop("disabled", true);
+  $("#nombre_persona").prop("disabled", true);
+  $("#apellido").prop("disabled", true);
+  $("#cargo").prop("disabled", true);
+
+  var dataIn =
+    {
+      rut : rut,
+    };
+
+  $.post(
+    "/getClienteRut",
+    {
+      data : JSON.stringify(dataIn),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    function (data) {
+
+      try {
+
+        var rec = JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          $("#msg").html("Se han recuperado los datos del empleado especificado.");
+          $("#msg").fadeIn("slow").delay(3000).fadeOut("slow");
+
+          $("#nombre_persona").val(rec.nombres);
+          $("#apellido").val(rec.paterno);
+          $("#cargo").val(rec.cargo);
+
+        } else {
+
+          $("#msg").html("<b>El rut consultado no fu&eacute; hallado.</b>");
+          $("#msg").fadeIn("slow").delay(3000).fadeOut("slow");
+
+        }
+
+        $("#rut").prop("disabled", false);
+        $("#nombre_persona").prop("disabled", false);
+        $("#apellido").prop("disabled", false);
+        $("#cargo").prop("disabled", false);
+        $("#nombre_persona").focus();
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+  )
+  .fail(
+    function (jqXHR, textStatus, errorThrown) {
+      console.log("Error "+jqXHR.responseText);
+      alert("Se ha producido una excepción.");
+    }
+  );
+
+}
+
+function validaInsertEmpleado() {
+
+  if ($.trim($("#rut").val())=="" ||
+        $.trim($("#nombre_persona").val())=="" ||
+        $.trim($("#apellido").val())=="" ||
+        $.trim($("#cargo").val())=="") {
+
+      alert("Para incluir un empleado en la orden de compra se requieren todos los datos del formulario.");
+      return false;
+
+  }
+
+}

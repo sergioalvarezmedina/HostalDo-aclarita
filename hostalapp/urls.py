@@ -10,9 +10,14 @@ urlpatterns = [
     path('', views.InicioSesion, name="InicioSesion"), #1
 
     # jquery , post
+
     path('setLogin', views.setLogin, name="setLogin"), #1
+    path('getClienteRut', views.getClienteRut, name="getClienteRut"), #1
     path('getComunaList', views.getComuna, name="getComuna"), #1
     path('mainHostal/', views.mainHostal, name="mainHostal"), #12
+
+    # cliente inserta huesped
+    path('ordenCompraHuespedes/', views.ordenCompraHuespedes, name='ordenCompraHuespedes'), # insertar empleado como huesped a una orden  de compra
 
     path('Formulario/', views.Formulario, name="Formulario"), #3 4 5
 
@@ -66,9 +71,7 @@ urlpatterns = [
 
     path('getOCEmpleados', views.getOCEmpleados, name="getOCEmpleados"),
 
-
-
-
+    path('OrdenCompraEnviar/', views.OrdenCompraEnviar, name="OrdenCompraEnviar"),
 
     # jquery , post
     path('getPlatosSeleccion', views.getMenuPlatosSel, name="getMenuPlatosSel"),
@@ -76,5 +79,7 @@ urlpatterns = [
 
     path('unsetHabitacion', views.Eliminar_habitacion, name="Eliminar_habitacion"),
     path('setHabitacioEstado', views.Modificar_EstadoHabitacion, name="Modificar_EstadoHabitacion"),
+
+    path('removeOCEmpleado/', views.removeOCEmpleado, name="removeOCEmpleado"),
 
 ]
