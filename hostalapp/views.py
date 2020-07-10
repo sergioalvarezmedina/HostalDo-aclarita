@@ -227,10 +227,16 @@ def GuardarFormulario(request):
     return render(request, "hostal/InicioSesion.html",{'form':form, 'nav':'/InicioSesion/'})
 
 def SolicitarServicio(request):
+
+    menu = []
+    for m in Hmenu.objects.all():
+        menu.append(m)
+
     form = {
+            "menu":menu,
             "ayuda" : ayuda[9]
         }
-    return render(request, 'hostal/SolicitarServicio.html', { "form" : form })
+    return render(request, 'hostal/SolicitarServicio.html', { "form" : form, 'nav':'/AdministracionCliente/'})
 
 def misDatos(request):
     return render(request, 'hostal/misDatos.html')
@@ -1039,6 +1045,43 @@ def mainHostal(request):
         }
 
     return render(request, 'hostal/menu.html', { "form": form })
+
+"""def ordenCompraHuespedes(request):
+
+    now = datetime.now()
+
+    menu=Hmenu.objects.get(menu_id=request.POST["menuId"])
+
+    persona = HPersona(
+        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+        rut = request.POST["rut_emp"],
+        nombres = request.POST["nombre_persona"],
+        paterno = request.POST["Ap_paterno"],
+        materno = request.POST["Ap_materno"]
+        cargo = request.POST["cargo"]
+    )
+    persona.save()
+
+
+    Ocompra= HocHuesped(
+        oc_huesped_id  = getSecuenciaId("H_OC_HUESPED_OC_HUESPED_ID_SEQ"),
+        orden_compra= getSecuenciaId(H_ORDEN_COMPRA_ORDEN_COMPRA_ID),
+        persona = persona,
+        recepcion_flag = 0
+        )
+    
+    Ocompra.save()
+
+    form = {
+    "menu":menu,
+    "persona":persona,
+    "Ocompra":Ocompra
+    }
+
+    return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/" })
+
+        """
+
 
 def getOrdenCompra(request):
 

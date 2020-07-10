@@ -1,5 +1,5 @@
 {% extends 'hostal/base.html' %}
-
+{% load static %}
 {% block content %}
 <title>Solicitar Servicio</title>
 <body>
@@ -18,37 +18,38 @@
                     <h2 class="title">Solicitar Servicio</h2>
                 </div>
                 <br>
- <form class="needs-validation" novalidate>
+ <form class="needs-validation" action="/ordenCompraHuespedes/" novalidate>
   <div class="form-row d-flex justify-content-around">
     <div class="control-label form-inline">
       <label for="validationCustom01" class="mr-3">Rut</label>
-      <input type="text" class="form-control" id="validationCustom01" value="Rut" required>
+      <input type="text" class="form-control" id="validationCustom01" name="rut_emp" value="{{form.persona.rut}}" required>
     </div>
     <div class="control-label form-inline">
       <label for="validationCustom02" class="mr-3">Nombre</label>
-      <input type="text" class="form-control" id="validationCustom02" value="Nombre" required>
+      <input type="text" class="form-control" id="validationCustom02" name="nombre_persona" value="{{form.persona.nombres}}" required>
     </div>
      <div class="form-inline">
       <label for="validationCustom03" class="mr-3">Apellido</label>
-      <input type="text" class="form-control" id="apellido" value="Apellido" required>
+      <input type="text" class="form-control" id="apellido" value="{{form.persona.Ap_paterno}}" name="Ap_paterno" required>
     </div>
   </div>
   <div class="form-row d-flex justify-content-around">
     <div class="form-inline">
       <label for="validationCustom04" class="mr-3">Cargo</label>
-      <input type="text" class="form-control" id="cargo" value="Cargo" required>
+      <input type="text" class="form-control" id="cargo" value="{{form.persona.cargo}}" name="cargo" required>
       </div>
       <div class="form-inline">
       <label for="validationCustom04" class="mr-3">Menu</label>
        <select class="form-control">
-                 <option value="+47">Ejecutivo</option>
-                    <option value="+46">Vegetariano</option>
-                    <option value="+45">Vegano</option>
+        {% for r in form.region %}
+                 <option value="+{{m.menu_id}}">{m.nombre}}</option>
+                
+        {% endfor %}
             </select>
       </div>
     </div>
     <div class="botonesUsuario">
-    <button id="btn " class="btn text-light registro btn-space " type="button" > 
+    <button id="btn " class="btn text-light registro btn-space " type="submit" > 
       Agregar
     </button>
     <button id="btn " class="btn text-light registro btn-space" type="button" > 
@@ -194,4 +195,11 @@
     </div>
   </div>
 </div>
+
+
+    <script src="{% static 'js/hostal.js' %}"></script>
+    <script>
+      $("#navigationForm").prop("action", "{{nav}}");
+    </script>
+
     {% endblock %}
