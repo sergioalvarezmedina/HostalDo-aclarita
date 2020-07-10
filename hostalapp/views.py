@@ -1089,35 +1089,17 @@ def mainHostal(request):
 
     return render(request, 'hostal/menu.html', { "form": form })
 
-<<<<<<< HEAD
 def removeOCEmpleado(request):
-=======
-def ordenCompraHuespedes(request):
->>>>>>> 791cc198c67b1359b73927bd8ef647e6b4b9de00
 
     try:
         emp=request.session["oc_empleados"]
     except:
         emp = []
 
-<<<<<<< HEAD
     menu=HMenu.objects.all()
     habitacion=HHabitacion.objects.all()
 
     empTmp=[]
-=======
-    menu=HMenu.objects.get(menu_id=request.POST["menu"])
-
-    persona = HPersona(
-        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        rut = request.POST["rut_emp"],
-        nombres = request.POST["nombre_persona"],
-        paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"],
-        cargo = request.POST["cargo"]
-    )
-    persona.save()
->>>>>>> 791cc198c67b1359b73927bd8ef647e6b4b9de00
 
     for e in emp:
 
@@ -1167,12 +1149,14 @@ def ordenCompraHuespedes(request):
         "habitacion":HHabitacion.objects.filter(vigencia=1),
     }
 
-    print(emp)
-
     return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/" })
 
-<<<<<<< HEAD
 def OrdenCompraEnviar(request):
+
+    usuarioId=request.session['accesoId']
+    usuario=HUsuario.objects.get(usuario_id=usuarioId)
+    persona=HPersona.objects.get(persona_id=usuario.persona_id)
+    #organismo=HOrganismo.objects.get(persona_id=persona.persona_id)
 
     emp=request.session["oc_empleados"]
 
@@ -1194,11 +1178,7 @@ def OrdenCompraEnviar(request):
     oc.save()
 
     for e in emp:
-=======
-        
->>>>>>> 791cc198c67b1359b73927bd8ef647e6b4b9de00
-
-        persona=HPersona.objects.get(rut=e.rut)
+        persona=HPersona.objects.get(rut=e["rut"])
 
     return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
 
