@@ -26,6 +26,11 @@
           <div class="form-group text-center">
             <h1 class="text-light title">Iniciar Sesión</h1>
           </div>
+          <div class="form-group text-center">
+            {% if form.msg != "" %}
+              <span style="color:red"><h3>{{form.msg}}</h3></span>
+            {% endif %}
+          </div>
           <div class="input-group">
             <input type="text" class="input--style-5" placeholder="Ingrese su Usuario" id="usuario">
           </div>

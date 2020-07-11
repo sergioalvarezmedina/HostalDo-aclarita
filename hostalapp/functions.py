@@ -1,5 +1,6 @@
 import base64
 import cx_Oracle
+from django.shortcuts import render
 from django.db import connection
 from .models import HUsuario
 
@@ -20,12 +21,19 @@ def decode(key, enc):
         dec.append(dec_c)
     return "".join(dec)
 
-def checkSession():
+def checkSession(request):
+
+    print("Chequeando sesiòn")
+    print("accesoId "+str(request.session["accesoId"]))
+
     try:
-        if "accesoId" not in request.sessions["accesoId"] or request.sessions["accesoId"]=='':
-            print("No se encontró la sesion")
+        if request.session["accesoId"]=='':
+            return 0
+        else:
+            return 1
     except:
         print("No se encontró la sesion")
+        return 0
 
 def getSecuenciaId(seq):
 
