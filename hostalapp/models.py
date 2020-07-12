@@ -418,3 +418,11 @@ class HUsuarioPerfil(models.Model):
     class Meta:
         managed = False
         db_table = 'h_usuario_perfil'
+
+class HPagoForma(models.Model):
+    pago_forma_id = models.FloatField(primary_key=True)
+    nombre = models.CharField(max_length=20)
+
+    class Meta:
+        managed = False
+        db_table = 'h_pago_forma'

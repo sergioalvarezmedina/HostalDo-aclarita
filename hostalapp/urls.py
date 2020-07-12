@@ -55,6 +55,10 @@ urlpatterns = [
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
 
     path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f49ad19cca6ebba5fe83cebf651b727b44b381
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
 
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
