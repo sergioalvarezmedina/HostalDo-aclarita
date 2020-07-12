@@ -370,6 +370,7 @@ def Facturas(request):
     return render(request, 'hostal/Facturas.html',{ 'form' : form, "nav":"/mainHostal/"})
 
 def RegistroHuespedes(request):
+
     request.session["oc_empleados"]=[]
     emp = []
 
@@ -379,6 +380,7 @@ def RegistroHuespedes(request):
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "pagoForma":HPagoForma.objects.all(),
         "ayuda" : ayuda[9]
     }
 
@@ -412,10 +414,12 @@ def GuardarHuesped(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
+        "pagoForma":HPagoForma.objects.all(),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
     }
 
     return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/AdministracionOrdenesCompra/" })
+#    return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/mainHostal/" })
 
 def removeOCAdmin(request):
 
@@ -1371,7 +1375,13 @@ def OrdenCompraEnviar(request):
 
     request.session["oc_empleados"]=''
 
-    return redirect(to="AdministracionCliente")
+    usuario=HUsuario.objects.get(usuario_id=request.session["accesoId"])
+
+    if usuario.usuario_perfil_id==2:
+        return redirect(to="AdministracionOrdenesCompra")
+    elif usuario.usuario_perfil_id==3:
+        return redirect(to="AdministracionCliente")
+
     #return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
 
 def getOrdenCompra(request):

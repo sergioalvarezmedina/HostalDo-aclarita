@@ -72,10 +72,9 @@
                   <br>
 
                   <div class="titulos d-flex mt-5 mb-5 col-9 center-block ">
-                    <input class="buscarEmpresa form-control"></input>
-                    <button id="btn" class="btn text-light registro btn-space " type="submit" name="insertEmpleado" >
-                     Buscar
-                    </button>
+                    <div class="titulos d-flex mt-5 mb-5 col-9 center-block ">
+                      <input class="buscarEmpresa form-control" onkeyup="empleadoFiltro($(this).val());">
+                    </div>
                   </div>
 
                 </form>
@@ -98,7 +97,7 @@
                             <th class="text-center"scope="col" >&nbsp;</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="empleadosList">
                           {% for e in form.emp %}
                           <tr>
                             <th scope="row">#{{e.id}}</th>
@@ -161,13 +160,11 @@
     </div>
 <div class="dropdown center-block">
     <label class=""><h4>Forma de Pago</h3></label>
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Forma de Pago
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-    <button class="dropdown-item" type="button">Efectivo</button>
-    <button class="dropdown-item" type="button">Tarjeta de Credito</button>
-  </div>
+      <select id="pagoFormaId" name="pagoFormaId" class="form-control">
+        {% for p in form.pagoForma %}
+        <option value="{{p.pago_forma_id}}">{{p.nombre}}</option>
+        {% endfor %}
+      </select>
 </div>
 <br>
 <div class="botonesSolicitar ">
@@ -181,27 +178,6 @@
     </button>
   </form>
 </div>
-    <br>
-
-            <!-- Modal Ayuda-->
-<div class="modal fade" id="Ayuda" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ayuda</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        El procedimiento consiste en ayudar a realizar la compra de lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit dolore tempora at ipsam, dolorem eum commodi deleniti, voluptatum. Est, aperiam natus beatae maiores molestias sit vitae in obcaecati! Aliquam doloribus ut atque recusandae non minus, et, ea illum, temporibus eveniet repellendus exercitationem dolorem error nulla amet ad inventore tenetur! Qui aliquid quisquam reiciendis quidem maxime velit molestias ut quibusdam tempora dolores iure minima, pariatur officiis maiores voluptas culpa sapiente fuga earum sed eum. Nesciunt quod, dolorum repellendus. Itaque recusandae qui minima quas officiis vel perferendis sunt, cum distinctio laudantium sit libero dignissimos asperiores enim, maxime cupiditate accusantium ullam quidem repudiandae incidunt corporis nam commodi beatae labore. Sit cum voluptatem nam itaque magni mollitia atque fugiat pariatur eius sapiente, iste ratione illo quasi aut laudantium. Officiis labore quidem qui, nemo, blanditiis voluptatibus. Ducimus et similique minus consectetur. Natus hic ipsum, commodi vel sint similique provident, ad tenetur maxime obcaecati aut, voluptates.
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
-</div>
-
 
     <script src="{% static 'js/hostal.js' %}"></script>
     <script>
