@@ -385,7 +385,7 @@ function unsetHabitacion(habitacionId) {
 
 }
 
-function setHabitacionEstado(habitacionId) {
+function setHabitacionEstado() {
 
   var sel={};
 
@@ -401,7 +401,7 @@ function setHabitacionEstado(habitacionId) {
     {
       sel : JSON.stringify(sel),
       estado : $("#estado").val(),
-      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+      csrfmiddlewaretoken : formEstadoCambio.csrfmiddlewaretoken.value,
     },
 
     function (data) {

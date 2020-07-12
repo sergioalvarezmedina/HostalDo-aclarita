@@ -1428,9 +1428,10 @@ def AgregarHabitacion(request):
 def Modificar_EstadoHabitacion(request):
 
     print(request.POST["estado"])
+    print(request.POST["sel"])
 
     sel=json.loads(request.POST["sel"])
-    estadoId=json.loads(request.POST["estado"])
+    estadoId=request.POST["estado"]
     data = {}
 
     if len(sel) > 0:
