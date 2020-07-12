@@ -51,24 +51,29 @@
                           </table>
                          </div>
                          <br>
+
                          <br>
-                     <div class="botonesParteuno">
-                      <div class="control-label form-inline mb-3" >
-                         <label for="validationCustom03" class="mr-10 pr-4">Estado</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-                                    <select name="estado" for="estado" id="estado" class="form-control">
-                                       {% for estadoHabitacion in form.estadoHabitacion %}
-                                        <option selected="selected" >{{estadoHabitacion.descripcion}}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="select-dropdown"></div>
-                                </div>
-                  <form method="POST" action="/ModificarEstado/">
-                    {% csrf_token %}
-                       <button id="btnAplicarEstado" class="btn text-light registro btn-space" type="button" onclick="showModificarEstado()">Aplicar Estado</button>
-                  </form>
-                       <button id="btnNuevTipoHab" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
-                    </div>
+                        <form method="POST" action="/ModificarEstado/" id="formEstadoCambio" name="formEstadoCambio">
+
+                          {% csrf_token %}
+
+                          <div class="botonesParteuno">
+                            <div class="control-label form-inline mb-3" >
+                              <label for="validationCustom03" class="mr-10 pr-4">Estado</label>
+                              <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                                <select name="estado" for="estado" id="estado" class="form-control">
+                                  {% for estadoHabitacion in form.estadoHabitacion %}
+                                  <option selected="selected" value="{{estadoHabitacion.habitacion_estado_id}}" >{{estadoHabitacion.descripcion}}</option>
+                                  {% endfor %}
+                                </select>
+                                <div class="select-dropdown"></div>
+                              </div>
+                              <button id="btnAplicarEstado" name="cambiarEstado" class="btn text-light registro btn-space" type="button" onclick="setHabitacionEstado()" >Aplicar Estado</button>
+                            </div>
+                          </div>
+                        </form>
+                        <button id="btnNuevTipoHab" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
+                      </div>
                    <br>
                    <br>
                    <div class="text-center">
