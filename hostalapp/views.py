@@ -1327,8 +1327,9 @@ def OrdenCompraEnviar(request):
 
     print ("Usuario "+str(usuarioId))
 
+    oc_id=getSecuenciaId("H_ORDEN_COMPRA_ORDEN_COMPRA_ID")
     oc=HOrdenCompra(
-        orden_compra_id=getSecuenciaId("H_ORDEN_COMPRA_ORDEN_COMPRA_ID"),
+        orden_compra_id=oc_id,
         servicio_inicio=datetime.now(),
         servicio_fin=datetime.now(),
         organismo_id=190,
@@ -1371,6 +1372,7 @@ def OrdenCompraEnviar(request):
 
     form = {
         "status":"success",
+        "id_new":"Se ha generado una nueva orden de compra con ID #"+str(oc_id),
     }
 
     request.session["oc_empleados"]=''
@@ -1378,9 +1380,11 @@ def OrdenCompraEnviar(request):
     usuario=HUsuario.objects.get(usuario_id=request.session["accesoId"])
 
     if usuario.usuario_perfil_id==2:
-        return redirect(to="AdministracionOrdenesCompra")
+        return render(request, 'hostal/AdministracionOrdenesCompra.html', { "form": form, "nav":"/mainHostal/" })
+        #return redirect(to="AdministracionOrdenesCompra", { "form":form})
     elif usuario.usuario_perfil_id==3:
-        return redirect(to="AdministracionCliente")
+        return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
+        #return redirect(to="AdministracionCliente")
 
     #return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
 
