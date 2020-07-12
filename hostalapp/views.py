@@ -1230,6 +1230,18 @@ def ordenCompraHuespedes(request):
 
 def OrdenCompraEnviar(request):
 
+    print(request.POST)
+
+    if request.POST["limpiarOc"]:
+        request.session["oc_empleador"]=""
+        menu=HMenu.objects.get(menu_id=request.POST["menu"])
+        habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
+        form = {
+            "menu":menu,
+            "habitacion":habitacion,
+        }
+        return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/mainHostal" })
+
     usuarioId=request.session['accesoId']
     usuario=HUsuario.objects.get(usuario_id=usuarioId)
     persona=HPersona.objects.get(persona_id=usuario.persona_id)

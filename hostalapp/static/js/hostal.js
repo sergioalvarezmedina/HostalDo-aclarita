@@ -583,3 +583,30 @@ function validaInsertEmpleado() {
   }
 
 }
+
+function empleadoFiltro(txt) {
+
+  $("#empleadosList tr").each(
+
+    function (indice, valor) {
+
+      var sw=0;
+      $(this).find("td").each(
+        function () {
+          var txtCel=$(this).text().toUpperCase();
+          if (txtCel.indexOf(txt.toUpperCase())>-1) {
+            sw=1;
+          }
+        }
+      );
+
+      if (sw==1 || $.trim(txt)=="") {
+        $(this).fadeIn("slow");
+      } else {
+        $(this).fadeOut("slow");
+      }
+
+    }
+  );
+
+}
