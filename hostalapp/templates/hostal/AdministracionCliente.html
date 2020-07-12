@@ -37,7 +37,7 @@
                           <td>{{oc.servicio_inicio}}</td>
                           <td>{{oc.servicio_fin}}</td>
                            <td >
-                             <button data-toggle="modal" data-target=".bd-example-modal-lg" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
+                             <button onclick="$('#modalOCDetalle').modal('show');" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
                                {{oc.empleados_cantidad}}
                              </button>
                            </td>
@@ -55,9 +55,19 @@
         </div>
     </div>
     <!-- Probando Modal-->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+    <div class="modal fade " tabindex="-1" id="modalOCDetalle" role="dialog" aria-labelledby="OCDetalle" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          1
+        </div>
+      </div>
+    </div>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
+
 
        <table class="table">
         <thead class="thead-dark">
@@ -124,6 +134,9 @@
   </div>
 </div>
 
+<script src="{% static 'js/jquery-3.5.1.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'js/modal.js' %}"></script>
 <script src="{% static 'js/hostal.js' %}"></script>
 <script>
   $("#navigationForm").prop("action", "{{nav}}");

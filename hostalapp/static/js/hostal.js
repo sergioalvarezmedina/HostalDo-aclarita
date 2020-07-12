@@ -1,8 +1,23 @@
 
 function onlyNum(e) {
 
-  var n = "1234567890"+String.fromCharCode(8)+String.fromCharCode(9);
+  var n = "1234567890"+
+    String.fromCharCode(8)+
+    String.fromCharCode(9)+
+
+    String.fromCharCode(96)+
+    String.fromCharCode(97)+
+    String.fromCharCode(98)+
+    String.fromCharCode(99)+
+    String.fromCharCode(100)+
+    String.fromCharCode(101)+
+    String.fromCharCode(102)+
+    String.fromCharCode(103)+
+    String.fromCharCode(104)+
+    String.fromCharCode(105);
   var k = (e.which)?e.which:e.keyCode;
+
+  console.log(k);
 
   return (n.indexOf(String.fromCharCode(k)) > -1);
 
