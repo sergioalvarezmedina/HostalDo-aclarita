@@ -1503,16 +1503,14 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form, "nav":"/mainHostal/"} )
 
 def Editarhab(request, habitacion_id):
-<<<<<<< HEAD
+
     request.session["habitacion_id"] = str(habitacion_id)
-=======
 
     if checkSession(request)==0:
         form ={
             "msg":"La sesión se encuentra finalizada."
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
->>>>>>> 04f49ad19cca6ebba5fe83cebf651b727b44b381
 
     habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
     idHabitacion = habitacion.habitacion_id
@@ -1535,7 +1533,7 @@ def updateHab(request):
 
     habitacion = HHabitacion.objects.get(habitacion_id = request.session["habitacion_id"]);
     habitacionTipo = HHabitacionTipo.objects.get(habitacion_tipo_id = habitacion.habitacion_tipo_id)
-    habitacionList = HHabitacionTipo.objects.all()
+
 
     print(habitacionTipo)
 
@@ -1555,18 +1553,24 @@ def updateHab(request):
         habitacion.save()
 
 
+
+    listaHabitaciones = HHabitacion.objects.all()
+    estadoHabitacion = HHabitacionEstado.objects.all()
+    tipoHabitacion = HHabitacionTipo.objects.all()
     print(habitacion.habitacion_tipo.descriptor)
 
 
     form = {
             'habitacion':habitacion,
-            'habitacionList':habitacionList,
+            'listaHabitaciones':listaHabitaciones,
+            'estadoHabitacion':estadoHabitacion,
+            'tipoHabitacion':tipoHabitacion,
             'habitacionTipo':habitacionTipo
 
       
         }
 
-    return render(request, 'hostal/Editarhab.html', {'form':form, "nav":"/AdministracionHabitaciones/"})
+    return render(request, 'hostal/AdministracionHabitaciones.html', {'form':form, "nav":"/mainHostal/"})
 
 def GuardarNuevaHabitacion(request):
 
@@ -1576,10 +1580,20 @@ def GuardarNuevaHabitacion(request):
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
+    descriptor = request.POST["nombre_tipo_habitacion"]
+
+    if HHabitacionTipo.objects.filter(descriptor = descriptor).count() > 0:
+
+        print("Nombre de Habitacion ya existe")
+
+        messages.error(request, "El nombre de la habitacion ya se encuentra registrado")
+
+        return redirect(to="AdministracionHabitaciones")
+
     nuevoTipoHabitacion = HHabitacionTipo(
-        habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
-        descriptor= request.POST["nombre_tipo_habitacion"]
-        )
+            habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
+            descriptor= request.POST["nombre_tipo_habitacion"]
+            )
     nuevoTipoHabitacion.save()
 
     return redirect(to="AdministracionHabitaciones")
