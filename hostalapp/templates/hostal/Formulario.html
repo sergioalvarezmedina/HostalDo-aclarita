@@ -52,7 +52,7 @@
                   {% endif %}
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="/GuardarFormulario/" >
+                    <form method="POST" action="/GuardarFormulario/" novalidate onsubmit="return validaOrganismo();">
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="name">Nombre Empresa</div>
@@ -101,7 +101,7 @@
                             <div class="value">
                                 <div class="input-group">
                                     <div class="rs-select2 js-select-simple select--no-search">
-                                    <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                                    <select select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
                                     <option disabled="disabled" selected="selected" name="comuna" >-Seleccione región-</option>
                                     </select>
                                     <div class="select-dropdown" name ="comuna"></div>
@@ -220,7 +220,7 @@
     <!-- razon Social JS-->
     <script src="{% static 'js/razonSocial.js' %}"></script>
 
-</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</body>
 
 </html>
 <!-- end document-->

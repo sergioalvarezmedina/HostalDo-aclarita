@@ -52,12 +52,10 @@ urlpatterns = [
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
-<<<<<<< HEAD
+
     path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
     
-=======
 
->>>>>>> a7eff9bfaf2f73d2165467014ace78417987ac8f
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
 
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
