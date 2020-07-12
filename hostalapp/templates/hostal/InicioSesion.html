@@ -19,7 +19,7 @@
 
     <div class="row justify-content-center pt-1 mt-1 mr-1">
       <div class="col-md-4 formulario">
-        <form id="formLogin" method="post">
+        <form id="formLogin" method="post" onsubmit="alert('Going!');">
 
           {% csrf_token %}
 
@@ -44,9 +44,7 @@
 
           <div class="text-center mt-4">
           <div class="btnsInicio">
-          <button id="entrar" type="button" onclick="setLogin($('#usuario').val(), $('#password').val());"  class="btn text-light registro btn-space">
-            Entrar
-          </button>
+          <button id="entrar" type="button" onclick="setLogin($('#usuario').val(), $('#password').val());" class="btn text-light registro btn-space">Entrar</button>
           <button type="summit" class="btn text-light registro btn-space mt-4" onclick="$('#formLogin').prop('action','{% url 'Formulario' %}');">
             Soy un nuevo cliente
             </button>
