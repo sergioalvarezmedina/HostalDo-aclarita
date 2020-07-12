@@ -328,30 +328,81 @@ def Facturas(request):
     return render(request, 'hostal/Facturas.html',{ 'form' : form, "nav":"/mainHostal/"})
 
 def RegistroHuespedes(request):
-    hpd = HPersona.objects.all()
-    print(hpd)
+    request.session["oc_empleados"]=[]
+    emp = []
+
+    menu = []
+
     form = {
-        "ayuda" : ayuda[2],
-        }
-    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd, "form" : form})
+        "emp":emp,
+        "menu":HMenu.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "ayuda" : ayuda[9]
+    }
 
-"""def GuardarHuesped(request):
+    return render (request, 'hostal/RegistroHuespedes.html', {"form" : form, "nav":"/AdministracionOrdenesCompra/"})
 
+def GuardarHuesped(request):
 
-    hpd = HPersona(
-        persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
-        rut=request.POST["rut_empleado"],
-        nombres = request.POST["nombre_persona"],
-        paterno = request.POST["Ap_paterno"],
-        materno = request.POST["Ap_materno"],
-        cargo = request.POST["cargo"]
-    )
+    try:
+        emp=request.session["oc_empleados"]
+    except:
+        emp = []
 
-    hpd.save()
+    menu=HMenu.objects.get(menu_id=request.POST["menu"])
+    habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
 
-    hpd = HPersona.objects.all()
+    empleado={
+        "id":len(emp)+1,
+        "rut":request.POST["rut_emp"],
+        "nombres":request.POST["nombre_persona"],
+        "apellido":request.POST["Ap_paterno"],
+        "cargo":request.POST["cargo"],
+        "habitacionId":request.POST["habitacion"],
+        "habitacionRotulo":habitacion.rotulo,
+        "menuId":request.POST["menu"],
+        "menuNombre":menu.nombre,
+    }
 
-    return render (request, 'hostal/RegistroHuespedes.html', {'hpd':hpd})"""
+    emp.append(empleado)
+    request.session["oc_empleados"]=emp
+
+    form = {
+        "emp":emp,
+        "menu":HMenu.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
+    }
+
+    return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/AdministracionOrdenesCompra/" })
+
+def removeOCAdmin(request):
+
+    try:
+        emp=request.session["oc_empleados"]
+    except:
+        emp = []
+
+    menu=HMenu.objects.all()
+    habitacion=HHabitacion.objects.all()
+
+    empTmp=[]
+
+    for e in emp:
+
+        if str(e["id"]) == request.POST["unsetEmpleado"]:
+            print("Excluyendo "+str(e["id"]) )
+        else:
+            empTmp.append(e)
+
+    request.session["oc_empleados"]=empTmp
+
+    form = {
+        "emp":empTmp,
+        "menu":HMenu.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
+    }
+
+    return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/AdministracionOrdenesCompra/", "nav":"/AdministracionOrdenesCompra/" })
 
 def AdminClientesAgregar(request):
 

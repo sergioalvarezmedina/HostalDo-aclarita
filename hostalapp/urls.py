@@ -52,6 +52,7 @@ urlpatterns = [
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
+    path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
     
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
     
@@ -85,5 +86,6 @@ urlpatterns = [
     path('setHabitacioEstado', views.Modificar_EstadoHabitacion, name="Modificar_EstadoHabitacion"),
 
     path('removeOCEmpleado/', views.removeOCEmpleado, name="removeOCEmpleado"),
+    path('removeOCAdmin/', views.removeOCAdmin, name="removeOCAdmin"),
 
 ]

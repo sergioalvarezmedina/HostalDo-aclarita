@@ -11,8 +11,6 @@
                     <h2 class="title">Solicitar Servicio</h2>
                 </div>
                 <br>
-<<<<<<< HEAD
-
                 <form method="POST" class="needs-validation" action="/ordenCompraHuespedes/" novalidate onsubmit="return validaInsertEmpleado()">
 
                   {% csrf_token %}
@@ -90,6 +88,7 @@
                     <table class="table text-center " >
                         <thead class="thead-dark text-center">
                           <tr >
+                            <th class="text-center"scope="col">ID</th>
                             <th class="text-center"scope="col">Rut</th>
                             <th class="text-center"scope="col">Nombres</th>
                             <th class="text-center"scope="col">Apellido</th>
@@ -122,99 +121,7 @@
 
                  </form>
 
-=======
- <form class="needs-validation" action="/ordenCompraHuespedes/" novalidate>
-  <div class="form-row d-flex justify-content-around">
-    <div class="control-label form-inline">
-      <label for="validationCustom01" class="mr-3">Rut</label>
-      <input type="text" class="form-control" id="validationCustom01" name="rut_emp" value="{{form.persona.rut}}" required>
-    </div>
-    <div class="control-label form-inline">
-      <label for="validationCustom02" class="mr-3">Nombre</label>
-      <input type="text" class="form-control" id="validationCustom02" name="nombre_persona" value="{{form.persona.nombres}}" required>
-    </div>
-     <div class="form-inline">
-      <label for="validationCustom03" class="mr-3">Apellido</label>
-      <input type="text" class="form-control" id="apellido" value="{{form.persona.Ap_paterno}}" name="Ap_paterno" required>
-    </div>
-  </div>
-  <div class="form-row d-flex justify-content-around">
-    <div class="form-inline">
-      <label for="validationCustom04" class="mr-3">Cargo</label>
-      <input type="text" class="form-control" id="cargo" value="{{form.persona.cargo}}" name="cargo" required>
-      </div>
-      <div class="form-inline">
-      <label for="validationCustom04" class="mr-3">Menu</label>
-       <select class="form-control" name="menu" for="menu" id="menu">
-        {% for m in form.menu %}
-                 <option value="{{m.menu}}">{{m.menu.nombre}}</option>
-        {% endfor %}
-      </select>
-      </div>
-    </div>
-    <div class="botonesUsuario">
-    <button id="btn " class="btn text-light registro btn-space " type="submit" > 
-      Agregar
-    </button>
-    <button id="btn " class="btn text-light registro btn-space" type="button" > 
-      Limpiar
-    </button>
-    </div>
-    <br>
-    <br>
-    <div class="titulos d-flex mt-5 mb-5 col-9 center-block ">
-      <input class="buscarEmpresa form-control"></input>
-      <button id="btn " class="btn text-light registro btn-space " type="button" > 
-           Buscar
-          </button>
-  </div>
-</form>
-<div class="tabla-contenidos">
-                <table class="table text-center " >
-                    <thead class="thead-dark text-center">
-                      <tr >
-                        <th class="text-center"scope="col">ID OC</th>
-                        <th class="text-center"scope="col">Días</th>
-                        <th class="text-center"scope="col">Total</th>
-                        <th class="text-center"scope="col">Fecha Ingreso</th>
-                        <th class="text-center"scope="col">Fecha Salida</th>
-                        <th class="text-center"scope="col" >Cantidad Empleados<i class="far fa-user"></i></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th class="text-center"scope="row">01</th>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>24/08/19</td>
-                        <td>26/08/29</td>
-                         <!-- Ejemplo Modal-->
-                         <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                          2
-                         </button></td>
-                      <tr>
-                        <th class="text-center"scope="row">02</th>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>24/08/19</td>
-                        <td>26/08/29</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                          2
-                         </button></td>
-                      <tr>
-                        <th class="text-center"scope="row">03</th>
-                        <td>4</td>
-                        <td>$14.000</td>
-                        <td>24/08/19</td>
-                        <td>26/08/29</td>
-                        <td ><button data-toggle="modal" data-target=".bd-example-modal-lg" id="btn " class="btn text-light registro btn-space " type="button" > 
-                          2
-                         </button></td>
-                    </tbody>
-                  </table>
-                </div>
-                 <!--Modal-->
->>>>>>> 791cc198c67b1359b73927bd8ef647e6b4b9de00
+<!--MODAL-->
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
