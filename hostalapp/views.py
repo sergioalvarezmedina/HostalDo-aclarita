@@ -10,10 +10,29 @@ import sys
 from datetime import date
 from datetime import datetime
 
+acceso = {
+    2:
+        {
+            "status":"success",
+            "uri":"mainHostal",
+        },
+    3:
+        {
+            "status":"success",
+            "uri":"AdministracionCliente",
+        },
+    4:
+        {
+            "status":"success",
+            "uri":"ProveedorOrdenDePedidos",
+        },
+}
+
+
 WORDFISH = '1236545dasdas$'
 ayudaDb = HAsistente.objects.all()
 
-form={}
+form = {}
 ayuda = {}
 for a in ayudaDb:
     ayuda[a.modulo_id]=a.contenido
@@ -50,7 +69,7 @@ def getComuna(request):
 def InicioSesion(request):
 
     try:
-        request.sessions["accesoId"]=''
+        request.session["accesoId"]=''
     except:
         print("No se encontró la sesion")
 
@@ -65,10 +84,10 @@ def setLogin(request):
     try:
 
         print("User "+dataUser["user"])
-
         usuario=HUsuario.objects.get(username=dataUser["user"]);
+        request.session['accesoId'] = usuario.usuario_id
 
-        request.session['accesoId']=usuario.usuario_id
+        print("Perfil "+str(usuario.usuario_perfil_id))
 
         if usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 2: # ADMINISTRADOR
 
@@ -81,7 +100,7 @@ def setLogin(request):
 
             data = {
                 "status":"success",
-                "uri":"AdministracionCliente",
+                "uri":"/AdministracionCliente",
                 }
 
         elif usuario.contrasena == encode(WORDFISH, dataUser["pass"]) and usuario.usuario_perfil_id == 4: # PROVEEDOR
@@ -99,7 +118,6 @@ def setLogin(request):
                 "passIni":dataUser["pass"],
                 "pass":encode(WORDFISH, dataUser["pass"]),
             }
-
             request.session['accesoId']=''
 
     except HUsuario.DoesNotExist:
@@ -110,9 +128,7 @@ def setLogin(request):
             "passIni":dataUser["pass"],
             "pass":encode(WORDFISH, dataUser["pass"]),
         }
-
         request.session['accesoId']=''
-
 
     return HttpResponse(json.dumps(data))
 
@@ -248,6 +264,12 @@ def misDatos(request): # DATOS PERSONALES DEL CLIENTE
 
 
 def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesiòn se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
 
     usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
 
@@ -1131,7 +1153,11 @@ def OrdenDePedidos(request):
 
 def mainHostal(request):
 
-    print (ayuda[1])
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesiòn se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
 
     form= {
         "id" : "menu",
@@ -1341,6 +1367,13 @@ def generarOrdenDePedidos(request): #template 30
 ############ MODULO HABITACIONES
 
 def AdministracionHabitaciones(request): #template 37 -43
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesiòn se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     listaHabitaciones = HHabitacion.objects.all()
     estadoHabitacion = HHabitacionEstado.objects.all()
     tipoHabitacion = HHabitacionTipo.objects.all()
@@ -1351,6 +1384,7 @@ def AdministracionHabitaciones(request): #template 37 -43
             "tipoHabitacion" : tipoHabitacion,
             "ayuda" : ayuda[6]
         }
+
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form, "nav":"/mainHostal/"} )
 
 def Editarhab(request, habitacion_id):
