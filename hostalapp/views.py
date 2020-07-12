@@ -244,6 +244,12 @@ def GuardarFormulario(request):
 
 def SolicitarServicio(request):
 
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     request.session["oc_empleados"]=[]
     emp = []
 
@@ -260,6 +266,12 @@ def SolicitarServicio(request):
 
 def misDatos(request): # DATOS PERSONALES DEL CLIENTE
 
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     return render(request, 'hostal/misDatos.html')
 
 
@@ -267,7 +279,7 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
 
     if checkSession(request)==0:
         form ={
-            "msg":"La sesiòn se encuentra finalizada."
+            "msg":"La sesión se encuentra finalizada."
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
@@ -1400,6 +1412,13 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form, "nav":"/mainHostal/"} )
 
 def Editarhab(request, habitacion_id):
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
     if request.method == 'GET':
         datosOrg ={'idHabitacion':habitacion.habitacion_id,'nombreHabitacion':habitacion.rotulo,
@@ -1410,6 +1429,12 @@ def Editarhab(request, habitacion_id):
 
 def GuardarNuevaHabitacion(request):
 
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     nuevoTipoHabitacion = HHabitacionTipo(
         habitacion_tipo_id=getSecuenciaId("H_HABITACION_TIPO_HABITACION_TIPO_ID_SEQ"),
         descriptor= request.POST["nombre_tipo_habitacion"]
@@ -1419,6 +1444,12 @@ def GuardarNuevaHabitacion(request):
     return redirect(to="AdministracionHabitaciones")
 
 def AgregarHabitacion(request):
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
 
     nuevaHabitacion = HHabitacion(
         habitacion_id = request.POST['HabitacionID'],
@@ -1505,6 +1536,12 @@ def Eliminar_habitacion(request):
 
 def AdministracionMenu(request):
 
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     listaMenu = HMenu.objects.all()
     print(listaMenu)
 
@@ -1516,6 +1553,12 @@ def AdministracionMenu(request):
     return render(request, 'hostal/AdministracionMenu.html', { "form" : form, "nav":"/mainHostal/" })
 
 def GuardarMenu(request):
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
 
     now = datetime.now()
 
@@ -1552,6 +1595,7 @@ def GuardarMenu(request):
 
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+
 ##############################################
 #def GuardarMenu(request):
 
@@ -1568,12 +1612,26 @@ def GuardarMenu(request):
 #URL PROVEEDOR
 
 def ProveedorOrdenDePedidos(request):
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     form = {
             "ayuda" : ayuda[10]
         }
     return render(request, 'hostal/ProveedorOrdenDePedidos.html', { "form" : form })
 
 def AdministracionProductos(request):
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
     return render(request, 'hostal/AdministracionProductos.html')
 
 
