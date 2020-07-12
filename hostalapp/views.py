@@ -1503,16 +1503,14 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form, "nav":"/mainHostal/"} )
 
 def Editarhab(request, habitacion_id):
-<<<<<<< HEAD
-    request.session["habitacion_id"] = str(habitacion_id)
-=======
 
     if checkSession(request)==0:
         form ={
             "msg":"La sesión se encuentra finalizada."
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
->>>>>>> 04f49ad19cca6ebba5fe83cebf651b727b44b381
+
+    request.session["habitacion_id"] = str(habitacion_id)
 
     habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
     idHabitacion = habitacion.habitacion_id
@@ -1563,7 +1561,7 @@ def updateHab(request):
             'habitacionList':habitacionList,
             'habitacionTipo':habitacionTipo
 
-      
+
         }
 
     return render(request, 'hostal/Editarhab.html', {'form':form, "nav":"/AdministracionHabitaciones/"})
