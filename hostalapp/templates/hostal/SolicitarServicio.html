@@ -121,12 +121,20 @@
           </div>
 
           <div class="dropdown center-block">
-              <label class=""><h4>Forma de Pago</h3></label>
-                <select id="pagoFormaId">
-                  <option value="0">Efectivo</option>
-                  <option value="2">Transferencia</option>
-                  <option value="0">Efectivo</option>
-                </select>
+            <table width="50%">
+              <tr>
+                <td>
+                  <label class=""><h4>Forma de Pago</h3></label>
+                </td>
+                <td>
+                  <select id="pagoFormaId" name="pagoFormaId" class="form-control">
+                    {% for p in form.pagoForma %}
+                    <option value="{{p.pago_forma_id}}">{{p.nombre}}</option>
+                    {% endfor %}
+                  </select>
+                </td>
+              </tr>
+            </table>
           </div>
 
           </form>
@@ -138,7 +146,13 @@
             <form id="OCEnvioForm" method="POST" action="/OrdenCompraEnviar/">
               {% csrf_token %}
               <button id="btn " class="btn text-light registro btn-space " type="submit" name="limpiarOc" value="limpiar">Limpiar Registro</button>
-              <button id="btn " class="btn text-light registro btn-space" type="submit" name="enviarOc" value="enviar" >Enviar OC</button>
+
+              {% if form.emp %}
+              <button id="btn " class="btn text-light registro btn-space" name="enviarOc" value="enviar" type="submit" >Enviar OC</button>
+              {% else %}
+              <button class="btn text-light registro btn-space" disabled >Enviar OC</button>
+              {% endif %}
+
             </form>
 
           </div>

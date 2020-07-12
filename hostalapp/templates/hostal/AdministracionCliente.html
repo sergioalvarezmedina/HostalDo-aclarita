@@ -28,15 +28,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% if not form.oc.count %}
-                      <tr>
-                        <td colspan="6">No se encontraron &oacute;rdenes de compra.</td>
-                      </tr>
-                      {% else %}
+                      {% if form.oc %}
                         {% for oc in form.oc %}
                         <tr>
-                          <th class="text-center"scope="row">01</th>
-                          <td>{{oc.orden_compra_id}}</td>
+                          <td>#{{oc.orden_compra_id}}</td>
                           <td>{{oc.dias}}</td>
                           <td>{{oc.total}}</td>
                           <td>{{oc.servicio_inicio}}</td>
@@ -48,6 +43,10 @@
                            </td>
                         </tr>
                         {% endfor %}
+                      {% else %}
+                        <tr>
+                          <td colspan="6">No se encontraron &oacute;rdenes de compra.</td>
+                        </tr>
                       {% endif %}
                     </tbody>
                   </table>

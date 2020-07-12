@@ -1,5 +1,5 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
-HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario)
+HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario, HPagoForma)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual
 import json
@@ -143,6 +143,8 @@ def Formulario(request):
     return render(request, "hostal/Formulario.html", {'form':form, 'nav':'/InicioSesion/'})
 
 def GuardarFormulario(request):
+
+
     now = datetime.now()
 
     username = request.POST["username"]
@@ -250,15 +252,15 @@ def SolicitarServicio(request):
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    request.session["oc_empleados"]=[]
-    emp = []
+    emp = request.session["oc_empleados"]
 
-    menu = []
+    print(emp)
 
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "pagoForma":HPagoForma.objects.all(),
         "ayuda" : ayuda[9]
     }
 
@@ -292,16 +294,16 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
                         TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
                         NVL(o.razon_social, 'S/D') organismo_razon_social,
                         NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                        oc.servicio_fin-oc.servicio_inicio dias,
+                        (oc.servicio_fin+1)-oc.servicio_inicio dias,
                         (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
                         (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
                     FROM
                         h_orden_compra oc
-                    INNER JOIN
+                    LEFT JOIN
                         h_usuario u
                         ON
                             oc.usuario_id=u.usuario_id
-                    INNER JOIN
+                    LEFT JOIN
                         h_organismo o
                         ON
                             oc.organismo_id=o.organismo_id
@@ -319,6 +321,12 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
     return render(request, 'hostal/AdministracionCliente.html', { "form" : form, "nav":"/" })
 
 def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINISTRADOR.
+
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
 
     print(ayuda[2])
 
@@ -1203,14 +1211,20 @@ def removeOCEmpleado(request):
         "emp":empTmp,
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "pagoForma":HPagoForma.objects.all(),
     }
 
     return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/", "nav":"/AdministracionCliente/" })
 
 def ordenCompraHuespedes(request):
 
+    emp = []
+
     try:
-        emp=request.session["oc_empleados"]
+        if request.session["oc_empleados"]=='':
+            emp = []
+        else:
+            emp=request.session["oc_empleados"]
     except:
         emp = []
 
@@ -1236,52 +1250,97 @@ def ordenCompraHuespedes(request):
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "pagoForma":HPagoForma.objects.all(),
     }
 
     return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/AdministracionCliente/" })
 
 def OrdenCompraEnviar(request):
 
-    print(request.POST)
-
-    if request.POST["limpiarOc"]:
-        request.session["oc_empleador"]=""
-        menu=HMenu.objects.get(menu_id=request.POST["menu"])
-        habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
-        form = {
-            "menu":menu,
-            "habitacion":habitacion,
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
         }
-        return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/mainHostal" })
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    usuarioId=request.session['accesoId']
+    try:
+
+        if request.POST["limpiarOc"]:
+
+            request.session["oc_empleador"]=""
+            menu=HMenu.objects.get(menu_id=request.POST["menu"])
+            habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
+
+            form = {
+                "menu":menu,
+                "habitacion":habitacion,
+                "pagoForma":HPagoForma.objects.all(),
+            }
+
+            return render(request, 'hostal/SolicitarServicio.html', { "form": form, "nav":"/mainHostal" })
+
+    except:
+
+        print ("Limpiar OK NO")
+        print ("ENVIO "+request.POST["enviarOc"])
+
+    usuarioId=request.session["accesoId"]
     usuario=HUsuario.objects.get(usuario_id=usuarioId)
-    persona=HPersona.objects.get(persona_id=usuario.persona_id)
-    #organismo=HOrganismo.objects.get(persona_id=persona.persona_id)
-
     emp=request.session["oc_empleados"]
-
     now = datetime.now()
+
+    print ("Usuario "+str(usuarioId))
 
     oc=HOrdenCompra(
         orden_compra_id=getSecuenciaId("H_ORDEN_COMPRA_ORDEN_COMPRA_ID"),
         servicio_inicio=datetime.now(),
         servicio_fin=datetime.now(),
         organismo_id=190,
-        revision_usuario_id=1,
-        visacion_usuario_id=1,
+        revision_usuario_id=usuarioId,
+        visacion_usuario_id=usuarioId,
         factura_emision_flag=0,
-        factura_usuario_id=1,
-        usuario_id=1,
+        factura_usuario_id=usuarioId,
+        usuario_id=usuarioId,
         registro_fecha=datetime.now(),
-        nulo_usuario_id=1)
+        nulo_usuario_id=usuarioId)
 
     oc.save()
 
     for e in emp:
-        persona=HPersona.objects.get(rut=e["rut"])
+        existe=1
 
-    return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
+        try:
+            persona=HPersona.objects.get(rut=e["rut"])
+        except:
+            existe=0
+
+        if existe==0:
+            persona=HPersona(
+                persona_id = getSecuenciaId("H_PERSONA_PERSONA_ID_SEQ"),
+                rut = e["rut"],
+                nombres = e["nombres"],
+                paterno = e["apellido"],
+                materno = "",
+                cargo = e["cargo"]
+            )
+            persona.save()
+
+        pasajero=HOcHuesped(
+            oc_huesped_id = getSecuenciaId("H_OC_HUESPED_OC_HUESPED_ID_SEQ"),
+            orden_compra = oc,
+            persona = persona,
+            recepcion_flag = 0
+        )
+        pasajero.save()
+
+    form = {
+        "status":"success",
+    }
+
+    request.session["oc_empleados"]=''
+
+    return redirect(to="AdministracionCliente")
+    #return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
 
 def getOrdenCompra(request):
 
