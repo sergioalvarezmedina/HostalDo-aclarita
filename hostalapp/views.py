@@ -497,14 +497,15 @@ def AdminClientesAgregar(request):
             cliente = { }
 
     elif rut :
-        try:
-            clienteResult = HOrganismo.objects.get(rut=rut)
-            cliente = { clienteResult }
 
+        try:
+            cliente = HOrganismo.objects.filter(rut__contains=rut)
+            cliente = { clienteResult }
         except:
             cliente = { }
 
     elif nombre:
+
         try:
             nombreLike="%"+nombre.upper()+"%"
             sql = """
@@ -533,6 +534,7 @@ def AdminClientesAgregar(request):
             cliente = { }
 
     else:
+
         try:
             cliente = HOrganismo.objects.all().exclude(proveedor_flag=1)
         except:
@@ -959,7 +961,10 @@ def AdminProveedor(request):
     rut = request.POST.get('buscarRut')
     nombre = request.POST.get('buscarNombre')
 
-    if rut and nombre:
+    print(request.POST)
+    print(rut)
+
+    if rut.strip()!="" and nombre.strip()!="":
         try:
 
             nombreLike="%"+nombre.upper()+"%"
@@ -997,14 +1002,41 @@ def AdminProveedor(request):
         except:
             proveedor = { }
 
-    elif rut :
+    elif rut.strip()!="" :
+
+        print("Buscando por rut "+rut)
+
         try:
-            proveedorResult = HOrganismo.objects.get(rut=rut)
-            proveedor = { proveedorResult }
+            rutLike="%"+rut.upper().strip()+"%"
+            sql = """
+                SELECT
+                    ORGANISMO_ID,
+                    RAZON_SOCIAL,
+                    RUT,
+                    NOMBRE_FANTASIA,
+                    GIRO,
+                    DIRECCION,
+                    TELEFONO,
+                    CUENTA_DATOS,
+                    PERSONA_ID,
+                    USUARIO_ID,
+                    TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                    PROVEEDOR_FLAG,
+                    COMUNA_ID,
+                    VIGENCIA
+                FROM
+                    h_organismo
+                WHERE
+                    UPPER(RUT) LIKE %s
+                """
+
+            proveedor=HOrganismo.objects.raw(sql, [rutLike])
+#            proveedor = HOrganismo.objects.filter(rut__constains=rut)
         except:
+            print("Nos caímos!!!")
             proveedor = { }
 
-    elif nombre:
+    elif nombre.strip()!="":
         try:
             nombreLike="%"+nombre.upper()+"%"
             sql = """

@@ -15,8 +15,8 @@ function onlyNum(e) {
     String.fromCharCode(103)+
     String.fromCharCode(104)+
     String.fromCharCode(105);
+    
   var k = (e.which)?e.which:e.keyCode;
-
   console.log(k);
 
   return (n.indexOf(String.fromCharCode(k)) > -1);
