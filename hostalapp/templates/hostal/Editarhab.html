@@ -1,5 +1,5 @@
 {% extends 'hostal/base.html' %}
-
+{% load static  %}
 {% block content %}
 <title>Editar Habitación</title>
 
@@ -15,37 +15,39 @@
                     </div>
                 </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form class="needs-validation" method="POST" action="/GuardarNuevoProvedor/"novalidate>
+                <form class="needs-validation" method="POST" action="/updateHab/"novalidate>
                   {% csrf_token %}
+
+                  <input type="hidden" id="habitacion_id" name="habitacion_id" value="{{habitacion.habitacion_id}}">
                     <div class="row">
                 <div class="col ml-4 justify-content-around ">
                     <div class="control-label form-inline mb-3">
-                        <label for="validationCustom01" class="mr-3">Id Habitación</label>
-                        <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="idHabitacion" value="{{idHabitacion}} " required>
+                        <label for="validationCustom01" class="mr-3">ID Habitación</label>
+                        <input type="text" class="form-control col-lg-7 ml-5" id="validationCustom01" name="idHabitacion" value="{{form.habitacion.habitacion_id}}" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom02" class="mr-3">Nombre</label>
-                         <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombreHabitacion" value="{{nombreHabitacion}}" required>
+                         <input type="text" class="form-control col-lg-7" id="validationCustom02" name="nombreHabitacion" value="{{form.habitacion.rotulo}}" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom03" class="mr-3">Precio </label>
-                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{precioHabitacion}}" name="precioHabitacion" required>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{form.habitacion.precio}}" name="precioHabitacion" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom03" class="mr-3">Camas</label>
-                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{camasHabitacion}}" name="camasHabitacion" required>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{form.habitacion.camas}}" name="camasHabitacion" required>
                     </div>
                     <div class="control-label form-inline mb-3">
                          <label for="validationCustom03" class="mr-3">Accesorios</label>
-                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{accesoriosHabitacion}}" name="accesoriosHabitacion" required>
+                         <input type="text" class="form-control col-lg-7 ml-5" id="razons" value="{{form.habitacion.accesorios}}" name="accesoriosHabitacion" required>
                     </div>
 
                       <div class="control-label form-inline mr-3 justify-content-center" >
                          <label for="validationCustom03" class="mr-10 pr-4">Tipo Habitación</label>
-                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-                                    <select name="tipoHabitacion" for="estado" id="estado" class="form-control">
-                                      {% for tipoHabitacion in form.tipoHabitacion %}
-                                      <option selected="selected">{{tipoHabitacion.descriptor}}</option>
+                                <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3" value="{{form.habitacion.habitacion_tipo.descriptor}}" >
+                                    <select name="habitacionTipo" for="estado" id="estado" class="form-control">
+                                      {% for h in form.tipo %}
+                                      <option selected="selected" name="habitacionTipo" value="{{h.descriptor}}" {% if h.habitacion_id == form.idHabitacion %}selected{% endif %}>{{h.descriptor}}</option>
                                       {% endfor %}
                                     </select>
                                     <div class="select-dropdown"></div>
@@ -56,5 +58,10 @@
                       </button>
                 </div>
 </body>
+<script src="{% static 'js/hostal.js' %}"></script>
+
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 
 {% endblock %}

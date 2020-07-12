@@ -57,10 +57,11 @@
 
                           {% csrf_token %}
 
-                          <div class="botonesParteuno">
-                            <div class="control-label form-inline mb-3" >
-                              <label for="validationCustom03" class="mr-10 pr-4">Estado</label>
-                              <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+                          <div class="botonesParteuno ">
+                            <div class="control-label form-inline mb-3  justify-content-around" >
+                              <div class="justify-content-start form-inline">
+                              <label for="validationCustom03" class="mr-2 pr-2">Estado</label>
+                              <div class="rs-select2 js-select-simple select--no-search ml-2 pl-2">
                                 <select name="estado" for="estado" id="estado" class="form-control">
                                   {% for estadoHabitacion in form.estadoHabitacion %}
                                   <option selected="selected" value="{{estadoHabitacion.habitacion_estado_id}}" >{{estadoHabitacion.descripcion}}</option>
@@ -68,18 +69,23 @@
                                 </select>
                                 <div class="select-dropdown"></div>
                               </div>
-                              <button id="btnAplicarEstado" name="cambiarEstado" class="btn text-light registro btn-space" type="button" onclick="setHabitacionEstado()" >Aplicar Estado</button>
+                               <button id="btnAplicarEstado" name="cambiarEstado" class="btn text-light registro btn-space" type="button" onclick="setHabitacionEstado()" >Aplicar Estado</button>
+                             
+                              </div>
+                               <button id="btnEliminarHab" class="btn text-light registro btn-space text" type="button" onclick="showHabitacionEliminar()">Eliminar</button>
+                             
                             </div>
                           </div>
+                          <div class="text-center mt-5 mb-5 ">
+                          <button id="btnNuevTipoHab" class="btn text-light registro btn-space " type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
+                           <button id="btnAgregarHab" class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Agregar</button>
+                          </div>
+
                         </form>
-                        <button id="btnNuevTipoHab" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#TipoHabitacion">Nuevo Tipo de Habitación</button>
+  
                       </div>
                    <br>
                    <br>
-                   <div class="text-center">
-                <button id="btnEliminarHab" class="btn text-light registro btn-space text" type="button" onclick="showHabitacionEliminar()">Eliminar</button>
-               <button id="btnAgregarHab" class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Agregar</button>
-               </div>
                   </div>
               </div>
 
@@ -216,5 +222,10 @@
 <script src="{% static "js/bootstrap.min.js" %}"></script>
 <script src="{% static "js/modal.js" %}"></script>
 <script src="{% static "js/hostal.js" %}"></script>
+<script src="{% static 'js/hostal.js' %}"></script>
+
+<script>
+  $("#navigationForm").prop("action", "{{nav}}");
+</script>
 
 {% endblock %}

@@ -1388,13 +1388,61 @@ def AdministracionHabitaciones(request): #template 37 -43
     return render(request, 'hostal/AdministracionHabitaciones.html', { "form" : form, "nav":"/mainHostal/"} )
 
 def Editarhab(request, habitacion_id):
+    request.session["habitacion_id"] = str(habitacion_id)
+
     habitacion = HHabitacion.objects.get(habitacion_id = habitacion_id)
-    if request.method == 'GET':
-        datosOrg ={'idHabitacion':habitacion.habitacion_id,'nombreHabitacion':habitacion.rotulo,
-                   'precioHabitacion':habitacion.precio,'camasHabitacion':habitacion.camas,'accesoriosHabitacion':habitacion.accesorios}
+    idHabitacion = habitacion.habitacion_id
+    habitacionList = HHabitacionTipo.objects.all()
 
-    return render(request, 'hostal/Editarhab.html', datosOrg)
+    print(habitacion)
 
+    for h in habitacionList:
+        print(str(h.habitacion_tipo_id)+" "+h.descriptor)
+
+
+    form = {
+    'habitacion' : habitacion,
+    'tipo' : habitacionList,
+    }
+
+    return render(request, 'hostal/Editarhab.html', {'form':form, "nav":"/AdministracionHabitaciones/"})
+
+def updateHab(request):
+
+    habitacion = HHabitacion.objects.get(habitacion_id = request.session["habitacion_id"]);
+    habitacionTipo = HHabitacionTipo.objects.get(habitacion_tipo_id = habitacion.habitacion_tipo_id)
+    habitacionList = HHabitacionTipo.objects.all()
+
+    print(habitacionTipo)
+
+    if  habitacion.habitacion_id != request.POST["idHabitacion"] or habitacion.rotulo!= request.POST ["nombreHabitacion"] or habitacion.precio!= request.POST["precioHabitacion"] or habitacion.camas!= request.POST ["camasHabitacion"] or habitacion.accesorios!= request.POST["accesoriosHabitacion"]:
+
+        habitacion = HHabitacion(
+        habitacion_id = request.POST['idHabitacion'],
+        rotulo = request.POST["nombreHabitacion"],
+        habitacion_tipo = HHabitacionTipo.objects.get(descriptor = request.POST['habitacionTipo']),
+        habitacion_estado = HHabitacionEstado.objects.get(habitacion_estado_id = 1),
+        camas = request.POST["camasHabitacion"],
+        accesorios = request.POST["accesoriosHabitacion"],
+        precio = request.POST["precioHabitacion"],
+        vigencia = 1
+
+        )
+        habitacion.save()
+
+
+    print(habitacion.habitacion_tipo.descriptor)
+
+
+    form = {
+            'habitacion':habitacion,
+            'habitacionList':habitacionList,
+            'habitacionTipo':habitacionTipo
+
+      
+        }
+
+    return render(request, 'hostal/Editarhab.html', {'form':form, "nav":"/AdministracionHabitaciones/"})
 
 def GuardarNuevaHabitacion(request):
 

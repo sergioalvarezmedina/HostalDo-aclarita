@@ -48,19 +48,13 @@ urlpatterns = [
 
     path('AdministracionProductos/', views.AdministracionProductos, name="AdministracionProductos"), #47 - 52
 
-    path('Editarhab/<habitacion_id>', views.Editarhab, name="Editarhab"),
-
+    path('Editarhab/<habitacion_id>/', views.Editarhab, name="Editarhab"),
+    path('updateHab/', views.updateHab, name="updateHab"),
+    
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
-<<<<<<< HEAD
 
     path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
-    
-
-=======
-
-    path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
->>>>>>> 00a152dbe7aa724622a16326f35670580d2ac855
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
 
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
