@@ -50,13 +50,16 @@ urlpatterns = [
 
     path('Editarhab/<habitacion_id>/', views.Editarhab, name="Editarhab"),
     path('updateHab/', views.updateHab, name="updateHab"),
-    
+
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
 
     path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d8b3eb1dfc7b7d6389bb531e164e0448d25b9c3
     path('GuardarFormulario/', views.GuardarFormulario, name="GuardarFormulario"),
 
     path('GuardarMenu/', views.GuardarMenu, name="GuardarMenu"),
