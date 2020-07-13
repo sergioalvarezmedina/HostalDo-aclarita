@@ -422,11 +422,6 @@ def GuardarHuesped(request):
     menu=HMenu.objects.get(menu_id=request.POST["menu"])
     habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
 
-    try:
-        organismoId=request.POST["organismoId"]
-    except:
-        organismoId=0
-
     empleado={
         "id":len(emp)+1,
         "rut":request.POST["rut_emp"],
@@ -435,24 +430,28 @@ def GuardarHuesped(request):
         "cargo":request.POST["cargo"],
         "habitacionId":request.POST["habitacion"],
         "habitacionRotulo":habitacion.rotulo,
-        "organismo":HOrganismo.objects.all(),
-        "organismo_id":organismoId,
         "menuId":request.POST["menu"],
         "menuNombre":menu.nombre,
     }
 
     emp.append(empleado)
-    request.session["oc_empleados"]=emp
+    try:
+        request.session["oc_empleados"]=emp
+    except:
+        print("No se puso guardar en sesion")
+
+    print(request.POST["organismoId"])
 
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
         "pagoForma":HPagoForma.objects.all(),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "organismoId":int(request.POST["organismoId"]),
+        "organismo":HOrganismo.objects.all()
     }
 
     return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/AdministracionOrdenesCompra/" })
-#    return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/mainHostal/" })
 
 def removeOCAdmin(request):
 
@@ -479,6 +478,9 @@ def removeOCAdmin(request):
         "emp":empTmp,
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "organismo":HOrganismo.objects.all(),
+        "organismoId":int(request.POST["organismoId"]),
+        "pagoForma":HPagoForma.objects.all()
     }
 
     return render(request, 'hostal/RegistroHuespedes.html', { "form": form, "nav":"/AdministracionOrdenesCompra/", "nav":"/AdministracionOrdenesCompra/" })
