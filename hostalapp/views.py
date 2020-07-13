@@ -1819,15 +1819,68 @@ def AdministracionMenu(request):
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    listaMenu = HMenu.objects.all()
-    print(listaMenu)
+    listaMenu = HMenu.objects.all()    
+
+    listaPlato = HPlato.objects.all()
+    print(listaPlato)
 
     form = {
-            "listaMenu" : listaMenu,
+            'listaMenu':listaMenu,
+            "listaPlato" : listaPlato,
             "ayuda" : ayuda[4] # poner el ìndice de la ayuda para esta pantalla
         }
 
     return render(request, 'hostal/AdministracionMenu.html', { "form" : form, "nav":"/mainHostal/" })
+
+
+def GuardarPlato(request):
+
+    if checkSession(request)==0:
+            form ={
+                "msg":"La sesión se encuentra finalizada."
+            }
+            return render(request, "hostal/InicioSesion.html", { "form":form } )
+
+    now = datetime.now()
+
+    nombre_plato = request.POST["nombre_plato"]
+
+
+    if HPlato.objects.filter(nombre = nombre_plato).count() > 0:
+            messages.error(request, "El nombre del Plato ya se encuentra registrado.")
+            listaPlato= HPlato.objects.all()
+            listaMenu=HMenu.objects.all()
+
+            form = {
+            "datos" : request.POST,
+            'listaMenu':listaMenu,
+            'listaPlato':listaPlato,
+            "ayuda" : ayuda[4]
+            }
+
+            return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+     
+    plato = HPlato(
+        plato_id = getSecuenciaId("H_PLATO_PLATO_ID_SEQ"),
+        nombre =request.POST["nombre_plato"] ,
+        ingredientes = request.POST["ingredientes"],
+        valor = request.POST["valor"],
+        registro_fecha = datetime.now(),
+        vigencia = 1,)  
+
+    plato.save()
+
+    listaPlato= HPlato.objects.all()
+    listaMenu = HMenu.objects.all()
+
+    form = {
+    'listaMenu':listaMenu,
+    'listaPlato':listaPlato,
+    "ayuda" : ayuda[4]
+    }
+
+    print(listaPlato)
+    return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
 def GuardarMenu(request):
 
@@ -1846,10 +1899,12 @@ def GuardarMenu(request):
     if HMenu.objects.filter(nombre = nombre_menu).count() > 0:
         messages.error(request, "El nombre del Menu ya se encuentra en la lista.")
         listaMenu= HMenu.objects.all()
+        listaPlato= HPlato.objects.all()
 
         form = {
         "datos" : request.POST,
         'listaMenu':listaMenu,
+        'listaPlato':listaPlato,
         "ayuda" : ayuda[4]
         }
 
@@ -1865,9 +1920,12 @@ def GuardarMenu(request):
 
     menu.save()
 
+
+    listaPlato=HPlato.objects.all()
     listaMenu= HMenu.objects.all()
 
     form = {
+    'listaPlato':listaPlato,
     'listaMenu':listaMenu,
     "ayuda" : ayuda[4]
     }
@@ -1875,9 +1933,9 @@ def GuardarMenu(request):
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
-def EditarMenu(request,menu_id):
+def EditarPlato(request,plato_id):
 
-    request.session["menu_id"] = str(menu_id)
+    request.session["plato_id"] = str(plato_id)
 
     if checkSession(request)==0:
         form ={
@@ -1885,46 +1943,47 @@ def EditarMenu(request,menu_id):
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    request.session["menu_id"] = str(menu_id)
+    request.session["plato_id"] = str(plato_id)
 
-    menu = HMenu.objects.get(menu_id = menu_id)
-    idMenu = menu.menu_id
-    menuList = HMenu.objects.all()
+    plato = HPlato.objects.get(plato_id = plato_id)
+    idPlato = plato.plato_id
+    platoList = HPlato.objects.all()
 
-    print(menu)
+    print(plato)
     form = {
-    'menu' : menu,
-    'tipo' : menuList,
+    'plato' : plato,
+    'tipo' : platoList,
     }
-    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/AdministracionMenu/"})
+    return render(request, 'hostal/EditarPlato.html', {'form':form, "nav":"/AdministracionMenu/"})
 
 
-def updateMenu(request):
+def updatePlato(request):
     
-    menu = HMenu.objects.get(menu_id=request.session["menu_id"]);
+    plato = HPlato.objects.get(plato_id=request.session["plato_id"]);
 
-    print(menu)
+    print(plato)
 
-    if  menu.nombre != request.POST["nombre_menu"] :
+    if  plato.nombre != request.POST["nombre_plato"] :
 
-        menu = HMenu(
-        nombre = request.POST["nombre_menu"],
+        plato = HPlato(
+        nombre = request.POST["nombre_plato"],
         vigencia= 1
     )
-        menu.save()
+    plato.save()
 
-    listaMenu= HMenu.objects.all()
+
+    listaPlato= HPlato.objects.all()
 
     form = {
-    'menu':menu,
-    'listaMenu':listaMenu,
+    'plato':plato,
+    'listaPlato':listaPlato,
     "ayuda" : ayuda[4]
     }
 
     print(listaMenu)
-    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/AdministracionMenu/"})
+    return render(request, 'hostal/EditarPlato.html', {'form':form, "nav":"/AdministracionMenu/"})
 
-def Eliminar_menu(request):
+def Eliminar_plato(request):
 
     sel=json.loads(request.POST["sel"])
     data = {}
@@ -1934,8 +1993,9 @@ def Eliminar_menu(request):
         for selId in sel:
 
             print("ID "+str(sel[selId]))
-            menu = HMenu.objects.get(menu_id=sel[selId])
-            menu.delete()
+            plato = HPlato.objects.get(plato_id=sel[selId])
+
+            plato.delete()
 
         data = {
 
@@ -1947,7 +2007,7 @@ def Eliminar_menu(request):
 
         data = {
             "status" : "error",
-            "msg" : "Se ha producido un error al intentar eliminar el Menú, el identificador recibido es inconsistente."
+            "msg" : "Se ha producido un error al intentar eliminar el Plato, el identificador recibido es inconsistente."
         }
 
     return HttpResponse(json.dumps(data))
