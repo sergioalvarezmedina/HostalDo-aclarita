@@ -3,8 +3,6 @@
 {% block content %}
 <title>Ordenes de Compra</title>
 
-<script src="{% static 'js/hostal.js' %}?{% now "YmdHis" %}"></script>
-
 <body>
     <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
         <div class="wrapper wrapper--w960">
@@ -14,7 +12,7 @@
                 </div>
                 <br>
 
-                <form name="formOC" method="post" action="{% url "getOrdenCompra" %}">
+                <form name="formOC" id="formOC" method="post" action="{% url "getOrdenCompra" %}">
 
                   <h3>
                   <div id="msg" class="col-lg-12 text text-success text-center" style="display:none"></div>
@@ -71,7 +69,7 @@
                           <td>{{oc.servicio_inicio}}</td>
                           <td>{{oc.servicio_fin}}</td>
                           <td >
-                            <button onclick="$('#modalOCDetalle').modal('show');" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
+                            <button onclick="$('#formOC').prop('action', '/ocDetalle/{{oc.orden_compra_id}}'); $('#formOC').submit();" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
                               {{oc.empleados_cantidad}}
                             </button>
                           </td>
@@ -173,6 +171,10 @@
       </a>
     </div>
 
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/hostal.js' %}"></script>
     <script>
       $("#navigationForm").prop("action", "{{nav}}");
@@ -184,5 +186,20 @@
       {% endif %}
     </script>
 
+    <div class="modal fade" id="modalOCDetalle" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="OCDetalle" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Aguarde</h5>
+          </div>
+          <div class="modal-body">
+           <div id="modalProcessBody">
+           </div>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
 
 {% endblock %}
