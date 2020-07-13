@@ -1812,20 +1812,7 @@ def GuardarMenu(request):
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
-##############################################
-#def GuardarMenu(request):
 
- #   menu = HMenu(
-  #      menu_id= getSecuenciaId("H_MENU_MENU_ID_SEQ"),
-   #     nombre = request.POST["nombre_menu"],
-    #    vigencia= 1
-    #)
-    #print(menu)
-    #menu.save()
-
-    #return render(request, 'hostal/AdministracionMenu.html')
-
-#URL PROVEEDOR
 
 def ProveedorOrdenDePedidos(request):
 
