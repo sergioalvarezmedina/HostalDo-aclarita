@@ -1892,27 +1892,16 @@ def EditarMenu(request,menu_id):
     menuList = HMenu.objects.all()
 
     print(menu)
-
-<<<<<<< HEAD
-"""def updateMenu(request, menu_id):
-
-    menu = HHmenu.objects.get(menu_id=request.session["menu_id"]);
-=======
-    for m in menuList:
-        print(str(m.nombre))
-
-
     form = {
     'menu' : menu,
     'tipo' : menuList,
     }
-    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/mainHostal/"})
+    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/AdministracionMenu/"})
 
 
 def updateMenu(request):
     
     menu = HMenu.objects.get(menu_id=request.session["menu_id"]);
->>>>>>> bcce711a97f3d23c55d0f547064c8767512a25ff
 
     print(menu)
 
@@ -1920,7 +1909,6 @@ def updateMenu(request):
 
         menu = HMenu(
         nombre = request.POST["nombre_menu"],
-        registro_fecha = datetime.now(),
         vigencia= 1
     )
         menu.save()
@@ -1934,7 +1922,7 @@ def updateMenu(request):
     }
 
     print(listaMenu)
-    return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/AdministracionMenu/"})
 
 def Eliminar_menu(request):
 
@@ -1959,7 +1947,7 @@ def Eliminar_menu(request):
 
         data = {
             "status" : "error",
-            "msg" : "Se ha producido un error al intentar eliminar la habitación, el identificador recibido es inconsistente."
+            "msg" : "Se ha producido un error al intentar eliminar el Menú, el identificador recibido es inconsistente."
         }
 
     return HttpResponse(json.dumps(data))

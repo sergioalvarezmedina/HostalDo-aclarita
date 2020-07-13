@@ -26,14 +26,18 @@
                 </div>
           <div class="control-label form-inline mb-3 mt-3">
               <label for="validationCustom03" class="mr-10 pr-2">Menu</label>
-            <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-               <select name="estado" for="estado" id="estado" class="form-control  mr-5">
-               <option disabled="disabled" selected="selected">Ejecutivo</option>
-              </select>
+          <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+               <select  name="idMenu" value="idMenu"  for="" id="idMenu" class="form-control  mr-5">
+               {% for m in form.listaMenu %}
+                  <option  value="{{m.menu_id}}" {% if m.menu_id == form.idMenu %}selected{% endif %} selected="selected">{{ m.menu_id }} - {{m.nombre}}
+                  </option>  
+               {% endfor %}           
+              </select>       
             <div class="select-dropdown"></div>
           </div>
             <button id="btn " class="btn text-light registro btn-space" type="button">Listar Menu</button>
             <button id="btnNuevoMenu" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#NuevoMenu">Nuevo Menú</button>
+            <button id="btnNuevoPlato" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#NuevoPlato">Nuevo Plato</button>
         </div>
         </div>
 
@@ -43,7 +47,7 @@
              <thead class="thead-dark text-center">
                <tr>
                 <th class="text-center"scope="col">Fecha</th>
-                <th class="text-center"scope="col">Menu</th>
+                <th class="text-center"scope="col">Plato</th>
                 <th class="text-center"scope="col">Sel</th>
                 <th class="text-center"scope="col">Edición</th>
               </tr>
@@ -80,6 +84,34 @@
 
  <!-- Modal Agregar Menu-->
   <div class="modal fade" id="NuevoMenu" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar Menú</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" action="/GuardarMenu/">
+          {% csrf_token %}
+
+          <div class="modal-body">
+           <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom01" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_menu" required>
+           </div>
+         </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+          </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar Plato-->
+  <div class="modal fade" id="NuevoPlato" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
