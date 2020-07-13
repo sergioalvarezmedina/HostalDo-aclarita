@@ -1772,6 +1772,8 @@ def AdministracionMenu(request):
 
 def GuardarMenu(request):
 
+    #request.session["menu_id"] = str(menu_id)
+
     if checkSession(request)==0:
         form ={
             "msg":"La sesión se encuentra finalizada."
@@ -1814,7 +1816,57 @@ def GuardarMenu(request):
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
+def EditarMenu():
 
+    return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+
+"""def updateMenu(request, menu_id):
+    
+    menu = HHmenu.objects.get(menu_id=request.session["menu_id"]);
+
+    print(menu)
+
+    if  menu.nombre != request.POST["nombre_menu"] :
+
+        menu = HMenu(
+        nombre = request.POST["nombre_menu"],
+        registro_fecha = datetime.now(),
+        vigencia= 1
+    )
+        menu.save()
+
+    listaMenu= HMenu.objects.all()
+
+    form = {
+    'menu':menu
+    'listaMenu':listaMenu,
+    "ayuda" : ayuda[4]
+    }
+
+    print(listaMenu)
+    return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+
+
+    listaHabitaciones = HHabitacion.objects.all()
+    estadoHabitacion = HHabitacionEstado.objects.all()
+    tipoHabitacion = HHabitacionTipo.objects.all()
+    print(habitacion.habitacion_tipo.descriptor)
+
+
+    form = {
+            'habitacion':habitacion,
+            'listaHabitaciones':listaHabitaciones,
+            'estadoHabitacion':estadoHabitacion,
+            'tipoHabitacion':tipoHabitacion,
+            'habitacionTipo':habitacionTipo
+
+
+        }
+
+    return render(request, 'hostal/AdministracionHabitaciones.html', {'form':form, "nav":"/mainHostal/"})
+
+
+    """
 
 def ProveedorOrdenDePedidos(request):
 

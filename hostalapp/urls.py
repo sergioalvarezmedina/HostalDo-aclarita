@@ -42,6 +42,9 @@ urlpatterns = [
     path('AdministracionHabitaciones/', views.AdministracionHabitaciones, name="AdministracionHabitaciones"), #37 -43
     path('AdministracionMenu/', views.AdministracionMenu, name="AdministracionMenu"), #44 -46
 
+    path('EditarMenu/', views.EditarMenu, name="EditarMenu"),
+    
+
     #URLS PROVEEDOR
 
     path('ProveedorOrdenDePedidos/', views.ProveedorOrdenDePedidos, name="ProveedorOrdenDePedidos"), #34 -36
