@@ -16,6 +16,10 @@
 
                 <form name="formOC" method="post" action="{% url "getOrdenCompra" %}">
 
+                  <h3>
+                  <div id="msg" class="col-lg-12 text text-success text-center" style="display:none"></div>
+                  </h3>
+
                   {% csrf_token %}
 
                   <div class="container-fluid">
@@ -49,42 +53,42 @@
                         <th class="text-center"scope="col">ID OC</th>
                         <th class="text-center"scope="col">Empresa</th>
                         <th class="text-center"scope="col">Días</th>
-                        <th class="text-center"scope="col">Total</th>
                         <th class="text-center"scope="col">Fecha Ingreso</th>
                         <th class="text-center"scope="col">Fecha Salida</th>
-                        <th class="text-center"scope="col" >Cantidad Empleados </i>
+                        <th class="text-center"scope="col">Cantidad Empleados </i>
+                        <th class="text-center"scope="col">Total</th>
                         <th class="text-center"scope="col">Arribos</th>
                         <th class="text-center"scope="col">Facturas</th>
                       </tr>
                     </thead>
                     <tbody>
-                        {% for o in oc %}
-                          <tr>
-                            <th class="text-center"scope="col">#{{ o.orden_compra_id }}</th>
-                            <th scope="col">Raz&oacute;n social: {{ o.organismo_nombre_fantasia }}{% if o.organismo_nombre_fantasia and o.organismo_razon_social %}<br>{% endif %}Nombre fantas&iacute;a:{{ o.organismo_razon_social }}</th>
-                            <th class="text-center"scope="col">{{ o.dias }}</th>
-                            <th class="text-center"scope="col">{{ o.total }}</th>
-                            <th class="text-center"scope="col">{{ o.servicio_inicio }}</th>
-                            <th class="text-center"scope="col">{{ o.servicio_fin }}</th>
-                            <th class="text-center "data-toggle="modal" data-target="#Modalempleados" scope="col" onclick="getOCEmpleados('{{o.orden_compra_id}}')" >
-                               <span style="cursor:pointer">
-                              {{ o.empleados_cantidad }}
-                                  {% if o.empleados_cantidad > 0 %}
-                                  <i class="fa fa-users"></i>
-                                </span>
-                              {% endif %}
-                            </th>
-                            <th class="text-center"scope="col">{{ o.empleados_arrivos_cantidad }} {% if o.empleados_arrivos_cantidad > 0 %}<i class="fa fa-flag-checkered"></i>{% endif %}</th>
-                            <th class="text-center"scope="col">
-                                <a href="{% url 'Facturas' %}">
-                              <button class="btn btn-danger" type="button" onclick >Facturaci&oacute;n</button>
-                              </a>
-                            </th>
-                          </tr>
-                        {% endfor %}
+                      {% if form.oc %}
+                        {% for oc in form.oc %}
                         <tr>
-                          <td colspan="9" class="alert alert-warning">{{msg}}</td>
+                          <td>#{{oc.orden_compra_id}}</td>
+                          <td>{{oc.organismo.razon_social}}<br>{{oc.organismo.nombre_fantasia}}</td>
+                          <td>{{oc.dias}}</td>
+                          <td>{{oc.servicio_inicio}}</td>
+                          <td>{{oc.servicio_fin}}</td>
+                          <td >
+                            <button onclick="$('#modalOCDetalle').modal('show');" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
+                              {{oc.empleados_cantidad}}
+                            </button>
+                          </td>
+                          <td>{{oc.total}}</td>
+                          <td>{{oc.empleados_arrivos_cantidad}} <i class="fa fa-flag-checkered"></i></td>
+                          <td>
+                            <a href="{% url 'Facturas' %}">
+                              <button class="btn btn-danger" type="button" onclick >Facturaci&oacute;n</button>
+                            </a>
+                          </td>
                         </tr>
+                        {% endfor %}
+                      {% else %}
+                        <tr>
+                          <td colspan="6">No se encontraron &oacute;rdenes de compra.</td>
+                        </tr>
+                      {% endif %}
                     </tbody>
                   </table>
                 </div>
@@ -172,6 +176,12 @@
     <script src="{% static 'js/hostal.js' %}"></script>
     <script>
       $("#navigationForm").prop("action", "{{nav}}");
+    </script>
+    <script>
+      {% if form.msg %}
+      $("#msg").html("{{form.msg}}");
+      $("#msg").fadeIn("slow").delay(3000).fadeOut("slow");
+      {% endif %}
     </script>
 
 
