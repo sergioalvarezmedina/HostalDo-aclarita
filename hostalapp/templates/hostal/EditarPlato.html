@@ -19,13 +19,17 @@
 
                   <div class="row">
                 <div class="col ml-4 ">
-                    <div class="control-label mb-3 text-center">
-                        <label for="validationCustom01" class="">ID Menú</label>
-                        <input type="text" class="form-control text-center" id="validationCustom01" name="idPlato" value="{{form.plato.plato_id}}" readonly>
-                    </div>
                     <div class="control-label  mb-3 text-center">
                          <label for="validationCustom02" class="">Nombre</label>
                          <input type="text" class="form-control text-center" id="validationCustom02" name="nombre_plato" value="{{form.plato.nombre}}" required>
+                    </div>
+                    <div class="control-label  mb-3 text-center">
+                         <label for="validationCustom02" class="">Ingredientes</label>
+                         <textarea type="text" class="form-control text-center" id="validationCustom02" name="ingredientes" value="{{form.plato.ingredientes}}" required>> </textarea>
+                    </div>
+                    <div class="control-label  mb-3 text-center">
+                         <label for="validationCustom02" class="">Valor</label>
+                         <input type="text" class="form-control text-center" id="validationCustom02" name="valor" value="{{form.plato.valor}}" required>
                     </div>
                     <div class="control-label mb-3 text-center">
                          <label for="validationCustom03" class="">Fecha de Registro</label>

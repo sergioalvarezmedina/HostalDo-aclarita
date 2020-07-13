@@ -1966,9 +1966,13 @@ def updatePlato(request):
     if  plato.nombre != request.POST["nombre_plato"] :
 
         plato = HPlato(
-        nombre = request.POST["nombre_plato"],
-        vigencia= 1
-    )
+        plato_id = getSecuenciaId("H_PLATO_PLATO_ID_SEQ"),
+        nombre =request.POST["nombre_plato"] ,
+        ingredientes = request.POST["ingredientes"],
+        valor = request.POST["valor"],
+        registro_fecha = datetime.now(),
+        vigencia = 1,)  
+
     plato.save()
 
 
@@ -1980,7 +1984,6 @@ def updatePlato(request):
     "ayuda" : ayuda[4]
     }
 
-    print(listaMenu)
     return render(request, 'hostal/EditarPlato.html', {'form':form, "nav":"/AdministracionMenu/"})
 
 def Eliminar_plato(request):
