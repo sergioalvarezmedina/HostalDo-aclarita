@@ -337,19 +337,44 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
                 NVL(o.razon_social, 'S/D') organismo_razon_social,
                 NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                oc.servicio_fin-oc.servicio_inicio dias,
-                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
-                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                (oc.servicio_fin+1)-oc.servicio_inicio dias,
+                NVL(SUM(h.precio), 0) total,
+                COUNT(och.oc_huesped_id) empleados_cantidad,
+                COUNT(ocha.oc_huesped_id) empleados_arrivos_cantidad
             FROM
                 h_orden_compra oc
-            INNER JOIN
+            LEFT JOIN
                 h_usuario u
                 ON
                     oc.usuario_id=u.usuario_id
-            INNER JOIN
+            LEFT JOIN
                 h_organismo o
                 ON
                     oc.organismo_id=o.organismo_id
+
+            LEFT JOIN h_oc_huesped och
+                ON oc.orden_compra_id=och.orden_compra_id
+
+            LEFT JOIN h_oc_huesped ocha
+                ON oc.orden_compra_id=ocha.orden_compra_id AND
+                ocha.recepcion_flag=1
+
+            LEFT JOIN h_huesped_habitacion hh
+                ON och.oc_huesped_id=hh.huesped_id
+
+            LEFT JOIN h_habitacion h
+                ON
+                    hh.habitacion_id=h.habitacion_id
+
+            GROUP BY
+
+                oc.orden_compra_id,
+                TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY'),
+                TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY'),
+                NVL(o.razon_social, 'S/D'),
+                NVL(o.nombre_fantasia, 'S/D'),
+                (oc.servicio_fin+1)-oc.servicio_inicio
+
         """
 
     print ("Query : "+sql)
@@ -1370,23 +1395,21 @@ def OrdenCompraEnviar(request):
         )
         pasajero.save()
 
-    form = {
-        "status":"success",
-        "id_new":"Se ha generado una nueva orden de compra con ID #"+str(oc_id),
-    }
-
     request.session["oc_empleados"]=''
 
     usuario=HUsuario.objects.get(usuario_id=request.session["accesoId"])
 
+    form = {
+        "status":"success",
+        "msg":"Se ha generado una nueva orden de compra con ID #"+str(oc_id),
+    }
+
     if usuario.usuario_perfil_id==2:
         return render(request, 'hostal/AdministracionOrdenesCompra.html', { "form": form, "nav":"/mainHostal/" })
-        #return redirect(to="AdministracionOrdenesCompra", { "form":form})
+
     elif usuario.usuario_perfil_id==3:
         return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
-        #return redirect(to="AdministracionCliente")
 
-    #return render(request, 'hostal/AdministracionCliente.html', { "form": form, "nav":"/" })
 
 def getOrdenCompra(request):
 
@@ -1428,9 +1451,9 @@ def getOrdenCompra(request):
                                 TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
                                 NVL(o.razon_social, 'S/D') organismo_razon_social,
                                 NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                                oc.servicio_fin-oc.servicio_inicio dias,
-                                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
-                                (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                                (oc.servicio_fin+1+)-oc.servicio_inicio dias,
+                                (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                                (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
                             FROM
                                 h_orden_compra oc
                             INNER JOIN
@@ -1459,7 +1482,7 @@ def getOrdenCompra(request):
                                 TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
                                 NVL(o.razon_social, 'S/D') organismo_razon_social,
                                 NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                                oc.servicio_fin-oc.servicio_inicio dias,
+                                (oc.servicio_fin+1)-oc.servicio_inicio dias,
                                 (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
                                 (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
                             FROM
@@ -1484,8 +1507,13 @@ def getOrdenCompra(request):
         oc = {}
         msg = "El criterio de búsqueda utilizado no ha retornado registros."
 
+    form = {
+        "oc" : oc,
+        "msg" : msg,
 
-    return render(request, 'hostal/AdministracionOrdenesCompra.html', { "msg" : msg, "oc" : oc, "status" : "success"})
+    }
+
+    return render(request, 'hostal/AdministracionOrdenesCompra.html', { "form": form, "msg" : msg, "oc" : oc, "status" : "success"})
 
 def generarOrdenDePedidos(request): #template 30
     form = {
