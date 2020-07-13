@@ -344,6 +344,63 @@ function showHabitacionEliminar(habitacionId) {
 
 }
 
+function unsetMenu(menuid) {
+
+  var sel={};
+
+  var index=0;
+  $("input[name='sel']:checked").each(
+    function(){
+      sel[index++]=$(this).val();
+    }
+  );
+
+  $.post(
+    "/unsetMenu",
+    {
+      sel : JSON.stringify(sel),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+
+    function (data) {
+
+      try {
+
+        var rec=JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          location.reload();
+
+        } else {
+
+          showMessage(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+
+  );
+
+}
+
+function showMenuEliminar(menuid) {
+
+  if (confirm("¿Esta seguro de eliminar el Menú seleccionada?")) {
+
+    unsetMenu(menuid);
+
+  }
+
+
+}
+
 function showHabitacionEstado(habitacionId) {
 
   if (confirm("¿Esta seguro de cambiar el estado de la habitación seleccionada?")) {

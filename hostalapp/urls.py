@@ -42,8 +42,9 @@ urlpatterns = [
     path('AdministracionHabitaciones/', views.AdministracionHabitaciones, name="AdministracionHabitaciones"), #37 -43
     path('AdministracionMenu/', views.AdministracionMenu, name="AdministracionMenu"), #44 -46
 
-    path('EditarMenu/', views.EditarMenu, name="EditarMenu"),
-    
+    path('EditarMenu/<menu_id>/', views.EditarMenu, name="EditarMenu"),
+    path('updateMenu/', views.updateMenu, name="updateMenu"),
+  
 
     #URLS PROVEEDOR
 
@@ -53,6 +54,8 @@ urlpatterns = [
 
     path('Editarhab/<habitacion_id>/', views.Editarhab, name="Editarhab"),
     path('updateHab/', views.updateHab, name="updateHab"),
+    path('unsetMenu', views.Eliminar_menu, name="Eliminar_menu"),
+
 
     #Metodos
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
