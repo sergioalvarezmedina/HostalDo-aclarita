@@ -1430,6 +1430,13 @@ def OrdenCompraEnviar(request):
 
 def getOrdenCompra(request):
 
+    try:
+        print("TODO "+request.POST["todo"])
+        if request.POST["todo"]:
+            return redirect(to="AdministracionOrdenesCompra");
+    except:
+        print("Busqueda filtrada.")
+
     msg = ""
 
     if request.POST["ocNumero"] == "" and request.POST["cliente"] == "":
@@ -1443,52 +1450,98 @@ def getOrdenCompra(request):
         ocFlag=0
         clienteFlag=0
 
-        ocNumero = int(request.POST["ocNumero"]) if (request.POST["ocNumero"]!="") else 0
-        cliente = request.POST["cliente"] if (request.POST["cliente"]!="") else ''
+        try:
+            ocNumero = request.POST["ocNumero"]
+        except:
+            ocNumero=''
 
-        print("CLiente "+cliente)
+        try:
+            cliente = request.POST["cliente"]
+        except:
+            cliente=''
 
-        if "ocNumero" in request.POST and request.POST["ocNumero"]!="":
-            ocFlag=1
+        print("Oc "+ocNumero)
+        print("Cliente "+cliente)
 
-        if "cliente" in request.POST and request.POST["cliente"]!="":
-            clienteFlag=1
+        if ocNumero and ocNumero!='':
 
-        if ocFlag==1 and clienteFlag==1:
+            if cliente and cliente!='':
 
-            print("Ambos criterios "+request.POST["ocNumero"]+" "+request.POST["ocNumero"])
-            oc = HOrdenCompra.objects.raw("SELECT * FROM H_ORDEN_COMPRA WHERE ORDEN_COMPRA_ID=%i", [ocNumero])
+                print("Buscando por OC & Cliente")
+                print("OC "+ocNumero+"  / "+cliente)
 
-        elif ocNumero>0:
+                cliente='%'+cliente+'%'
 
-            sql="""
-                            SELECT
-                                oc.orden_compra_id orden_compra_id,
-                                TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
-                                TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
-                                NVL(o.razon_social, 'S/D') organismo_razon_social,
-                                NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                                (oc.servicio_fin+1+)-oc.servicio_inicio dias,
-                                (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
-                                (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
-                            FROM
-                                h_orden_compra oc
-                            INNER JOIN
-                                h_usuario u
-                                ON
-                                    oc.usuario_id=u.usuario_id
-                            INNER JOIN
-                                h_organismo o
-                                ON
-                                    oc.organismo_id=o.organismo_id
-                            WHERE
-                                oc.orden_compra_id=%i
-                        """ % ocNumero
+                sql="""
+                                SELECT
+                                    oc.orden_compra_id orden_compra_id,
+                                    TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                                    TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                                    NVL(o.razon_social, 'S/D') organismo_razon_social,
+                                    NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                                    (oc.servicio_fin+1)-oc.servicio_inicio dias,
+                                    (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                                    (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag=1) empleados_arrivos_cantidad
+                                FROM
+                                    h_orden_compra oc
+                                INNER JOIN
+                                    h_usuario u
+                                    ON
+                                        oc.usuario_id=u.usuario_id
+                                INNER JOIN
+                                    h_organismo o
+                                    ON
+                                        oc.organismo_id=o.organismo_id
+                                WHERE
+                                    oc.orden_compra_id="""+ocNumero+""" AND
+                                    (
+                                        UPPER(o.nombre_fantasia) LIKE UPPER('"""+cliente+"""') OR
+                                        UPPER(o.razon_social) LIKE UPPER('"""+cliente+"""'))
+                            """
 
-            print ("Query : "+sql)
-            oc = HOrdenCompra.objects.raw(sql);
+                print ("Query : "+sql)
+                oc = HOrdenCompra.objects.raw(sql);
 
-        elif cliente != "":
+                print("Buscando aplicada")
+
+            else:
+
+                print("Buscando por OC")
+                print("OC "+ocNumero)
+
+                sql="""
+                                SELECT
+                                    oc.orden_compra_id orden_compra_id,
+                                    TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                                    TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                                    NVL(o.razon_social, 'S/D') organismo_razon_social,
+                                    NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                                    (oc.servicio_fin+1)-oc.servicio_inicio dias,
+                                    (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                                    (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                                FROM
+                                    h_orden_compra oc
+                                INNER JOIN
+                                    h_usuario u
+                                    ON
+                                        oc.usuario_id=u.usuario_id
+                                INNER JOIN
+                                    h_organismo o
+                                    ON
+                                        oc.organismo_id=o.organismo_id
+                                WHERE
+                                    oc.orden_compra_id="""+ocNumero+"""
+                            """
+
+                print ("Query : "+sql)
+                oc = HOrdenCompra.objects.raw(sql);
+
+                print("Consulta ejecutara")
+
+        elif cliente and cliente != "":
+
+            print("Buscando por Cliente")
+            print("cliente "+cliente )
 
             cliente=cliente.upper()
 
@@ -1518,6 +1571,11 @@ def getOrdenCompra(request):
                         """, [cliente+'%', cliente+'%']
                     )
 
+            print ("Query : "+sql)
+            oc = HOrdenCompra.objects.raw(sql);
+
+            print("Query ejecutada")
+
     except:
 
         print("Se ha producido una excepción ", sys.exc_info()[0])
@@ -1527,15 +1585,16 @@ def getOrdenCompra(request):
     form = {
         "oc" : oc,
         "msg" : msg,
-
     }
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "form": form, "msg" : msg, "oc" : oc, "status" : "success"})
 
 def generarOrdenDePedidos(request): #template 30
+
     form = {
             "ayuda" : ayuda[3]
         }
+
     return render(request, 'hostal/generarOrdenDePedidos.html', { "form" : form, "nav":"/OrdenDePedidos/"})
 
 ############ MODULO HABITACIONES
@@ -1821,7 +1880,7 @@ def EditarMenu():
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
 """def updateMenu(request, menu_id):
-    
+
     menu = HHmenu.objects.get(menu_id=request.session["menu_id"]);
 
     print(menu)
@@ -2027,16 +2086,22 @@ def getClienteRut(request):
 
 def showOCDetalle(request, oc_id):
 
+    print(oc_id)
+
     ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
+    ordenCompra=HOrdenCompra.objects.get(orden_compra_id=oc_id)
+
+
     hh = []
     for h in ocHuesped:
-        huespedHabitacion=HHuespedHabitacion.objects.filter(huesped_id=h.huesped_)
+        huespedHabitacion=HHuespedHabitacion.objects.filter(huesped_id=h.huesped_id)
         print ("Huesped id "+huespedHabitacion.huesped_id)
         hh.append(huespedHabitacion)
 
     form = {
-        "oc" : ocHuesped,
-        "hh" : huespedHabitacion,
+        "oc" : ordenCompra,
+        "huesped" : ocHuesped,
+        "hh" : hh,
         "ayuda" : ayuda[10],
     }
 

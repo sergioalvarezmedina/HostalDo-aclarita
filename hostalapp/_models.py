@@ -120,14 +120,20 @@ class DjangoSession(models.Model):
 
 class HAsistente(models.Model):
     asistente_id = models.FloatField(primary_key=True)
-    contenido = models.CharField(max_length=4000)
+    contenido = models.TextField(max_length=4000)
     vigencia_flag = models.FloatField()
     modulo = models.ForeignKey('HModulo', models.DO_NOTHING)
     vigencia = models.FloatField()
 
     class Meta:
+        verbose_name = "Ayuda"
+        verbose_name_plural = "Ayuda"
+        ordering = ["asistente_id"]
         managed = False
         db_table = 'h_asistente'
+
+    def __str__(self):
+        return self.contenido
 
 
 class HComuna(models.Model):
@@ -136,8 +142,14 @@ class HComuna(models.Model):
     region = models.ForeignKey('HRegion', models.DO_NOTHING)
 
     class Meta:
+        verbose_name = "Comuna"
+        verbose_name_plural = "Comunas"
+        ordering = ["comuna_id"]
         managed = False
         db_table = 'h_comuna'
+
+    def __str__(self):
+        return self.nombre
 
 
 class HHabitacion(models.Model):
@@ -175,23 +187,14 @@ class HHabitacionTipo(models.Model):
 
 
 class HHuespedHabitacion(models.Model):
-    huesped_habitacion_id = models.FloatField(primary_key=True)
-    habitacion = models.ForeignKey(HHabitacion, models.DO_NOTHING)
-    oc_huesped = models.ForeignKey('HOcHuesped', models.DO_NOTHING)
+    huesped_habitacion = models.OneToOneField('HOcHuesped', models.DO_NOTHING, primary_key=True)
+    huesped = models.ForeignKey('HOcHuesped', models.DO_NOTHING, related_name="+")
+    habitacion = models.ForeignKey(HHabitacion, models.DO_NOTHING, related_name="+")
 
     class Meta:
         managed = False
         db_table = 'h_huesped_habitacion'
-
-
-class HHuespedHabitacionMenu(models.Model):
-    menu = models.OneToOneField('HMenu', models.DO_NOTHING, primary_key=True)
-    huesped_habitacion_id = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'h_huesped_habitacion_menu'
-        unique_together = (('menu', 'huesped_habitacion_id'),)
+        unique_together = (('huesped_habitacion', 'huesped', 'habitacion'),)
 
 
 class HMenu(models.Model):
@@ -207,7 +210,7 @@ class HMenu(models.Model):
 
 class HMinuta(models.Model):
     minuta_id = models.FloatField(primary_key=True)
-    fecha = models.DateField()
+    fecha = models.FloatField()
     plato = models.ForeignKey('HPlato', models.DO_NOTHING)
     menu = models.ForeignKey(HMenu, models.DO_NOTHING)
     vigencia = models.BooleanField()
@@ -222,8 +225,14 @@ class HModulo(models.Model):
     descripcion = models.CharField(max_length=100)
 
     class Meta:
+        verbose_name = "modulo"
+        verbose_name_plural = "Modulos"
+        ordering = ["modulo_id"]
         managed = False
         db_table = 'h_modulo'
+
+    def __str__(self):
+        return self.descripcion
 
 
 class HOcHuesped(models.Model):
@@ -235,6 +244,7 @@ class HOcHuesped(models.Model):
     class Meta:
         managed = False
         db_table = 'h_oc_huesped'
+        unique_together = (('oc_huesped_id', 'orden_compra'),)
 
 
 class HOcItems(models.Model):
@@ -254,19 +264,18 @@ class HOrdenCompra(models.Model):
     orden_compra_id = models.FloatField(primary_key=True)
     servicio_inicio = models.DateField()
     servicio_fin = models.DateField()
-    organismo = models.ForeignKey('HOrganismo', models.DO_NOTHING)
+    organismo = models.ForeignKey('HOrganismo', models.DO_NOTHING, related_name="+")
     revision_fecha = models.DateField(blank=True, null=True)
-    revision_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='revision_usuario')
+    revision_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
     visacion_fecha = models.DateField(blank=True, null=True)
-    visacion_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='visacion_usuario')
+    visacion_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
     factura_numero = models.CharField(max_length=100, blank=True, null=True)
     factura_emision_flag = models.BooleanField(blank=True, null=True)
-    factura_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='factura_usuario')
-    usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
+    factura_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
+    usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
     registro_fecha = models.DateField()
     nulo_fecha = models.DateField(blank=True, null=True)
-    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='nulo_usuario2')
-    pago_forma = models.ForeignKey('HPagoForma', models.DO_NOTHING, blank=True, null=True)
+    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
 
     class Meta:
         managed = False
@@ -275,16 +284,16 @@ class HOrdenCompra(models.Model):
 
 class HOrdenPedido(models.Model):
     orden_pedido_id = models.FloatField(primary_key=True)
-    proveedor_organismo = models.ForeignKey('HOrganismo', models.DO_NOTHING)
+    proveedor_organismo = models.ForeignKey('HOrganismo', models.DO_NOTHING, related_name="+")
     documento_numero = models.CharField(max_length=100, blank=True, null=True)
     documento_fecha = models.DateField(blank=True, null=True)
     observacion = models.CharField(max_length=4000, blank=True, null=True)
-    usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
+    usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
     registro_fecha = models.DateField()
     revision_fecha = models.DateField(blank=True, null=True)
     revision_usuario_id = models.FloatField(blank=True, null=True)
     nulo_fecha = models.DateField(blank=True, null=True)
-    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="nulo_usuario")
+    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="+")
 
     class Meta:
         managed = False
@@ -312,15 +321,6 @@ class HOrganismo(models.Model):
         db_table = 'h_organismo'
 
 
-class HPagoForma(models.Model):
-    pago_forma_id = models.FloatField(primary_key=True)
-    nombre = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'h_pago_forma'
-
-
 class HPersona(models.Model):
     persona_id = models.FloatField(primary_key=True)
     rut = models.CharField(max_length=30, blank=True, null=True)
@@ -342,7 +342,7 @@ class HPersonaDireccion(models.Model):
     persona = models.ForeignKey(HPersona, models.DO_NOTHING)
     usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
     registro_fecha = models.DateField(blank=True, null=True)
-    registro_hora = models.IntegerField(blank=True, null=True)
+    registro_hora = models.FloatField(max_length=4, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -418,3 +418,11 @@ class HUsuarioPerfil(models.Model):
     class Meta:
         managed = False
         db_table = 'h_usuario_perfil'
+
+class HPagoForma(models.Model):
+    pago_forma_id = models.FloatField(primary_key=True)
+    nombre = models.CharField(max_length=20)
+
+    class Meta:
+        managed = False
+        db_table = 'h_pago_forma'

@@ -32,8 +32,8 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% if form.hh %}
-                          {% for d in form.hh %}
+                        {% if form.huesped %}
+                          {% for h in form.hh %}
                           <tr>
                             <td>#{{d.huesped.persona.rut}}</td>
                             <td>{{d.huesped.persona.nombres}} {{d.huesped.persona.paterno}}</td>

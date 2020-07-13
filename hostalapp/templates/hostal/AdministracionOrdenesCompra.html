@@ -36,7 +36,8 @@
                     <br>
                     <div class="row">
                       <div class="col-lg-12">
-                        <button class="btn btn-primary" type="submit">Buscar <i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary" type="submit" onclick="return checkCriteria()">Buscar <i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary" name="todo" value="full" type="submit">Todo</button>
                       </div>
                     </div>
 
@@ -171,10 +172,6 @@
       </a>
     </div>
 
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/util.js' %}"></script>
-    <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'js/hostal.js' %}"></script>
     <script>
       $("#navigationForm").prop("action", "{{nav}}");

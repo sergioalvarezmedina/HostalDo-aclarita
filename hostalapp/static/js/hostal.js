@@ -87,7 +87,8 @@ function setLogin(user, pass) {
 
         } else {
 
-          showMessage('Credenciales incorrectas');
+          alert('Credenciales incorrectas');
+          $("#entrar").prop("disabled", false);
 
         }
 
@@ -625,5 +626,15 @@ function empleadoFiltro(txt) {
 
     }
   );
+
+}
+
+function checkCriteria() {
+
+  if ( $.trim($("#ocNumero").val() )=='' && $.trim( $("#cliente").val() )=='') {
+    $("#msg").html("Se requiere un criterio de b&uacute;squeda");
+    $("#msg").fadeIn("slow").delay(3000).fadeOut("slow");
+    return false;
+  }
 
 }

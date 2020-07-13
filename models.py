@@ -256,16 +256,16 @@ class HOrdenCompra(models.Model):
     servicio_fin = models.DateField()
     organismo = models.ForeignKey('HOrganismo', models.DO_NOTHING)
     revision_fecha = models.DateField(blank=True, null=True)
-    revision_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='revision_usuario')
+    revision_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True)
     visacion_fecha = models.DateField(blank=True, null=True)
-    visacion_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='visacion_usuario')
+    visacion_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True)
     factura_numero = models.CharField(max_length=100, blank=True, null=True)
     factura_emision_flag = models.BooleanField(blank=True, null=True)
-    factura_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='factura_usuario')
+    factura_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True)
     usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
     registro_fecha = models.DateField()
     nulo_fecha = models.DateField(blank=True, null=True)
-    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='nulo_usuario2')
+    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True)
     pago_forma = models.ForeignKey('HPagoForma', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
@@ -284,7 +284,7 @@ class HOrdenPedido(models.Model):
     revision_fecha = models.DateField(blank=True, null=True)
     revision_usuario_id = models.FloatField(blank=True, null=True)
     nulo_fecha = models.DateField(blank=True, null=True)
-    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, related_name="nulo_usuario")
+    nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
 
     class Meta:
         managed = False
