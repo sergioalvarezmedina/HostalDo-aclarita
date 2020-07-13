@@ -90,4 +90,6 @@ urlpatterns = [
     path('removeOCEmpleado/', views.removeOCEmpleado, name="removeOCEmpleado"),
     path('removeOCAdmin/', views.removeOCAdmin, name="removeOCAdmin"),
 
+    path('ocDetalle/<int:oc_id>', views.showOCDetalle, name="showOCDetalle"),
+
 ]

@@ -22,15 +22,15 @@
                     <div class="form-row ">
                     <div class="form-inline">
                       <div class="form-inline ">
-                        <label for="validationCustom04" class="mr-3">Empresa</label>
-                        <select class="form-control" id="empresa" name="empresa">
+                        <label for="empresa" class="mr-3">Empresa</label>
+                        <select class="form-control" id="organismoId" name="organismoId" onchange="$('#empresaRut').val($(this).data('id'));">
                         {% for o in form.organismo %}
-                        <option value="{{e.organismo_id}}">{{o.organismo_id}}-{{o.nombre}}</option>
+                          <option value="{{o.organismo_id}}" data-id="{{o.rut}}" {% if o.organismo_id == form.organismoId %}selected{% endif %}>{{o.razon_social}} - {{o.nombre_fantasia}}</option>
                         {% endfor %}
                         </select>
                       </div>
-                        <label for="validationCustom04" class="mr-3 ml-5">Rol Empresa</label>
-                        <input type="text" class="form-control" id="cargo" value="{{form.organismo.rut}}" name="cargo" required onfocus="this.select()">
+                        <label for="empresaRut" class="mr-3 ml-5">Rol Empresa</label>
+                        <input type="text" class="form-control" id="empresaRut" value="{{form.organismo.rut}}" name="empresaRut" readonly>
                     </div>
                   </div>
 
@@ -87,10 +87,7 @@
 
                   <div class="titulos d-flex mt-5 mb-5 col-9 center-block ">
                     <div class="titulos d-flex mt-5 mb-5 col-9 center-block ">
-                      <button id="btn " class="btn text-light registro btn-space " type="submit" >
-                      Busqueda
-                    </button>
-                      <input class="buscarEmpresa form-control" onkeyup="empleadoFiltro($(this).val());">
+                      Filtrar clientes <input class="buscarEmpresa form-control" onkeyup="empleadoFiltro($(this).val());">
                     </div>
                   </div>
 

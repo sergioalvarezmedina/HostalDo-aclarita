@@ -1,5 +1,5 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
-HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario, HPagoForma)
+HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario, HPagoForma, HHuespedHabitacion)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual
 import json
@@ -360,7 +360,7 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 ocha.recepcion_flag=1
 
             LEFT JOIN h_huesped_habitacion hh
-                ON och.oc_huesped_id=hh.huesped_id
+                ON och.oc_huesped_id=hh.oc_huesped_id
 
             LEFT JOIN h_habitacion h
                 ON
@@ -406,6 +406,7 @@ def RegistroHuespedes(request):
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(vigencia=1),
         "pagoForma":HPagoForma.objects.all(),
+        "organismo":HOrganismo.objects.all(),
         "ayuda" : ayuda[9]
     }
 
@@ -421,6 +422,11 @@ def GuardarHuesped(request):
     menu=HMenu.objects.get(menu_id=request.POST["menu"])
     habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
 
+    try:
+        organismoId=request.POST["organismoId"]
+    except:
+        organismoId=0
+
     empleado={
         "id":len(emp)+1,
         "rut":request.POST["rut_emp"],
@@ -429,6 +435,8 @@ def GuardarHuesped(request):
         "cargo":request.POST["cargo"],
         "habitacionId":request.POST["habitacion"],
         "habitacionRotulo":habitacion.rotulo,
+        "organismo":HOrganismo.objects.all(),
+        "organismo_id":organismoId,
         "menuId":request.POST["menu"],
         "menuNombre":menu.nombre,
     }
@@ -987,8 +995,15 @@ def GuardarNuevoUsuario(request): #Al parecer OK
 
 def AdminProveedor(request):
 
-    rut = request.POST.get('buscarRut')
-    nombre = request.POST.get('buscarNombre')
+    if request.POST.get('buscarRut'):
+        rut = request.POST.get('buscarRut')
+    else:
+        rut=''
+
+    if request.POST.get('buscarNombre'):
+        nombre = request.POST.get('buscarNombre')
+    else:
+        nombre=''
 
     print(request.POST)
     print(rut)
@@ -1835,7 +1850,6 @@ def AdministracionProductos(request):
 
     return render(request, 'hostal/AdministracionProductos.html')
 
-
 def getOCEmpleados(request):
 
     dataIn = json.loads(request.POST["data"]);
@@ -1969,3 +1983,20 @@ def getClienteRut(request):
         }
 
     return HttpResponse(json.dumps(data))
+
+def showOCDetalle(request, oc_id):
+
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
+    hh = []
+    for h in ocHuesped:
+        huespedHabitacion=HHuespedHabitacion.objects.filter(huesped_id=h.huesped_)
+        print ("Huesped id "+huespedHabitacion.huesped_id)
+        hh.append(huespedHabitacion)
+
+    form = {
+        "oc" : ocHuesped,
+        "hh" : huespedHabitacion,
+        "ayuda" : ayuda[10],
+    }
+
+    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form })
