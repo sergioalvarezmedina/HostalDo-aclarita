@@ -13,6 +13,11 @@ overflow: auto;
 .table-wrapper-scroll-y {
 display: block;
 }
+
+.alinearVertical{
+display: flex;
+
+}
 /*.logotipo{
   padding-top: 10px;
   width: 150px;

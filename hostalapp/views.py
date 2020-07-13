@@ -1875,13 +1875,44 @@ def GuardarMenu(request):
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
-def EditarMenu():
+def EditarMenu(request,menu_id):
 
-    return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
+    request.session["menu_id"] = str(menu_id)
 
+    if checkSession(request)==0:
+        form ={
+            "msg":"La sesión se encuentra finalizada."
+        }
+        return render(request, "hostal/InicioSesion.html", { "form":form } )
+
+    request.session["menu_id"] = str(menu_id)
+
+    menu = HMenu.objects.get(menu_id = menu_id)
+    idMenu = menu.menu_id
+    menuList = HMenu.objects.all()
+
+    print(menu)
+
+<<<<<<< HEAD
 """def updateMenu(request, menu_id):
 
     menu = HHmenu.objects.get(menu_id=request.session["menu_id"]);
+=======
+    for m in menuList:
+        print(str(m.nombre))
+
+
+    form = {
+    'menu' : menu,
+    'tipo' : menuList,
+    }
+    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/mainHostal/"})
+
+
+def updateMenu(request):
+    
+    menu = HMenu.objects.get(menu_id=request.session["menu_id"]);
+>>>>>>> bcce711a97f3d23c55d0f547064c8767512a25ff
 
     print(menu)
 
@@ -1897,7 +1928,7 @@ def EditarMenu():
     listaMenu= HMenu.objects.all()
 
     form = {
-    'menu':menu
+    'menu':menu,
     'listaMenu':listaMenu,
     "ayuda" : ayuda[4]
     }
@@ -1905,27 +1936,34 @@ def EditarMenu():
     print(listaMenu)
     return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
 
+def Eliminar_menu(request):
 
-    listaHabitaciones = HHabitacion.objects.all()
-    estadoHabitacion = HHabitacionEstado.objects.all()
-    tipoHabitacion = HHabitacionTipo.objects.all()
-    print(habitacion.habitacion_tipo.descriptor)
+    sel=json.loads(request.POST["sel"])
+    data = {}
 
+    if len(sel) > 0:
 
-    form = {
-            'habitacion':habitacion,
-            'listaHabitaciones':listaHabitaciones,
-            'estadoHabitacion':estadoHabitacion,
-            'tipoHabitacion':tipoHabitacion,
-            'habitacionTipo':habitacionTipo
+        for selId in sel:
 
+            print("ID "+str(sel[selId]))
+            menu = HMenu.objects.get(menu_id=sel[selId])
+            menu.delete()
 
+        data = {
+
+            "status" : "success",
+            "msg" : "selección eliminada."
         }
 
-    return render(request, 'hostal/AdministracionHabitaciones.html', {'form':form, "nav":"/mainHostal/"})
+    else:
 
+        data = {
+            "status" : "error",
+            "msg" : "Se ha producido un error al intentar eliminar la habitación, el identificador recibido es inconsistente."
+        }
 
-    """
+    return HttpResponse(json.dumps(data))
+
 
 def ProveedorOrdenDePedidos(request):
 

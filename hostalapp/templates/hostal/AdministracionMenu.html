@@ -43,7 +43,7 @@
              <thead class="thead-dark text-center">
                <tr>
                 <th class="text-center"scope="col">Fecha</th>
-                <th class="text-center"scope="col">Platos</th>
+                <th class="text-center"scope="col">Menu</th>
                 <th class="text-center"scope="col">Sel</th>
                 <th class="text-center"scope="col">Edición</th>
               </tr>
@@ -54,9 +54,12 @@
                 <th scope="row">{{listaMenu.registro_fecha}}</th>
                 <td>{{ listaMenu.nombre }}</td>
                 <td><div class="form-check">
-                  <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
-                </div></td>
-                <td ><button data-toggle="modal" data-target="#editarMenu" id="btn "   class="btn text-light registro btn-space " type="button">Editar</button></td></tr>
+                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{listaMenu.menu_id}}" aria-label="...">
+                                     </div></td>
+                <td ><a href="/EditarMenu/ {{listaMenu.menu_id}}">
+                  <button id="btnEditarMenu"   class="btn text-light registro btn-space " type="button">Editar</button>
+                </a>
+                </td>
                 {% endfor %}
               </tbody>
             </table>
@@ -64,7 +67,7 @@
 
           <div class="text-center">
             <button data-toggle="modal" data-target="#NuevaMinuta" id="btnAgregarMinuta" class="btn text-light registro btn-space text" type="button" onclick="getPlatosSeleccion('NuevaMinutaPlatoAdd', 'NuevaMinutaPlatoSel');">Agregar Minuta</button>
-            <button id="btn " class="btn text-light registro btn-space" data-toggle="modal" data-target="#Agregar" type="button">Eliminar</button>
+            <button id="btnEliminarMenu " class="btn text-light registro btn-space" data-toggle="modal" data-target="#" type="button" onclick="showMenuEliminar()">Eliminar</button>
           </div>
         </div>
       </div>
