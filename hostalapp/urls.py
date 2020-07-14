@@ -102,4 +102,6 @@ urlpatterns = [
     path('ocDetalle/<int:oc_id>', views.showOCDetalle, name="showOCDetalle"),
     path('setHuespedArribo/', views.setHuespedArribo, name="setHuespedArribo"),
 
+    path('ocDetalleCliente/', views.showOCDetalleCliente, name="showOCDetalleCliente"),
+
 ]

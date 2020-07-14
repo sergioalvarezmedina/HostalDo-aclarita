@@ -1393,12 +1393,14 @@ def OrdenCompraEnviar(request):
 
     print ("Usuario "+str(usuarioId))
 
+    organismo=HOrganismo.objects.get(persona_id=usuario.persona_id)
+
     oc_id=getSecuenciaId("H_ORDEN_COMPRA_ORDEN_COMPRA_ID")
     oc=HOrdenCompra(
         orden_compra_id=oc_id,
         servicio_inicio=datetime.now(),
         servicio_fin=datetime.now(),
-        organismo_id=request.POST["organismoId"],
+        organismo=organismo,
         revision_usuario_id=usuarioId,
         visacion_usuario_id=usuarioId,
         factura_emision_flag=0,
@@ -2274,6 +2276,40 @@ def showOCDetalle(request, oc_id):
     }
 
     return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nav": "/AdministracionOrdenesCompra/" })
+
+def showOCDetalleCliente(request, oc_id):
+
+    print(oc_id)
+
+    request.session["oc_id"]=oc_id
+
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
+    ordenCompra=HOrdenCompra.objects.get(orden_compra_id=oc_id)
+
+    hh = []
+    for h in ocHuesped:
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
+        habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+
+        persona=HPersona.objects.get(persona_id=h.persona_id)
+        hh.append(
+            {
+                "hh":huespedHabitacion,
+                "oc":h,
+                "hab":habitacion,
+                "p":persona,
+            }
+        )
+
+    form = {
+        "oc" : ordenCompra,
+        "hh" : hh,
+        "ayuda" : ayuda[10],
+        "horaList":range(0, 24),
+        "minutoList":range(0, 59),
+    }
+
+    return render(request, 'hostal/oc_admin_detalle_cliente.html', { "form" : form, "nav": "/AdministracionCliente/" })
 
 def setHuespedArribo(request):
 

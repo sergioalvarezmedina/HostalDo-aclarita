@@ -1,0 +1,110 @@
+{% extends 'hostal/base.html' %}
+{% load static %}
+{% block content %}
+<title>Ordenes de Compra</title>
+
+<body>
+
+    <form action="{% url 'setHuespedArribo' %}" method="post" onsubmit="return checkSeleccionCheck_in();">
+
+      {% csrf_token %}
+
+    <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
+        <div class="wrapper wrapper--w960">
+            <div class="card card-5">
+                <div class="card-heading">
+                    <h2 class="title">Orden de compra #{{form.oc.orden_compra_id}}</h2>
+                </div>
+
+                <div class="tabla-contenidos">
+
+                  <table class="table table-bordered table-hover">
+                    <tr>
+                      <td width="10%">Cliente</td>
+                      <td>{{form.oc.organismo.razon_social}} / {{form.oc.organismo.nombre_fantasia}}</td>
+                    </tr>
+                  </table>
+
+                  <table class="table text-center" >
+                      <thead class="thead-dark text-center">
+                        <tr>
+                          <th class="text-center"scope="col">#</th>
+                          <th class="text-center"scope="col">Rut</th>
+                          <th class="text-center"scope="col">Nombre</th>
+                          <th class="text-center"scope="col">Cargo</th>
+                          <th class="text-center"scope="col">Arrivo</th>
+                          <th class="text-center"scope="col" width="20%">Hora</th>
+                          <th width="5%" class="text-center"scope="col">Habitaci&oacute;n</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if form.hh %}
+                          {% for hh in form.hh %}
+                          <tr>
+                            <td>{{hh.hh.oc_huesped_id}}</td>
+                            <td align="right">#{{hh.p.rut}}</td>
+                            <td>{{hh.p.nombres}} {{hh.p.paterno}}</td>
+                            <td>{{hh.p.cargo}}</td>
+                            <td>
+                              {% if  hh.oc.recepcion_flag %}
+                                <b>HUESPED RECIBIDO</b>
+                              {% else  %}
+                                SNI ARRIVO CONFIRMADO
+                              {% endif %}
+                            </td>
+                            <td>
+
+                                {% if  hh.oc.recepcion_flag %}
+                                  {% if hh.hora %}{{hh.hora}}{% else %}INDETERMINADO{% endif %}
+                                {% else  %}
+                                  SIN ARRIVO CONFIRMADO
+                                {% endif %}
+
+                            </td>
+                            <td align="left">
+                              Hab.:{{hh.hab.rotulo}}<br>
+                              Camas:{{hh.hab.camas}}<br>
+                              Accesorios:{{hh.hab.accesorios}}
+                              Accesorios:${{hh.hab.precio}}
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <td colspan="6">Esta orden de compra no cuenta con hu&eacute;spedes asociados..</td>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="icono-accesos d-flex">
+
+        <button class="iconosMenus ">
+          <i class="fa fa-suitcase"></i>
+          <div class="textoMenus">Registrar Check-In <i class="fa fa-send"></i></div>
+        </button>
+
+    </div>
+
+    </form>
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/modal.js' %}"></script>
+    <script src="{% static 'js/hostal.js' %}"></script>
+    <script>
+      $("#navigationForm").prop("action", "{{nav}}");
+    </script>
+    <script>
+      {% if form.msg %}
+      $("#msg").html("{{form.msg}}");
+      $("#msg").fadeIn("slow").delay(3000).fadeOut("slow");
+      {% endif %}
+    </script>
+
+{% endblock %}
