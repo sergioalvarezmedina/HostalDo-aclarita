@@ -27,21 +27,38 @@
                           <th class="text-center"scope="col">Nombre</th>
                           <th class="text-center"scope="col">Cargo</th>
                           <th class="text-center"scope="col">Arrivo</th>
-                          <th class="text-center"scope="col">Hora</th>
+                          <th class="text-center"scope="col" width="20%">Hora</th>
                           <th class="text-center"scope="col">Habitaci&oacute;n</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {% if form.huesped %}
-                          {% for h in form.hh %}
+                        {% if form.hh %}
+                          {% for hh in form.hh %}
                           <tr>
-                            <td>#{{d.huesped.persona.rut}}</td>
-                            <td>{{d.huesped.persona.nombres}} {{d.huesped.persona.paterno}}</td>
-                            <td>{{d.cargo}}</td>
+                            <td align="right">#{{hh.p.rut}}</td>
+                            <td>{{hh.p.nombres}} {{hh.p.paterno}}</td>
+                            <td>{{hh.p.cargo}}</td>
                             <td><input type="checkbox"></td>
                             <td>
-                              <input type="text" onkeydown="return onlyNum(event);" id="hh">:
-                              <input type="text" onkeydown="return onlyNum(event);" id="mm">
+                              <table width="100%">
+                                <tr>
+                                  <td>
+                                    <select id="hora" name="hora" class="form-control">
+                                      {% for h in form.horaList %}
+                                      <option value="{{h}}">{{h}}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </td>
+                                  <td width="1%">:</td>
+                                  <td>
+                                    <select id="minuto" name="minuto" class="form-control">
+                                      {% for m in form.minutoList %}
+                                      <option value="{{m}}">{{m}}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                             <td>{{d.habitacion.descriptor}}</td>
                           </tr>
