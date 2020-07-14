@@ -1893,11 +1893,10 @@ def EditarMenu(request,menu_id):
 
     print(menu)
 
-<<<<<<< HEAD
 """def updateMenu(request, menu_id):
 
     menu = HHmenu.objects.get(menu_id=request.session["menu_id"]);
-=======
+
     for m in menuList:
         print(str(m.nombre))
 
@@ -1907,12 +1906,11 @@ def EditarMenu(request,menu_id):
     'tipo' : menuList,
     }
     return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/mainHostal/"})
-
+"""
 
 def updateMenu(request):
-    
+
     menu = HMenu.objects.get(menu_id=request.session["menu_id"]);
->>>>>>> bcce711a97f3d23c55d0f547064c8767512a25ff
 
     print(menu)
 
