@@ -84,7 +84,7 @@ def setLogin(request):
     try:
 
         print("User "+dataUser["user"])
-        usuario=HUsuario.objects.get(username=dataUser["user"]);
+        usuario=HUsuario.objects.filter(username=dataUser["user"])[0];
         request.session['accesoId'] = usuario.usuario_id
 
         print("Perfil "+str(usuario.usuario_perfil_id))

@@ -104,6 +104,10 @@ function setLogin(user, pass) {
     function (jqXHR, textStatus, errorThrown) {
       console.log("Error "+jqXHR.responseText);
       alert("Se ha producido una excepción.");
+
+      $("#entrar").prop("disabled", false);
+
+
     }
   );
 
