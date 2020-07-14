@@ -33,12 +33,12 @@
                       {% if form.oc %}
                         {% for oc in form.oc %}
                         <tr>
-                          <td>#{{oc.orden_compra_id}}</td>
-                          <td>{{oc.dias}}</td>
-                          <td>${{oc.total}}</td>
-                          <td>{{oc.servicio_inicio}}</td>
-                          <td>{{oc.servicio_fin}}</td>
-                           <td >
+                          <td class="text-center">#{{oc.orden_compra_id}}</td>
+                          <td class="text-center">{{oc.dias}}</td>
+                          <td class="text-center">${{oc.total}}</td>
+                          <td class="text-center">{{oc.servicio_inicio}}</td>
+                          <td class="text-center">{{oc.servicio_fin}}</td>
+                           <td class="text-center">
                              <button onclick="$('#modalOCDetalle').modal('show');" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
                                {{oc.empleados_cantidad}}
                              </button>
