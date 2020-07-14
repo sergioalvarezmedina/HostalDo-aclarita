@@ -10,6 +10,13 @@ import sys
 from datetime import date
 from datetime import datetime
 
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+
+import itertools
+from random import randint
+from statistics import mean
+
 acceso = {
     2:
         {
@@ -345,9 +352,12 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 (oc.servicio_fin+1)-oc.servicio_inicio dias,
                 NVL(SUM(h.precio), 0) total,
                 (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
-                (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag=1) empleados_arrivos_cantidad
+                (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag=1) empleados_arrivos_cantidad,
+                oc.registro_fecha registro_fecha
+
             FROM
                 h_orden_compra oc
+
             LEFT JOIN
                 h_usuario u
                 ON
@@ -374,6 +384,9 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 ON
                     hh.habitacion_id=h.habitacion_id
 
+            WHERE
+                oc.nulo_fecha IS NULL
+
             GROUP BY
 
                 oc.orden_compra_id,
@@ -381,7 +394,11 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY'),
                 NVL(o.razon_social, 'S/D'),
                 NVL(o.nombre_fantasia, 'S/D'),
-                (oc.servicio_fin+1)-oc.servicio_inicio
+                (oc.servicio_fin+1)-oc.servicio_inicio,
+                oc.registro_fecha
+
+            ORDER BY
+                oc.registro_fecha
 
         """
 
@@ -399,11 +416,35 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form, "nav":"/mainHostal/"})
 
-def Facturas(request):
+def Facturas(request, oc_id):
+
+    oc = HOrdenCompra.objects.get(orden_compra_id=oc_id)
+    org = HOrganismo.objects.get(organismo_id=oc.organismo_id)
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
+
+    totalNeto=0;
+    total=0
+    for och in ocHuesped:
+        print("OC "+str(och.oc_huesped_id))
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=och.oc_huesped_id)
+        total=0
+        totalNeto=0
+        if huespedHabitacion:
+            print(huespedHabitacion.habitacion_id)
+            habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+            total=habitacion.precio
+            totalNeto=int(total/1.19)
+
     form = {
         "ayuda" : ayuda[2],
+        "oc":oc,
+        "huespedes_cantidad":ocHuesped.count(),
+        "org":org,
+        "total":total,
+        "totalNeto":totalNeto
         }
-    return render(request, 'hostal/Facturas.html',{ 'form' : form, "nav":"/mainHostal/"})
+
+    return render(request, 'hostal/Facturas.html',{ 'form' : form, "nav":"/AdministracionOrdenesCompra/"})
 
 def RegistroHuespedes(request):
 
@@ -2324,6 +2365,7 @@ def setHuespedArribo(request):
         ocHuesped=HOcHuesped.objects.get(oc_huesped_id=sel)
         ocHuesped.recepcion_flag=1
         ocHuesped.arrivo_hora=(int(request.POST["hora_"+sel])*100)+int(request.POST["hora_"+sel])
+        ocHuesped.arrivo_fecha=datetime.now()
         ocHuesped.save()
 
 
@@ -2332,19 +2374,26 @@ def setHuespedArribo(request):
 
     hh = []
     for h in ocHuesped:
+
         huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
         habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
 
         persona=HPersona.objects.get(persona_id=h.persona_id)
-        hora=int(h.arrivo_hora/100);
-        minuto=h.arrivo_hora-(hora*100);
+        if h.arrivo_hora:
+            hora=int(h.arrivo_hora/100);
+            if hora<10:
+                horaDisplay="0"+str(hora)
+            minuto=h.arrivo_hora-(hora*100);
+            if minuto<10:
+                minutoDisplay="0"+str(minuto)
+
         hh.append(
             {
                 "hh":huespedHabitacion,
                 "oc":h,
                 "hab":habitacion,
                 "p":persona,
-                "hora":str(hora)+":"+str(minuto)
+                "hora":str(horaDisplay)+":"+str(minutoDisplay)
             }
         )
 
@@ -2440,3 +2489,94 @@ def getProveedorBusqueda(request):
         }
 
     return HttpResponse(json.dumps(data))
+
+def factura_pdf(request, oc_id):
+    import io
+    from django.http import FileResponse
+    from reportlab.pdfgen import canvas
+
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+
+    sql = """
+        SELECT
+            orden_compra_id,
+            NVL(factura_numero, 0)+1 factura_numero
+        FROM H_ORDEN_COMPRA
+        WHERE
+            FACTURA_NUMERO IS NOT NULL AND
+            rownum=1
+        ORDER BY
+            FACTURA_NUMERO DESC
+    """
+    oCompraMax = HOrdenCompra.objects.raw(sql);
+
+    print("Nueva factura")
+    print(oCompraMax[0].factura_numero)
+
+    oc=HOrdenCompra.objects.get(orden_compra_id=oc_id)
+
+    now = datetime.now()
+
+    p.drawString(250, 800, "FACTURA #"+str(oCompraMax[0].factura_numero))
+    p.drawString(250, 780, "RUT:99.999.999-x")
+    p.drawString(250, 760, "FECHA "+format(now.day)+"/"+format(now.month)+"/"+format(now.year))
+    p.drawString(50, 720, "Sres.: ")
+    p.drawString(50, 700, oc.organismo.nombre_fantasia)
+    p.drawString(50, 680, oc.organismo.razon_social)
+    p.drawString(50, 660, oc.organismo.persona.nombres+" "+oc.organismo.persona.paterno+" "+oc.organismo.persona.materno)
+    p.drawString(50, 640, "Direccion "+oc.organismo.direccion)
+    p.drawString(50, 620, "Giro "+oc.organismo.giro)
+
+
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
+
+    totalNeto=0;
+    total=0
+    for och in ocHuesped:
+        print("OC "+str(och.oc_huesped_id))
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=och.oc_huesped_id)
+        total=0
+        totalNeto=0
+        if huespedHabitacion:
+            print(huespedHabitacion.habitacion_id)
+            habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+            total=habitacion.precio
+            totalNeto=int(total/1.19)
+
+
+    p.drawString(30, 580, "Detalle")
+    p.drawString(400, 530, "Neto")
+    p.drawString(500, 530, "Total")
+    guion=''
+    for i in range(75):
+        guion=guion+"="
+
+    p.drawString(30, 570, guion)
+
+    p.drawString(30, 550, "Servicio de hospedaje")
+    p.drawString(30, 530, "Numero Orden de compra: #"+str(oc_id))
+
+    p.drawString(250, 550, "Cantidad :"+str(ocHuesped.count())+" huesped(es)")
+
+    p.drawString(400, 550, "$"+str(totalNeto))
+    p.drawString(500, 550, "$"+str(total))
+
+    p.drawString(30, 120, guion)
+    p.drawString(30, 100, "Recibe")
+    p.drawString(30, 80, request.POST["recibeRut"])
+    p.drawString(30, 60, request.POST["recibeNombre"])
+
+    p.drawString(10, 10, "Hosta Doña Clarita - Team Desarrollo.")
+
+
+    oc.factura_numero=oCompraMax[0].factura_numero
+    oc.factura_usuario_id=request.session["accesoId"]
+    oc.factura_emision_flag=1
+    oc.save()
+
+    p.showPage()
+    p.save()
+
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='factura_'+str(oCompraMax[0].factura_numero)+'_oc_'+str(oc_id)+'_F.pdf')

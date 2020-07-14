@@ -55,14 +55,15 @@
                             <td>
 
                                 {% if  hh.oc.recepcion_flag %}
-                                  {% if hh.hora %}{{hh.hora}}{% else %}INDETERMINADO{% endif %}
+                                  <b>{% if hh.oc.arrivo_fecha %}{{hh.oc.arrivo_fecha}}{% else %}FECHA INDETERMINADO{% endif %}<br>
+                                  {% if hh.hora %}{{hh.hora}}{% else %}HORA INDETERMINADO{% endif %}</b>
                                 {% else  %}
                                   <table width="100%">
                                     <tr>
                                       <td>
                                         <select id="hora" name="hora_{{hh.hh.oc_huesped_id}}" class="form-control">
                                           {% for h in form.horaList %}
-                                          <option value="{{h}}">{{h}}</option>
+                                          <option value="{{h}}" {% if h == date|date:"H" %}selected{% endif %}>{{h}}</option>
                                           {% endfor %}
                                         </select>
                                       </td>

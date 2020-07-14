@@ -3,6 +3,8 @@ import cx_Oracle
 from django.shortcuts import render
 from django.db import connection
 from .models import HUsuario, HOrdenCompra
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 def encode(key, clear):
     enc = []

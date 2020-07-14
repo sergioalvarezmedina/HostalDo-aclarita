@@ -30,7 +30,7 @@ urlpatterns = [
 
     #URLS HOSTAL
     path('AdministracionOrdenesCompra/', views.AdministracionOrdenesCompra, name="AdministracionOrdenesCompra"), #13 14 15
-    path('Facturas/', views.Facturas, name="Facturas"), #16 17
+    path('Facturas/<oc_id>', views.Facturas, name="Facturas"), #16 17
     path('RegistroHuespedes/', views.RegistroHuespedes, name="RegistroHuespedes"), #18 19
     path('AdminClientesAgregar/', views.AdminClientesAgregar, name="AdminClientesAgregar"), #20 23
     path('CrearNuevoCliente/', views.CrearNuevoCliente, name="CrearNuevoCliente"),#21
@@ -103,5 +103,7 @@ urlpatterns = [
     path('setHuespedArribo/', views.setHuespedArribo, name="setHuespedArribo"),
 
     path('ocDetalleCliente/', views.showOCDetalleCliente, name="showOCDetalleCliente"),
+
+    path('factura_pdf/<oc_id>', views.factura_pdf, name="factura_pdf"),
 
 ]

@@ -30,9 +30,9 @@
                <select  name="idMenu" value="idMenu"  for="" id="idMenu" class="form-control  mr-5">
                {% for m in form.listaMenu %}
                   <option  value="{{m.menu_id}}" {% if m.menu_id == form.idMenu %}selected{% endif %} selected="selected">{{ m.menu_id }} - {{m.nombre}}
-                  </option>  
-               {% endfor %}           
-              </select>       
+                  </option>
+               {% endfor %}
+              </select>
             <div class="select-dropdown"></div>
           </div>
             <button id="btn " class="btn text-light registro btn-space" type="button">Listar Menu</button>
@@ -60,8 +60,9 @@
                 <td><div class="form-check">
                     <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{p.plato_id}}" aria-label="...">
                                      </div></td>
-                <td ><a href="/EditarPlato/ {{p.plato_id}}">
-                  <button id="btnEditarMenu"   class="btn text-light registro btn-space " type="button">Editar</button>
+                <td >
+                  <!--<a href="/EditarPlato/ {{p.plato_id}}">
+                  <button id="btnEditarMenu"   class="btn text-light registro btn-space " type="button">Editar</button>-->
                 </a>
                 </td>
                 {% endfor %}

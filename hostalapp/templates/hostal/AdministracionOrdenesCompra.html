@@ -76,7 +76,7 @@
                           <td>${{oc.total}}</td>
                           <td>{{oc.empleados_arrivos_cantidad}} <i class="fa fa-flag-checkered"></i></td>
                           <td>
-                            <a href="{% url 'Facturas' %}">
+                            <a href="{% url 'Facturas' oc.orden_compra_id %}">
                               <button class="btn btn-danger" type="button" onclick >Facturaci&oacute;n</button>
                             </a>
                           </td>

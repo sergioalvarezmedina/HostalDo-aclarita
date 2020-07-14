@@ -232,6 +232,7 @@ class HOcHuesped(models.Model):
     persona = models.ForeignKey('HPersona', models.DO_NOTHING)
     recepcion_flag = models.BooleanField(blank=True, null=True)
     arrivo_hora = models.FloatField()
+    arrivo_fecha = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -264,7 +265,7 @@ class HOrdenCompra(models.Model):
     factura_emision_flag = models.BooleanField(blank=True, null=True)
     factura_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='factura_usuario')
     usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
-    registro_fecha = models.DateField()
+    registro_fecha = models.DateField(auto_now = True)
     nulo_fecha = models.DateField(blank=True, null=True)
     nulo_usuario = models.ForeignKey('HUsuario', models.DO_NOTHING, blank=True, null=True, related_name='nulo_usuario2')
     pago_forma = models.ForeignKey('HPagoForma', models.DO_NOTHING, blank=True, null=True)
@@ -281,7 +282,7 @@ class HOrdenPedido(models.Model):
     documento_fecha = models.DateField(blank=True, null=True)
     observacion = models.CharField(max_length=4000, blank=True, null=True)
     usuario = models.ForeignKey('HUsuario', models.DO_NOTHING)
-    registro_fecha = models.DateField()
+    registro_fecha = models.DateField(auto_now = True)
     revision_fecha = models.DateField(blank=True, null=True)
     revision_usuario_id = models.FloatField(blank=True, null=True)
     nulo_fecha = models.DateField(blank=True, null=True)
