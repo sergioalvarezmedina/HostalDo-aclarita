@@ -2,7 +2,7 @@ import base64
 import cx_Oracle
 from django.shortcuts import render
 from django.db import connection
-from .models import HUsuario
+from .models import HUsuario, HOrdenCompra
 
 def encode(key, clear):
     enc = []
@@ -52,3 +52,63 @@ def usuarioActual():
 
     usuario=HUsuario.objects.get(usuario_id=56)
     return usuario
+
+def getOrdenCompraCliente(request):
+
+    usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
+
+    sql="""
+                    SELECT
+                        oc.orden_compra_id orden_compra_id,
+                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
+                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
+                        NVL(o.razon_social, 'S/D') organismo_razon_social,
+                        NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                        SUM(NVL(h.precio, 0)) total,
+                        (oc.servicio_fin+1)-oc.servicio_inicio dias,
+                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
+                    FROM
+                        h_orden_compra oc
+
+                    LEFT JOIN
+                        h_oc_huesped och
+                        ON
+                            oc.orden_compra_id=och.orden_compra_id
+
+                    LEFT JOIN
+                        h_huesped_habitacion hh
+                        ON
+                            och.oc_huesped_id=hh.oc_huesped_id
+
+                    LEFT JOIN
+                        h_habitacion h
+                        ON
+                            hh.habitacion_id=h.habitacion_id
+
+                    LEFT JOIN
+                        h_usuario u
+                        ON
+                            oc.usuario_id=u.usuario_id
+                    LEFT JOIN
+                        h_organismo o
+                        ON
+                            oc.organismo_id=o.organismo_id
+                    WHERE
+                        oc.usuario_id=%s
+
+                    GROUP BY
+                        oc.orden_compra_id,
+                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY'),
+                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY'),
+                        NVL(o.razon_social, 'S/D'),
+                        NVL(o.nombre_fantasia, 'S/D'),
+                        (oc.servicio_fin+1)-oc.servicio_inicio
+
+
+                """ % usuario.usuario_id
+
+    print ("Query : "+sql)
+    oc = HOrdenCompra.objects.raw(sql);
+
+    return oc

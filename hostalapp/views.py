@@ -1,7 +1,7 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
 HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario, HPagoForma, HHuespedHabitacion)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
-from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual
+from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual, getOrdenCompraCliente
 import json
 from django.contrib import messages
 from django.db import connection
@@ -285,66 +285,14 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
-
-    sql="""
-                    SELECT
-                        oc.orden_compra_id orden_compra_id,
-                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
-                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
-                        NVL(o.razon_social, 'S/D') organismo_razon_social,
-                        NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                        SUM(h.precio) total,
-                        (oc.servicio_fin+1)-oc.servicio_inicio dias,
-                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
-                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
-                    FROM
-                        h_orden_compra oc
-
-                    LEFT JOIN
-                        h_oc_huesped och
-                        ON
-                            oc.orden_compra_id=och.orden_compra_id
-
-                    LEFT JOIN
-                        h_huesped_habitacion hh
-                        ON
-                            och.oc_huesped_id=hh.oc_huesped_id
-
-                    LEFT JOIN
-                        h_habitacion h
-                        ON
-                            hh.habitacion_id=h.habitacion_id
-
-                    LEFT JOIN
-                        h_usuario u
-                        ON
-                            oc.usuario_id=u.usuario_id
-                    LEFT JOIN
-                        h_organismo o
-                        ON
-                            oc.organismo_id=o.organismo_id
-                    /*WHERE
-                        oc.usuario_id=%s*/
-
-                    GROUP BY
-                        oc.orden_compra_id,
-                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY'),
-                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY'),
-                        NVL(o.razon_social, 'S/D'),
-                        NVL(o.nombre_fantasia, 'S/D'),
-                        (oc.servicio_fin+1)-oc.servicio_inicio
-
-                """ % usuario.usuario_id
-
-    print ("Query : "+sql)
-    oc = HOrdenCompra.objects.raw(sql);
+    oc=getOrdenCompraCliente(request)
 
     habitacion = HHabitacion.objects.filter(habitacion_estado_id=1)
 
     form = {
         "oc" : oc,
         "habitacionOk":habitacion.count(),
+        "id":"cliente"
     }
 
     return render(request, 'hostal/AdministracionCliente.html', { "form" : form, "nav":"/" })
@@ -436,12 +384,12 @@ def RegistroHuespedes(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
-<<<<<<< HEAD
+
         "habitacion":HHabitacion.objects.filter(vigencia=1),
         "lHabitaciones":HHabitacion.objects.all(),
-=======
+
         "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
->>>>>>> dcc267017196616e027632837141e11046ecdae7
+
         "pagoForma":HPagoForma.objects.all(),
         "organismo":HOrganismo.objects.all(),
         "ayuda" : ayuda[9]
@@ -517,7 +465,7 @@ def removeOCAdmin(request):
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "organismo":HOrganismo.objects.all(),
-        "organismoId":int(request.POST["organismoId"]),
+        "organismoId":request.POST["organismoId"],
         "pagoForma":HPagoForma.objects.all()
     }
 
@@ -528,7 +476,7 @@ def AdminClientesAgregar(request):
     rut = request.POST.get('buscarRut')
     nombre = request.POST.get('buscarNombre')
 
-    if rut and nombre:
+    if rut!="" and nombre!="":
         try:
 
             nombreLike="%"+nombre.upper()+"%"
@@ -573,7 +521,7 @@ def AdminClientesAgregar(request):
         except:
             cliente = { }
 
-    elif rut :
+    elif rut!="" :
 
         try:
             cliente = HOrganismo.objects.filter(rut__contains=rut)
@@ -581,7 +529,7 @@ def AdminClientesAgregar(request):
         except:
             cliente = { }
 
-    elif nombre:
+    elif nombre!="":
 
         try:
             nombreLike="%"+nombre.upper()+"%"
@@ -642,6 +590,7 @@ def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html', {'form':form, 'nav':'/AdminClientesAgregar/'})
 
 def GuardarNuevoCliente(request):
+
     now = datetime.now()
 
     username = request.POST["username"]
@@ -1398,7 +1347,7 @@ def OrdenCompraEnviar(request):
     except:
 
         print ("Limpiar OK NO")
-        print ("ENVIO "+request.POST["enviarOc"])
+        print (request.POST)
 
     usuarioId=request.session["accesoId"]
     usuario=HUsuario.objects.get(usuario_id=usuarioId)
@@ -1412,7 +1361,7 @@ def OrdenCompraEnviar(request):
         orden_compra_id=oc_id,
         servicio_inicio=datetime.now(),
         servicio_fin=datetime.now(),
-        organismo_id=190,
+        organismo_id=request.POST["organismoId"],
         revision_usuario_id=usuarioId,
         visacion_usuario_id=usuarioId,
         factura_emision_flag=0,
@@ -1472,6 +1421,8 @@ def OrdenCompraEnviar(request):
     form = {
         "status":"success",
         "msg":"Se ha generado una nueva orden de compra con ID #"+str(oc_id),
+        "oc":getOrdenCompraCliente(request),
+        "id":"cliente"
     }
 
     if usuario.usuario_perfil_id==2:
@@ -1596,9 +1547,10 @@ def getOrdenCompra(request):
             print("Buscando por Cliente")
             print("cliente "+cliente )
 
-            cliente=cliente.upper()
+            cliente="%"+cliente.upper()+"%"
 
-            oc = HOrdenCompra.objects.raw("""
+            #oc = HOrdenCompra.objects.raw(
+            sql="""
                             SELECT
                                 oc.orden_compra_id orden_compra_id,
                                 TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
@@ -1621,11 +1573,10 @@ def getOrdenCompra(request):
                             WHERE
                                 UPPER(o.nombre_fantasia) LIKE UPPER(%s) OR
                                 UPPER(o.razon_social) LIKE UPPER(%s)
-                        """, [cliente+'%', cliente+'%']
-                    )
+                        """
 
             print ("Query : "+sql)
-            oc = HOrdenCompra.objects.raw(sql);
+            oc = HOrdenCompra.objects.raw(sql, [cliente, cliente]);
 
             print("Query ejecutada")
 
@@ -1638,6 +1589,7 @@ def getOrdenCompra(request):
     form = {
         "oc" : oc,
         "msg" : msg,
+#        "id":"cliente",
     }
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "form": form, "msg" : msg, "oc" : oc, "status" : "success"})
@@ -2282,4 +2234,4 @@ def showOCDetalle(request, oc_id):
         "minutoList":range(0, 59),
     }
 
-    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nat": "/AdministracionOrdenesCompra/" })
+    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nav": "/AdministracionOrdenesCompra/" })
