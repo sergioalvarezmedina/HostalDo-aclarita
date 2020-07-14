@@ -22,8 +22,8 @@
                       <div class="form-row ">
                       <div class="form-inline">
                         <div class="form-inline ">
-                          <label for="empresa" class="mr-3">Empresa</label>
-                          <select class="form-control" id="organismoId" name="organismoId" onchange="$('#organismoId2').val($(this).val());" >
+                          <label for="organismoId" class="mr-3">Empresa</label>
+                          <select class="form-control" id="organismoId" name="organismoId" onchange="$('#organismoId2').val($(this).val()); $('#organismoId3').val($(this).val());" >
                           {% for o in form.organismo %}
                             <option value="{{o.organismo_id}}" {% if o.organismo_id == form.organismoId %}selected{% endif %}>{{o.organismo_id}} - {{o.razon_social}} - {{o.nombre_fantasia}}</option>
                           {% endfor %}
@@ -182,15 +182,18 @@
 </div>
 <br>
 <div class="botonesSolicitar ">
+
   <form id="OCEnvioForm" method="POST" action="/OrdenCompraEnviar/">
+
+    <input type="hidden" id="organismoId3" name="organismoId" value="{{form.organismoId}}">
+
     {% csrf_token %}
-    <button id="btn " class="btn text-light registro btn-space " type="submit" name="limpiarOc" >
-      Limpiar Registro
-    </button>
-    <button id="btn " class="btn text-light registro btn-space" type="submit" name="enviarOc" >
-      Enviar OC
-    </button>
+
+    <button id="btn " class="btn text-light registro btn-space " type="submit" name="limpiarOc" >Limpiar Registro</button>
+    <button id="btn " class="btn text-light registro btn-space" type="submit" name="enviarOc" >Enviar OC</button>
+
   </form>
+
 </div>
 
     <script src="{% static 'js/hostal.js' %}"></script>

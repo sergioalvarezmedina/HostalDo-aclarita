@@ -49,7 +49,7 @@
                               {% if  hh.oc.recepcion_flag %}
                                 <b>HUESPED RECIBIDO</b>
                               {% else  %}
-                                <input type="checkbox" name="arrivoSel[]" value="{{hh.hh.oc_huesped_id}}">
+                                SNI ARRIVO CONFIRMADO
                               {% endif %}
                             </td>
                             <td>
@@ -57,25 +57,7 @@
                                 {% if  hh.oc.recepcion_flag %}
                                   {% if hh.hora %}{{hh.hora}}{% else %}INDETERMINADO{% endif %}
                                 {% else  %}
-                                  <table width="100%">
-                                    <tr>
-                                      <td>
-                                        <select id="hora" name="hora_{{hh.hh.oc_huesped_id}}" class="form-control">
-                                          {% for h in form.horaList %}
-                                          <option value="{{h}}">{{h}}</option>
-                                          {% endfor %}
-                                        </select>
-                                      </td>
-                                      <td width="1%">:</td>
-                                      <td>
-                                        <select id="minuto" name="minuto_{{hh.hh.oc_huesped_id}}" class="form-control">
-                                          {% for m in form.minutoList %}
-                                          <option value="{{m}}">{{m}}</option>
-                                          {% endfor %}
-                                        </select>
-                                      </td>
-                                    </tr>
-                                  </table>
+                                  SIN ARRIVO CONFIRMADO
                                 {% endif %}
 
                             </td>

@@ -1,5 +1,5 @@
 {% extends 'hostal/base.html' %}
-
+{% load static %}
 {% block content %}
 <title>Generar Orden de Pedido</title>
 <body>
@@ -17,20 +17,21 @@
                     <h2 class="title">GENERAR ORDEN DE PEDIDO</h2>
                 </div>
                 <br>
- <form class="needs-validation" novalidate>
-  
+ <form class="needs-validation" novalidate method="post">
+
+   {% csrf_token %}
   <div class="form-row d-flex justify-content-around">
-    
+
     <div class="control-label form-inline">
       <label for="validationCustom01" class="mr-3">Rut</label>
       <input type="text" class="form-control" id="validationCustom01" value="Rut" required>
     </div>
-    
+
     <div class="control-label form-inline">
       <label for="validationCustom02" class="mr-3">Razón Social</label>
       <input type="text" class="form-control" id="validationCustom02" value="Razon Social" required>
     </div>
-     
+
      <div class="form-inline">
       <label for="validationCustom03" class="mr-3">Giro</label>
       <input type="text" class="form-control" id="Giro" value="Giro" required>
@@ -39,10 +40,10 @@
     <br>
     <br>
     <div class="botonesParteuno">
-    <button id="btnProveedor" class="btn text-light registro btn-space " type="button" data-toggle="modal" data-target="#Buscarproveedor"> 
+    <button id="btnProveedor" class="btn text-light registro btn-space " type="button" data-toggle="modal" data-target="#Buscarproveedor">
       Buscar Proveedor
     </button>
-    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+    <button id="btn " class="btn text-light registro btn-space" type="button" >
       Limpiar
     </button>
     </div>
@@ -50,17 +51,17 @@
   </div>
 
   <div class="form-row d-flex justify-content-around">
-    
+
     <div class="control-label form-inline">
       <label for="validationCustom01" class="mr-3">Codigo Producto</label>
       <input type="text" class="form-control" id="CodigoProducto" value="Codigo Producto" required>
     </div>
-    
+
     <div class="control-label form-inline">
       <label for="validationCustom02" class="mr-3">Nombre Prodcuto</label>
       <input type="text" class="form-control" id="NombreProdcuto" value="Nombre Prodcuto" required>
     </div>
-     
+
      <div class="form-inline">
       <label for="validationCustom03" class="mr-3">Cantidad</label>
       <input type="text" class="form-control" id="Cantidad" value="Cantidad" required>
@@ -69,10 +70,10 @@
     <br>
     <br>
     <div class="botonesPartedos">
-    <button id="btnProducto" class="btn text-light registro btn-space " type="button" data-toggle="modal" data-target="#Buscarproducto"> 
+    <button id="btnProducto" class="btn text-light registro btn-space " type="button" data-toggle="modal" data-target="#Buscarproducto">
       Buscar Producto
     </button>
-    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+    <button id="btn " class="btn text-light registro btn-space" type="button" >
       Agregar Producto
     </button>
     </div>
@@ -112,10 +113,10 @@
                 </div>
 <br>
 <div class="botonesSolicitar ">
-    <button id="btn " class="btn text-light registro btn-space " type="button" > 
+    <button id="btn " class="btn text-light registro btn-space " type="button" >
       Limpiar Registro
     </button>
-    <button id="btn " class="btn text-light registro btn-space" type="button" > 
+    <button id="btn " class="btn text-light registro btn-space" type="button" >
       Enviar OP
     </button>
 
@@ -144,7 +145,7 @@
 
 
 
-            <!-- Modal Buscar proveedor-->
+<!-- Modal Buscar proveedor-->
 <div class="modal fade" id="Buscarproveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -156,20 +157,15 @@
       </div>
       <div class="modal-body">
                  <div class="control-label form-inline justify-content-center">
-               <label for="validationCustom01" class="mr-3">Rut</label>
-                <input type="text" class="form-control" id="validationCustom01" value="Rut" required>
+               <label for="buscarProveedorRut" class="mr-3">Rut</label>
+                <input type="text" class="form-control" id="buscarProveedorRut" value="" required>
             </div>
         <br>
           <div class="control-label form-inline justify-content-center">
-             <label for="validationCustom02" class="mr-3">Razón Social</label>
-             <input type="text" class="form-control" id="validationCustom02" value="Razon Social" required>
+             <label for="buscarProveedorRazon" class="mr-3">Razón Social</label>
+             <input type="text" class="form-control" id="buscarProveedorRazon" value="" required>
             </div>
-        <br>
-           <div class="form-inline justify-content-center">
-             <label for="validationCustom03" class="mr-3">Giro</label>
-            <input type="text" class="form-control" id="Giro" value="Giro" required>
-          </div>
-        <br>
+            <button class="btn btn-primary" type="button" onclick="getProveedorBusqueda($('#buscarProveedorRut').val(), $('#buscarProveedorRazon').val(), )">Buscar</button>
         <div class="tabla-contenidos">
                 <table class="table text-center " >
                     <thead class="thead-dark text-center">
@@ -181,35 +177,16 @@
                         <th class="text-center"scope="col">Selección</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <th class="text-center"scope="row">01</th>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
-                        
-                      <tr>
-                        <th class="text-center"scope="row">02</th>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
-                      <tr>
-                        <th class="text-center"scope="row">03</th>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td>XXXXXXXXXXXXXX</td>
-                        <td><input type="radio" id="radio" name="drone" value="radio" checked></td>
+                    <tbody id="buscarProveedorList">
                     </tbody>
                   </table>
                 </div>
 
-      </div>      
-    <br>        
+      </div>
+    <br>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary">Seleccionar</button>
       </div>
     </div>
   </div>
@@ -276,8 +253,8 @@
                   </table>
                 </div>
 
-      </div>      
-    <br>        
+      </div>
+    <br>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
@@ -285,5 +262,6 @@
     </div>
   </div>
 </div>
+<script src="{% static 'js/hostal.js' %}"></script>
 
     {% endblock %}

@@ -1,7 +1,7 @@
 from .models import (HAsistente, HOrganismo, HUsuario, HUsuarioPerfil, HOrdenCompra,
 HPersona, HOcHuesped,HRegion,HComuna,HOrdenPedido, HHabitacion , HHabitacionTipo , HHabitacionEstado , HMenu, HPlato, HPersonaDireccion, HUsuario, HPagoForma, HHuespedHabitacion)
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
-from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual
+from .functions import encode, decode, checkSession, getSecuenciaId, usuarioActual, getOrdenCompraCliente
 import json
 from django.contrib import messages
 from django.db import connection
@@ -84,7 +84,7 @@ def setLogin(request):
     try:
 
         print("User "+dataUser["user"])
-        usuario=HUsuario.objects.get(username=dataUser["user"]);
+        usuario=HUsuario.objects.filter(username=dataUser["user"])[0];
         request.session['accesoId'] = usuario.usuario_id
 
         print("Perfil "+str(usuario.usuario_perfil_id))
@@ -144,38 +144,60 @@ def Formulario(request):
 
 def GuardarFormulario(request):
 
-
     now = datetime.now()
 
     username = request.POST["username"]
     rutEmpresa = request.POST["rol_empresa"]
 
-    # VALIDANDO NOMRBE DE USUARIO
-    if HUsuario.objects.filter(username = username).count() > 0:
+    print("Validando... "+username+" / "+rutEmpresa)
 
-        messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
+    try:
 
-        region = []
-        for r in HRegion.objects.all():
-            region.append(r)
-        form = {
-            "datos" : request.POST,
-            "region" : region
-        }
-        return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+        usuario=HUsuario.objects.get(username=username)
 
-    # VALIDANDO RUT DEL ORGANISMO
-    if HOrganismo.objects.filter(rut = rutEmpresa).count()>0:
+        # VALIDANDO NOMRBE DE USUARIO
+        if usuario:
 
-        messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
-        region = []
-        for r in HRegion.objects.all():
-            region.append(r)
-        form = {
-            'datos':request.POST,
-            "region" : region
-        }
-        return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+            print("Nombre de usuario ya utilizado["+username+"]...")
+
+            messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
+
+            region = []
+            for r in HRegion.objects.all():
+                region.append(r)
+            form = {
+                "datos" : request.POST,
+                "region" : region
+            }
+            return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+
+    except:
+
+        print("USERNAME DISPONIBLE")
+
+    try:
+
+        organismo=HOrganismo.objects.get(rut=rutEmpresa)
+
+        # VALIDANDO RUT DEL ORGANISMO
+        if organismo.count()>0:
+
+            print("Rut empresa ya usado ["+rutEmpresa+"]...")
+
+            messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
+            region = []
+            for r in HRegion.objects.all():
+                region.append(r)
+            form = {
+                'datos':request.POST,
+                "region" : region
+            }
+            return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+
+    except:
+        print("RUT ORGANISMO DISPONIBLE")
+
+    print("Insertando persona")
 
     # PERSONA
     persona = HPersona(
@@ -186,24 +208,13 @@ def GuardarFormulario(request):
     )
     persona.save()
 
-    # DIRECCION
-    direccionP = HPersonaDireccion(
-        persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
-        telefono = request.POST["Ptelefono"],
-        email =request.POST["Pemail"],
-        persona = persona,
-        usuario = usuarioActual(), # 56 - Usuario en sesión
-        registro_fecha = datetime.now(),
-        registro_hora = (now.hour*100)+now.minute
-    )
-    direccionP.save()
-
+    print("Insertando usuario")
     # USUARIO
     perfil=HUsuarioPerfil.objects.get(usuario_perfil_id=4)
     usuario = HUsuario(
         usuario_id = getSecuenciaId ("H_USUARIO_USUARIO_ID_SEQ"),
-        persona=persona,
-        username = request.POST["username"],
+        persona = persona,
+        username = username,
         contrasena = encode(WORDFISH, request.POST["contrasena"]),
         registro_fecha = datetime.now(),
         usuario_perfil = perfil,
@@ -211,7 +222,22 @@ def GuardarFormulario(request):
     )
     usuario.save()
 
+    print("Insertando dirección")
+    # DIRECCION
+    direccionP = HPersonaDireccion(
+        persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        telefono = request.POST["Ptelefono"],
+        email =request.POST["Pemail"],
+        persona = persona,
+        usuario = usuario, # 56 - Usuario en sesión
+        registro_fecha = datetime.now(),
+        registro_hora = (now.hour*100)+now.minute
+    )
+    direccionP.save()
+
     comuna=HComuna.objects.get(comuna_id=request.POST["comunaId"])
+
+    print("Insertando organismo")
 
     # ORGANISMO
     organismo = HOrganismo(
@@ -222,7 +248,7 @@ def GuardarFormulario(request):
         giro = "", #request.POST["giro"],
         direccion = request.POST["direccion"],
         persona = persona,
-        usuario = usuarioActual(),
+        usuario = usuario,
         registro_fecha = datetime.now(),
         comuna = comuna,
         vigencia = 1
@@ -232,6 +258,8 @@ def GuardarFormulario(request):
     form = {
         "msg":"Cliente creado exitosamente.",
     }
+
+    print("Recuperando proveedor")
 
     try:
         cliente = HOrganismo.objects.distinct(proveedor_flag =1)
@@ -293,37 +321,14 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    usuario=HUsuario.objects.get(usuario_id=request.session['accesoId'])
+    oc=getOrdenCompraCliente(request)
 
-    sql="""
-                    SELECT
-                        oc.orden_compra_id orden_compra_id,
-                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
-                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
-                        NVL(o.razon_social, 'S/D') organismo_razon_social,
-                        NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
-                        (oc.servicio_fin+1)-oc.servicio_inicio dias,
-                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
-                        (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
-                    FROM
-                        h_orden_compra oc
-                    LEFT JOIN
-                        h_usuario u
-                        ON
-                            oc.usuario_id=u.usuario_id
-                    LEFT JOIN
-                        h_organismo o
-                        ON
-                            oc.organismo_id=o.organismo_id
-                    WHERE
-                        oc.usuario_id=%s
-                """ % usuario.usuario_id
-
-    print ("Query : "+sql)
-    oc = HOrdenCompra.objects.raw(sql);
+    habitacion = HHabitacion.objects.filter(habitacion_estado_id=1)
 
     form = {
         "oc" : oc,
+        "habitacionOk":habitacion.count(),
+        "id":"cliente"
     }
 
     return render(request, 'hostal/AdministracionCliente.html', { "form" : form, "nav":"/" })
@@ -347,8 +352,8 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
                 (oc.servicio_fin+1)-oc.servicio_inicio dias,
                 NVL(SUM(h.precio), 0) total,
-                COUNT(och.oc_huesped_id) empleados_cantidad,
-                COUNT(ocha.oc_huesped_id) empleados_arrivos_cantidad
+                (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag=1) empleados_arrivos_cantidad
             FROM
                 h_orden_compra oc
             LEFT JOIN
@@ -361,14 +366,17 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                     oc.organismo_id=o.organismo_id
 
             LEFT JOIN h_oc_huesped och
-                ON oc.orden_compra_id=och.orden_compra_id
+                ON
+                    oc.orden_compra_id=och.orden_compra_id
 
             LEFT JOIN h_oc_huesped ocha
-                ON oc.orden_compra_id=ocha.orden_compra_id AND
-                ocha.recepcion_flag=1
+                ON
+                    oc.orden_compra_id=ocha.orden_compra_id AND
+                    ocha.recepcion_flag=1
 
             LEFT JOIN h_huesped_habitacion hh
-                ON och.oc_huesped_id=hh.oc_huesped_id
+                ON
+                    och.oc_huesped_id=hh.oc_huesped_id
 
             LEFT JOIN h_habitacion h
                 ON
@@ -388,10 +396,13 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
     print ("Query : "+sql)
     oc = HOrdenCompra.objects.raw(sql);
 
+    habitacion=HHabitacion.objects.filter(habitacion_estado_id=1)
+
     form = {
         "id" : "login",
         "oc" : oc,
         "ayuda" : ayuda[2],
+        "habitacionOk":habitacion.count(),
         }
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form, "nav":"/mainHostal/"})
@@ -493,7 +504,7 @@ def removeOCAdmin(request):
         "menu":HMenu.objects.filter(vigencia=1),
         "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "organismo":HOrganismo.objects.all(),
-        "organismoId":int(request.POST["organismoId"]),
+        "organismoId":request.POST["organismoId"],
         "pagoForma":HPagoForma.objects.all()
     }
 
@@ -501,10 +512,16 @@ def removeOCAdmin(request):
 
 def AdminClientesAgregar(request):
 
-    rut = request.POST.get('buscarRut')
-    nombre = request.POST.get('buscarNombre')
+    rut = ''
+    nombre = ''
+    if request.POST.get('buscarRut'):
+        rut = request.POST.get('buscarRut')
+    if request.POST.get('buscarNombre'):
+        nombre = request.POST.get('buscarNombre')
 
-    if rut and nombre:
+    print(rut+" "+nombre)
+
+    if rut!="" and nombre!="":
         try:
 
             nombreLike="%"+nombre.upper()+"%"
@@ -529,7 +546,7 @@ def AdminClientesAgregar(request):
                 FROM h_organismo
                 WHERE
                     (UPPER(nombre_fantasia) LIKE %s OR
-                    UPPER(nombre_fantasia) LIKE %s) AND
+                    UPPER(razon_social) LIKE %s) AND
                     RUT LIKE %s"""
 
             cliente = HOrganismo.objects.raw(sql, [nombreLike, nombreLike,rutLike])
@@ -549,7 +566,7 @@ def AdminClientesAgregar(request):
         except:
             cliente = { }
 
-    elif rut :
+    elif rut!="" :
 
         try:
             cliente = HOrganismo.objects.filter(rut__contains=rut)
@@ -557,7 +574,7 @@ def AdminClientesAgregar(request):
         except:
             cliente = { }
 
-    elif nombre:
+    elif nombre!="":
 
         try:
             nombreLike="%"+nombre.upper()+"%"
@@ -618,6 +635,7 @@ def CrearNuevoCliente(request):
     return render (request, 'hostal/CrearNuevoCliente.html', {'form':form, 'nav':'/AdminClientesAgregar/'})
 
 def GuardarNuevoCliente(request):
+
     now = datetime.now()
 
     username = request.POST["username"]
@@ -1374,7 +1392,7 @@ def OrdenCompraEnviar(request):
     except:
 
         print ("Limpiar OK NO")
-        print ("ENVIO "+request.POST["enviarOc"])
+        print (request.POST)
 
     usuarioId=request.session["accesoId"]
     usuario=HUsuario.objects.get(usuario_id=usuarioId)
@@ -1383,12 +1401,14 @@ def OrdenCompraEnviar(request):
 
     print ("Usuario "+str(usuarioId))
 
+    organismo=HOrganismo.objects.get(persona_id=usuario.persona_id)
+
     oc_id=getSecuenciaId("H_ORDEN_COMPRA_ORDEN_COMPRA_ID")
     oc=HOrdenCompra(
         orden_compra_id=oc_id,
         servicio_inicio=datetime.now(),
         servicio_fin=datetime.now(),
-        organismo_id=190,
+        organismo=organismo,
         revision_usuario_id=usuarioId,
         visacion_usuario_id=usuarioId,
         factura_emision_flag=0,
@@ -1448,6 +1468,8 @@ def OrdenCompraEnviar(request):
     form = {
         "status":"success",
         "msg":"Se ha generado una nueva orden de compra con ID #"+str(oc_id),
+        "oc":getOrdenCompraCliente(request),
+        "id":"cliente"
     }
 
     if usuario.usuario_perfil_id==2:
@@ -1572,9 +1594,10 @@ def getOrdenCompra(request):
             print("Buscando por Cliente")
             print("cliente "+cliente )
 
-            cliente=cliente.upper()
+            cliente="%"+cliente.upper()+"%"
 
-            oc = HOrdenCompra.objects.raw("""
+            #oc = HOrdenCompra.objects.raw(
+            sql="""
                             SELECT
                                 oc.orden_compra_id orden_compra_id,
                                 TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY') servicio_inicio,
@@ -1597,11 +1620,10 @@ def getOrdenCompra(request):
                             WHERE
                                 UPPER(o.nombre_fantasia) LIKE UPPER(%s) OR
                                 UPPER(o.razon_social) LIKE UPPER(%s)
-                        """, [cliente+'%', cliente+'%']
-                    )
+                        """
 
             print ("Query : "+sql)
-            oc = HOrdenCompra.objects.raw(sql);
+            oc = HOrdenCompra.objects.raw(sql, [cliente, cliente]);
 
             print("Query ejecutada")
 
@@ -1614,6 +1636,7 @@ def getOrdenCompra(request):
     form = {
         "oc" : oc,
         "msg" : msg,
+#        "id":"cliente",
     }
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html', { "form": form, "msg" : msg, "oc" : oc, "status" : "success"})
@@ -2232,19 +2255,25 @@ def showOCDetalle(request, oc_id):
 
     print(oc_id)
 
+    request.session["oc_id"]=oc_id
+
     ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
     ordenCompra=HOrdenCompra.objects.get(orden_compra_id=oc_id)
 
     hh = []
     for h in ocHuesped:
-        huespedHabitacion=HHuespedHabitacion.objects.filter(oc_huesped_id=h.oc_huesped_id)
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
+        habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+
         persona=HPersona.objects.get(persona_id=h.persona_id)
-        pasajero={
-            "hh":huespedHabitacion,
-            "oc":h,
-            "p":persona,
-        }
-        hh.append(pasajero)
+        hh.append(
+            {
+                "hh":huespedHabitacion,
+                "oc":h,
+                "hab":habitacion,
+                "p":persona,
+            }
+        )
 
     form = {
         "oc" : ordenCompra,
@@ -2254,4 +2283,168 @@ def showOCDetalle(request, oc_id):
         "minutoList":range(0, 59),
     }
 
-    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nat": "/AdministracionOrdenesCompra/" })
+    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nav": "/AdministracionOrdenesCompra/" })
+
+def showOCDetalleCliente(request, oc_id):
+
+    print(oc_id)
+
+    request.session["oc_id"]=oc_id
+
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
+    ordenCompra=HOrdenCompra.objects.get(orden_compra_id=oc_id)
+
+    hh = []
+    for h in ocHuesped:
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
+        habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+
+        persona=HPersona.objects.get(persona_id=h.persona_id)
+        hh.append(
+            {
+                "hh":huespedHabitacion,
+                "oc":h,
+                "hab":habitacion,
+                "p":persona,
+            }
+        )
+
+    form = {
+        "oc" : ordenCompra,
+        "hh" : hh,
+        "ayuda" : ayuda[10],
+        "horaList":range(0, 24),
+        "minutoList":range(0, 59),
+    }
+
+    return render(request, 'hostal/oc_admin_detalle_cliente.html', { "form" : form, "nav": "/AdministracionCliente/" })
+
+def setHuespedArribo(request):
+
+    print(request.POST)
+
+    arrivoSel=request.POST.getlist("arrivoSel[]")
+
+    print(arrivoSel)
+
+    for sel in arrivoSel:
+        print("Oc huesped "+sel)
+        ocHuesped=HOcHuesped.objects.get(oc_huesped_id=sel)
+        ocHuesped.recepcion_flag=1
+        ocHuesped.arrivo_hora=(int(request.POST["hora_"+sel])*100)+int(request.POST["hora_"+sel])
+        ocHuesped.save()
+
+
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=request.session["oc_id"])
+    ordenCompra=HOrdenCompra.objects.get(orden_compra_id=request.session["oc_id"])
+
+    hh = []
+    for h in ocHuesped:
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
+        habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+
+        persona=HPersona.objects.get(persona_id=h.persona_id)
+        hora=int(h.arrivo_hora/100);
+        minuto=h.arrivo_hora-(hora*100);
+        hh.append(
+            {
+                "hh":huespedHabitacion,
+                "oc":h,
+                "hab":habitacion,
+                "p":persona,
+                "hora":str(hora)+":"+str(minuto)
+            }
+        )
+
+    form = {
+        "oc" : ordenCompra,
+        "hh" : hh,
+        "ayuda" : ayuda[10],
+        "horaList":range(0, 24),
+        "minutoList":range(0, 59),
+    }
+
+    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nav": "/AdministracionOrdenesCompra/" })
+
+def getProveedorBusqueda(request):
+
+    data = json.loads(request.POST["data"]);
+
+    try:
+
+        razon=data["razon"]
+        rut=data["rut"]
+
+        sql = """
+            SELECT
+                ORGANISMO_ID,
+                RAZON_SOCIAL,
+                RUT,
+                NOMBRE_FANTASIA,
+                GIRO,
+                DIRECCION,
+                TELEFONO,
+                CUENTA_DATOS,
+                PERSONA_ID,
+                USUARIO_ID,
+                TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                PROVEEDOR_FLAG,
+                COMUNA_ID,
+                VIGENCIA
+
+            FROM h_organismo
+            WHERE
+        """
+
+        if rut!="" and razon!="":
+            razonLike="%"+razon.upper()+"%"
+            rutLike="%"+rut.upper()+"%"
+            sql=sql+"""
+                UPPER(razon_social) LIKE %s OR RUT LIKE %s
+            """, [razonLike, rutLike]
+
+        elif rut!="":
+
+            rutLike="%"+rut.upper()+"%"
+            sql=sql+"""
+                RUT LIKE '"""+rutLike+"""'
+            """
+
+        elif razon!="":
+
+            razonLike="%"+razon.upper()+"%"
+            sql=sql+"""
+                UPPER(razon_social) LIKE '"""+razonLike+"""'
+            """
+
+        print(sql)
+
+        cliente = HOrganismo.objects.raw(sql)
+
+        html=''
+        for c in cliente:
+            html=html+"""
+                <td>
+                    <tr>"""+c.rut+"""</tr>
+                    <tr>"""+c.giro+"""</tr>
+                    <tr>"""+c.nombre_fantasia+"""</tr>
+                    <tr>"""+c.razon_social+"""</tr>
+                    <tr>
+                        <input type="checkbox" name="sel" value="""""+c.organismo_id+"""">
+                    </tr>
+                </td>
+            """
+
+        data = {
+            'status':'success',
+            'html':html,
+        }
+
+    except:
+
+        data = {
+            'status':'error',
+            'msg':'Se ha producido un error al intentar recuperar las coincidencias',
+        }
+
+    return HttpResponse(json.dumps(data))

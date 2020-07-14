@@ -104,6 +104,10 @@ function setLogin(user, pass) {
     function (jqXHR, textStatus, errorThrown) {
       console.log("Error "+jqXHR.responseText);
       alert("Se ha producido una excepción.");
+
+      $("#entrar").prop("disabled", false);
+
+
     }
   );
 
@@ -693,5 +697,79 @@ function checkCriteria() {
     $("#msg").fadeIn("slow").delay(3000).fadeOut("slow");
     return false;
   }
+
+}
+
+function checkSeleccionCheck_in() {
+
+  var sel=new Array();
+
+  $("[name='arrivoSel[]']:checked").each(
+    function () {
+      sel.push($(this).val());
+    }
+  );
+
+  if (sel.length==0) {
+
+    alert("Para aplicar el check-in se requiere como mìnimo la selección de un huesped.");
+    return false;
+
+  }
+
+}
+
+function getProveedorBusqueda(rut, razon) {
+
+  if ($.trim(rut)=="" && $.trim(razon)=="") {
+    alert("Para proceder con la búsqueda se requiere como mínimo un criterio de búsqueda.");
+    return;
+  }
+
+  var dataIn =
+    {
+      rut : rut,
+      razon : razon,
+    };
+
+  $.post(
+    "/getProveedorBusqueda",
+    {
+      data : JSON.stringify(dataIn),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    function (data) {
+
+      alert(data);
+
+      try {
+
+        var rec = JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          $("#buscarProveedorList").html(rec.html);
+
+        } else {
+
+          alert(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+  )
+  .fail(
+    function (jqXHR, textStatus, errorThrown) {
+      console.log("Error "+jqXHR.responseText);
+      alert("Se ha producido una excepción.");
+    }
+  );
+
 
 }

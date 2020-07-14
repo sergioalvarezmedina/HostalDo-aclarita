@@ -12,6 +12,7 @@ urlpatterns = [
     # jquery , post
 
     path('setLogin', views.setLogin, name="setLogin"), #1
+    path('getProveedorBusqueda', views.getProveedorBusqueda, name="getProveedorBusqueda"),
     path('getClienteRut', views.getClienteRut, name="getClienteRut"), #1
     path('getComunaList', views.getComuna, name="getComuna"), #1
     path('mainHostal/', views.mainHostal, name="mainHostal"), #12
@@ -44,7 +45,7 @@ urlpatterns = [
 
     path('EditarPlato/<plato_id>/', views.EditarPlato, name="EditarPlato"),
     path('updatePlato/', views.updatePlato, name="updatePlato"),
-  
+
 
     #URLS PROVEEDOR
 
@@ -59,7 +60,7 @@ urlpatterns = [
 
     #Metodos
     path('GuardarPlato/', views.GuardarPlato, name="GuardarPlato"),
-    
+
     path('GuardarNuevoUsuario/', views.GuardarNuevoUsuario, name="GuardarNuevoUsuario"),
 
     path('GuardarHuesped/', views.GuardarHuesped, name="GuardarHuesped"),
@@ -99,5 +100,8 @@ urlpatterns = [
     path('removeOCAdmin/', views.removeOCAdmin, name="removeOCAdmin"),
 
     path('ocDetalle/<int:oc_id>', views.showOCDetalle, name="showOCDetalle"),
+    path('setHuespedArribo/', views.setHuespedArribo, name="setHuespedArribo"),
+
+    path('ocDetalleCliente/', views.showOCDetalleCliente, name="showOCDetalleCliente"),
 
 ]

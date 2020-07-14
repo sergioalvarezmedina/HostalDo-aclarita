@@ -231,6 +231,7 @@ class HOcHuesped(models.Model):
     orden_compra = models.ForeignKey('HOrdenCompra', models.DO_NOTHING)
     persona = models.ForeignKey('HPersona', models.DO_NOTHING)
     recepcion_flag = models.BooleanField(blank=True, null=True)
+    arrivo_hora = models.FloatField()
 
     class Meta:
         managed = False
