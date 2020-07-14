@@ -316,8 +316,8 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                 NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
                 (oc.servicio_fin+1)-oc.servicio_inicio dias,
                 NVL(SUM(h.precio), 0) total,
-                COUNT(och.oc_huesped_id) empleados_cantidad,
-                COUNT(ocha.oc_huesped_id) empleados_arrivos_cantidad
+                (SELECT COUNT(*) cantidad FROM h_oc_huesped och1 WHERE och1.orden_compra_id=oc.orden_compra_id) empleados_cantidad,
+                (SELECT COUNT(*) cantidad FROM h_oc_huesped och2 WHERE och2.orden_compra_id=oc.orden_compra_id AND och2.recepcion_flag=1) empleados_arrivos_cantidad
             FROM
                 h_orden_compra oc
             LEFT JOIN
@@ -330,14 +330,17 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
                     oc.organismo_id=o.organismo_id
 
             LEFT JOIN h_oc_huesped och
-                ON oc.orden_compra_id=och.orden_compra_id
+                ON
+                    oc.orden_compra_id=och.orden_compra_id
 
             LEFT JOIN h_oc_huesped ocha
-                ON oc.orden_compra_id=ocha.orden_compra_id AND
-                ocha.recepcion_flag=1
+                ON
+                    oc.orden_compra_id=ocha.orden_compra_id AND
+                    ocha.recepcion_flag=1
 
             LEFT JOIN h_huesped_habitacion hh
-                ON och.oc_huesped_id=hh.oc_huesped_id
+                ON
+                    och.oc_huesped_id=hh.oc_huesped_id
 
             LEFT JOIN h_habitacion h
                 ON

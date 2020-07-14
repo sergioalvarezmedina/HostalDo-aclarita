@@ -59,8 +59,7 @@
                         <th class="text-center"scope="col">Arribos</th>
                         <th class="text-center"scope="col">Facturas</th>
                       </tr>
-                    </thead>
-                    <tbody>
+                      <tbody>
                       {% if form.oc %}
                         {% for oc in form.oc %}
                         <tr>
@@ -70,11 +69,11 @@
                           <td>{{oc.servicio_inicio}}</td>
                           <td>{{oc.servicio_fin}}</td>
                           <td >
-                            <button onclick="$('#formOC').prop('action', '/ocDetalle/{{oc.orden_compra_id}}'); $('#formOC').submit();" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
-                              {{oc.empleados_cantidad}}
-                            </button>
+                              <button onclick="$('#formOC').prop('action', '/ocDetalle/{{oc.orden_compra_id}}'); $('#formOC').submit();" id="btnCantidadEmpleados" class="btn text-light registro btn-space " type="button" >
+                                {{oc.empleados_cantidad}}
+                              </button>
                           </td>
-                          <td>{{oc.total}}</td>
+                          <td>${{oc.total}}</td>
                           <td>{{oc.empleados_arrivos_cantidad}} <i class="fa fa-flag-checkered"></i></td>
                           <td>
                             <a href="{% url 'Facturas' %}">

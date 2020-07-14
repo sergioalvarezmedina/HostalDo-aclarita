@@ -34,7 +34,7 @@
                           <th class="text-center"scope="col">Cargo</th>
                           <th class="text-center"scope="col">Arrivo</th>
                           <th class="text-center"scope="col" width="20%">Hora</th>
-                          <th class="text-center"scope="col">Habitaci&oacute;n</th>
+                          <th width="5%" class="text-center"scope="col">Habitaci&oacute;n</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -55,7 +55,7 @@
                             <td>
 
                                 {% if  hh.oc.recepcion_flag %}
-                                  {{hh.hora}}
+                                  {% if hh.hora %}{{hh.hora}}{% else %}INDETERMINADO{% endif %}
                                 {% else  %}
                                   <table width="100%">
                                     <tr>
@@ -83,6 +83,7 @@
                               Hab.:{{hh.hab.rotulo}}<br>
                               Camas:{{hh.hab.camas}}<br>
                               Accesorios:{{hh.hab.accesorios}}
+                              Accesorios:${{hh.hab.precio}}
                             </td>
                           </tr>
                           {% endfor %}
