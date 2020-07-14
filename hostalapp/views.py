@@ -309,7 +309,15 @@ def misDatos(request): # DATOS PERSONALES DEL CLIENTE
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    return render(request, 'hostal/misDatos.html')
+    region = []
+    for r in HRegion.objects.all():
+        region.append(r)
+
+    form =  {
+        "region" : region
+    }
+
+    return render(request, 'hostal/misDatos.html', {'form':form})
 
 
 def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
