@@ -122,11 +122,11 @@
 
           <div class="dropdown center-block">
             <table width="50%">
-              <tr>
+              <tr class="text-center">
                 <td>
                   <label class=""><h4>Forma de Pago</h3></label>
                 </td>
-                <td>
+                <td >
                   <select id="pagoFormaId" name="pagoFormaId" class="form-control">
                     {% for p in form.pagoForma %}
                     <option value="{{p.pago_forma_id}}">{{p.nombre}}</option>
