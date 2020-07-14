@@ -4,6 +4,11 @@
 <title>Ordenes de Compra</title>
 
 <body>
+
+    <form action="{% url 'setHuespedArribo' %}" method="post" onsubmit="return checkSeleccionCheck_in();">
+
+      {% csrf_token %}
+
     <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
         <div class="wrapper wrapper--w960">
             <div class="card card-5">
@@ -40,27 +45,33 @@
                             <td align="right">#{{hh.p.rut}}</td>
                             <td>{{hh.p.nombres}} {{hh.p.paterno}}</td>
                             <td>{{hh.p.cargo}}</td>
-                            <td><input type="checkbox" name="arrivoSel" value="{{hh.hh.oc_huesped_id}}"></td>
+                            <td><input type="checkbox" name="arrivoSel[]" value="{{hh.hh.oc_huesped_id}}"></td>
                             <td>
-                              <table width="100%">
-                                <tr>
-                                  <td>
-                                    <select id="hora" name="hora" class="form-control">
-                                      {% for h in form.horaList %}
-                                      <option value="{{h}}">{{h}}</option>
-                                      {% endfor %}
-                                    </select>
-                                  </td>
-                                  <td width="1%">:</td>
-                                  <td>
-                                    <select id="minuto" name="minuto" class="form-control">
-                                      {% for m in form.minutoList %}
-                                      <option value="{{m}}">{{m}}</option>
-                                      {% endfor %}
-                                    </select>
-                                  </td>
-                                </tr>
-                              </table>
+
+                                {% if  hh.oc.recepcion_flag %}
+                                  {{hh.hora}}
+                                {% else  %}
+                                  <table width="100%">
+                                    <tr>
+                                      <td>
+                                        <select id="hora" name="hora_{{hh.hh.oc_huesped_id}}" class="form-control">
+                                          {% for h in form.horaList %}
+                                          <option value="{{h}}">{{h}}</option>
+                                          {% endfor %}
+                                        </select>
+                                      </td>
+                                      <td width="1%">:</td>
+                                      <td>
+                                        <select id="minuto" name="minuto_{{hh.hh.oc_huesped_id}}" class="form-control">
+                                          {% for m in form.minutoList %}
+                                          <option value="{{m}}">{{m}}</option>
+                                          {% endfor %}
+                                        </select>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                {% endif %}
+
                             </td>
                             <td align="left">
                               Hab.:{{hh.hab.rotulo}}<br>
@@ -82,13 +93,15 @@
     </div>
 
     <div class="icono-accesos d-flex">
-      <a href="{% url 'RegistroHuespedes' %}">
+
         <button class="iconosMenus ">
           <i class="fa fa-suitcase"></i>
           <div class="textoMenus">Registrar Check-In <i class="fa fa-send"></i></div>
         </button>
-      </a>
+
     </div>
+
+    </form>
 
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>

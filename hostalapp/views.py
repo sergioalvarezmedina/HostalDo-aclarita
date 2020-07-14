@@ -2208,6 +2208,8 @@ def showOCDetalle(request, oc_id):
 
     print(oc_id)
 
+    request.session["oc_id"]=oc_id
+
     ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
     ordenCompra=HOrdenCompra.objects.get(orden_compra_id=oc_id)
 
@@ -2223,6 +2225,53 @@ def showOCDetalle(request, oc_id):
                 "oc":h,
                 "hab":habitacion,
                 "p":persona,
+            }
+        )
+
+    form = {
+        "oc" : ordenCompra,
+        "hh" : hh,
+        "ayuda" : ayuda[10],
+        "horaList":range(0, 24),
+        "minutoList":range(0, 59),
+    }
+
+    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nav": "/AdministracionOrdenesCompra/" })
+
+def setHuespedArribo(request):
+
+    print(request.POST)
+
+    arrivoSel=request.POST.getlist("arrivoSel[]")
+
+    print(arrivoSel)
+
+    for sel in arrivoSel:
+        print("Oc huesped "+sel)
+        ocHuesped=HOcHuesped.objects.get(oc_huesped_id=sel)
+        ocHuesped.recepcion_flag=1
+        ocHuesped.arrivo_hora=(int(request.POST["hora_"+sel])*100)+int(request.POST["hora_"+sel])
+        ocHuesped.save()
+
+
+    ocHuesped=HOcHuesped.objects.filter(orden_compra_id=request.session["oc_id"])
+    ordenCompra=HOrdenCompra.objects.get(orden_compra_id=request.session["oc_id"])
+
+    hh = []
+    for h in ocHuesped:
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
+        habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+
+        persona=HPersona.objects.get(persona_id=h.persona_id)
+        hora=int(h.arrivo_hora/100);
+        minuto=h.arrivo_hora-(hora*100);
+        hh.append(
+            {
+                "hh":huespedHabitacion,
+                "oc":h,
+                "hab":habitacion,
+                "p":persona,
+                "hora":str(hora)+":"+str(minuto)
             }
         )
 

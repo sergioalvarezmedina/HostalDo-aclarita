@@ -695,3 +695,22 @@ function checkCriteria() {
   }
 
 }
+
+function checkSeleccionCheck_in() {
+
+  var sel=new Array();
+
+  $("[name='arrivoSel[]']:checked").each(
+    function () {
+      sel.push($(this).val());
+    }
+  );
+
+  if (sel.length==0) {
+
+    alert("Para aplicar el check-in se requiere como mìnimo la selección de un huesped.");
+    return false;
+
+  }
+
+}
