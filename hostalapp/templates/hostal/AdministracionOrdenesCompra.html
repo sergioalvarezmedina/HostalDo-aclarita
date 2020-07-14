@@ -165,7 +165,7 @@
 
     <div class="icono-accesos d-flex">
       <a href="{% url 'RegistroHuespedes' %}">
-        <button class="iconosMenus ">
+        <button class="iconosMenus " {% if form.habitacionOk == 0 %}onclick="alert('No se han encontrado habitaciones disponibles'); return false;"{% endif %}>
           <i class="fa fa-suitcase"></i>
           <div class="textoMenus">Registrar Huesped</div>
         </button>

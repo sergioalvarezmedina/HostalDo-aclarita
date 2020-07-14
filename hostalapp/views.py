@@ -294,11 +294,28 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
                         TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY') servicio_fin,
                         NVL(o.razon_social, 'S/D') organismo_razon_social,
                         NVL(o.nombre_fantasia, 'S/D') organismo_nombre_fantasia,
+                        SUM(h.precio) total,
                         (oc.servicio_fin+1)-oc.servicio_inicio dias,
                         (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=oc.orden_compra_id) empleados_cantidad,
                         (SELECT COUNT(*) cantida FROM h_oc_huesped WHERE orden_compra_id=orden_compra_id AND recepcion_flag IS NOT NULL) empleados_arrivos_cantidad
                     FROM
                         h_orden_compra oc
+
+                    LEFT JOIN
+                        h_oc_huesped och
+                        ON
+                            oc.orden_compra_id=och.orden_compra_id
+
+                    LEFT JOIN
+                        h_huesped_habitacion hh
+                        ON
+                            och.oc_huesped_id=hh.oc_huesped_id
+
+                    LEFT JOIN
+                        h_habitacion h
+                        ON
+                            hh.habitacion_id=h.habitacion_id
+
                     LEFT JOIN
                         h_usuario u
                         ON
@@ -307,15 +324,27 @@ def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
                         h_organismo o
                         ON
                             oc.organismo_id=o.organismo_id
-                    WHERE
-                        oc.usuario_id=%s
+                    /*WHERE
+                        oc.usuario_id=%s*/
+
+                    GROUP BY
+                        oc.orden_compra_id,
+                        TO_CHAR(oc.servicio_inicio, 'DD/MM/YYYY'),
+                        TO_CHAR(oc.servicio_fin, 'DD/MM/YYYY'),
+                        NVL(o.razon_social, 'S/D'),
+                        NVL(o.nombre_fantasia, 'S/D'),
+                        (oc.servicio_fin+1)-oc.servicio_inicio
+
                 """ % usuario.usuario_id
 
     print ("Query : "+sql)
     oc = HOrdenCompra.objects.raw(sql);
 
+    habitacion = HHabitacion.objects.filter(habitacion_estado_id=1)
+
     form = {
         "oc" : oc,
+        "habitacionOk":habitacion.count(),
     }
 
     return render(request, 'hostal/AdministracionCliente.html', { "form" : form, "nav":"/" })
@@ -380,10 +409,13 @@ def AdministracionOrdenesCompra(request): # ADMINISTRACIÒN DE OC PARA EL ADMINI
     print ("Query : "+sql)
     oc = HOrdenCompra.objects.raw(sql);
 
+    habitacion=HHabitacion.objects.filter(habitacion_estado_id=1)
+
     form = {
         "id" : "login",
         "oc" : oc,
         "ayuda" : ayuda[2],
+        "habitacionOk":habitacion.count(),
         }
 
     return render(request, 'hostal/AdministracionOrdenesCompra.html',{ 'form' : form, "nav":"/mainHostal/"})
@@ -2222,14 +2254,18 @@ def showOCDetalle(request, oc_id):
 
     hh = []
     for h in ocHuesped:
-        huespedHabitacion=HHuespedHabitacion.objects.filter(oc_huesped_id=h.oc_huesped_id)
+        huespedHabitacion=HHuespedHabitacion.objects.get(oc_huesped_id=h.oc_huesped_id)
+        habitacion=HHabitacion.objects.get(habitacion_id=huespedHabitacion.habitacion_id)
+
         persona=HPersona.objects.get(persona_id=h.persona_id)
-        pasajero={
-            "hh":huespedHabitacion,
-            "oc":h,
-            "p":persona,
-        }
-        hh.append(pasajero)
+        hh.append(
+            {
+                "hh":huespedHabitacion,
+                "oc":h,
+                "hab":habitacion,
+                "p":persona,
+            }
+        )
 
     form = {
         "oc" : ordenCompra,

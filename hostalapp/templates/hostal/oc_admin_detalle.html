@@ -23,6 +23,7 @@
                   <table class="table text-center" >
                       <thead class="thead-dark text-center">
                         <tr>
+                          <th class="text-center"scope="col">#</th>
                           <th class="text-center"scope="col">Rut</th>
                           <th class="text-center"scope="col">Nombre</th>
                           <th class="text-center"scope="col">Cargo</th>
@@ -35,10 +36,11 @@
                         {% if form.hh %}
                           {% for hh in form.hh %}
                           <tr>
+                            <td>{{hh.hh.oc_huesped_id}}</td>
                             <td align="right">#{{hh.p.rut}}</td>
                             <td>{{hh.p.nombres}} {{hh.p.paterno}}</td>
                             <td>{{hh.p.cargo}}</td>
-                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox" name="arrivoSel" value="{{hh.hh.oc_huesped_id}}"></td>
                             <td>
                               <table width="100%">
                                 <tr>
@@ -60,7 +62,11 @@
                                 </tr>
                               </table>
                             </td>
-                            <td>{{d.habitacion.descriptor}}</td>
+                            <td align="left">
+                              Hab.:{{hh.hab.rotulo}}<br>
+                              Camas:{{hh.hab.camas}}<br>
+                              Accesorios:{{hh.hab.accesorios}}
+                            </td>
                           </tr>
                           {% endfor %}
                         {% else %}

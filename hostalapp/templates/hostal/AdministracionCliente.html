@@ -24,7 +24,7 @@
                         <th class="text-center"scope="col">Total</th>
                         <th class="text-center"scope="col">Fecha Ingreso</th>
                         <th class="text-center"scope="col">Fecha Salida</th>
-                        <th class="text-center"scope="col" >Cantidad Empleados<i class="far fa-user"></i></th>
+                        <th class="text-center"scope="col" >Cantidad Empleados <i class="fa fa-users"></i></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -111,7 +111,8 @@
   </div>
 </div>
     <div class="icono-accesos">
-        <a href="{% url 'SolicitarServicio' %}" class="icono1"><i class="fa fa-thumbs-up fa-2x"></i><br> Solicitar Servicio</a>
+        <a href="{% url 'SolicitarServicio' %}" class="icono1" {% if form.habitacionOk == 0 %}onclick="alert('No se han encontrado habitaciones disponibles'); return false;"{% endif %}>
+          <i class="fa fa-thumbs-up fa-2x"></i><br> Solicitar Servicio</a>
         <a href="{% url 'misDatos' %}"  class="icono1">Mis datos</a>
     </div>
 
