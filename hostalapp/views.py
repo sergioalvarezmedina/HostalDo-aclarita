@@ -259,7 +259,7 @@ def SolicitarServicio(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
-        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "pagoForma":HPagoForma.objects.all(),
         "ayuda" : ayuda[9]
     }
@@ -404,8 +404,12 @@ def RegistroHuespedes(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
+<<<<<<< HEAD
         "habitacion":HHabitacion.objects.filter(vigencia=1),
         "lHabitaciones":HHabitacion.objects.all(),
+=======
+        "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
+>>>>>>> dcc267017196616e027632837141e11046ecdae7
         "pagoForma":HPagoForma.objects.all(),
         "organismo":HOrganismo.objects.all(),
         "ayuda" : ayuda[9]
@@ -415,13 +419,13 @@ def RegistroHuespedes(request):
 
 def GuardarHuesped(request):
 
+    habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
     try:
         emp=request.session["oc_empleados"]
     except:
         emp = []
 
     menu=HMenu.objects.get(menu_id=request.POST["menu"])
-    habitacion=HHabitacion.objects.get(habitacion_id=request.POST["habitacion"])
 
     empleado={
         "id":len(emp)+1,
@@ -436,6 +440,7 @@ def GuardarHuesped(request):
     }
 
     emp.append(empleado)
+
     try:
         request.session["oc_empleados"]=emp
     except:
@@ -447,7 +452,7 @@ def GuardarHuesped(request):
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
         "pagoForma":HPagoForma.objects.all(),
-        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "organismoId":int(request.POST["organismoId"]),
         "organismo":HOrganismo.objects.all()
     }
@@ -478,7 +483,7 @@ def removeOCAdmin(request):
     form = {
         "emp":empTmp,
         "menu":HMenu.objects.filter(vigencia=1),
-        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "organismo":HOrganismo.objects.all(),
         "organismoId":int(request.POST["organismoId"]),
         "pagoForma":HPagoForma.objects.all()
@@ -1289,7 +1294,7 @@ def removeOCEmpleado(request):
     form = {
         "emp":empTmp,
         "menu":HMenu.objects.filter(vigencia=1),
-        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "pagoForma":HPagoForma.objects.all(),
     }
 
@@ -1328,7 +1333,7 @@ def ordenCompraHuespedes(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
-        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
         "pagoForma":HPagoForma.objects.all(),
     }
 
@@ -1387,6 +1392,7 @@ def OrdenCompraEnviar(request):
     oc.save()
 
     for e in emp:
+
         existe=1
 
         try:
@@ -1412,6 +1418,20 @@ def OrdenCompraEnviar(request):
             recepcion_flag = 0
         )
         pasajero.save()
+
+        habitacion=HHabitacion.objects.get(habitacion_id=e["habitacionId"])
+
+        huespedHabitacion=HHuespedHabitacion(
+            huesped_habitacion_id = getSecuenciaId("H_HUESPED_HABITACION_HUESPED_H"),
+            habitacion = habitacion,
+            oc_huesped = pasajero,
+        )
+        huespedHabitacion.save()
+
+        # ACTUALIZACIÒN DE ESTADO DE HABITACION
+        habitacion.habitacion_estado_id=2; # OCUPADA
+        habitacion.save()
+
 
     request.session["oc_empleados"]=''
 
@@ -1822,7 +1842,7 @@ def AdministracionMenu(request):
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    listaMenu = HMenu.objects.all()    
+    listaMenu = HMenu.objects.all()
 
     listaPlato = HPlato.objects.all()
     print(listaPlato)
@@ -1862,14 +1882,14 @@ def GuardarPlato(request):
             }
 
             return render(request, 'hostal/AdministracionMenu.html', {'form':form, "nav":"/mainHostal/"})
-     
+
     plato = HPlato(
         plato_id = getSecuenciaId("H_PLATO_PLATO_ID_SEQ"),
         nombre =request.POST["nombre_plato"] ,
         ingredientes = request.POST["ingredientes"],
         valor = request.POST["valor"],
         registro_fecha = datetime.now(),
-        vigencia = 1,)  
+        vigencia = 1,)
 
     plato.save()
 
@@ -1946,6 +1966,21 @@ def EditarPlato(request,plato_id):
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
+    request.session["menu_id"] = str(menu_id)
+
+    menu = HMenu.objects.get(menu_id = menu_id)
+    idMenu = menu.menu_id
+    menuList = HMenu.objects.all()
+
+    print(menu)
+
+"""def updateMenu(request, menu_id):
+
+    menu = HHmenu.objects.get(menu_id=request.session["menu_id"]);
+
+    for m in menuList:
+        print(str(m.nombre))
+
     request.session["plato_id"] = str(plato_id)
 
     plato = HPlato.objects.get(plato_id = plato_id)
@@ -1957,12 +1992,21 @@ def EditarPlato(request,plato_id):
     'plato' : plato,
     'tipo' : platoList,
     }
+
+    return render(request, 'hostal/EditarMenu.html', {'form':form, "nav":"/mainHostal/"})
+"""
+
+def updateMenu(request):
+
+    menu = HMenu.objects.get(menu_id=request.session["menu_id"]);
+
     return render(request, 'hostal/EditarPlato.html', {'form':form, "nav":"/AdministracionMenu/"})
 
 
 def updatePlato(request):
-    
+
     plato = HPlato.objects.get(plato_id=request.session["plato_id"]);
+
 
     print(plato)
 
@@ -1974,7 +2018,7 @@ def updatePlato(request):
         ingredientes = request.POST["ingredientes"],
         valor = request.POST["valor"],
         registro_fecha = datetime.now(),
-        vigencia = 1,)  
+        vigencia = 1,)
 
     plato.save()
 
@@ -2183,18 +2227,23 @@ def showOCDetalle(request, oc_id):
     ocHuesped=HOcHuesped.objects.filter(orden_compra_id=oc_id)
     ordenCompra=HOrdenCompra.objects.get(orden_compra_id=oc_id)
 
-
     hh = []
     for h in ocHuesped:
-        huespedHabitacion=HHuespedHabitacion.objects.filter(huesped_id=h.huesped_id)
-        print ("Huesped id "+huespedHabitacion.huesped_id)
-        hh.append(huespedHabitacion)
+        huespedHabitacion=HHuespedHabitacion.objects.filter(oc_huesped_id=h.oc_huesped_id)
+        persona=HPersona.objects.get(persona_id=h.persona_id)
+        pasajero={
+            "hh":huespedHabitacion,
+            "oc":h,
+            "p":persona,
+        }
+        hh.append(pasajero)
 
     form = {
         "oc" : ordenCompra,
-        "huesped" : ocHuesped,
         "hh" : hh,
         "ayuda" : ayuda[10],
+        "horaList":range(0, 24),
+        "minutoList":range(0, 59),
     }
 
-    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form })
+    return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nat": "/AdministracionOrdenesCompra/" })
