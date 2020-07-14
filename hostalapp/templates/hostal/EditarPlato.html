@@ -8,28 +8,32 @@
         <div class="wrapper wrapper--w960">
             <div class="card card-5">
                 <div class="card-heading">
-                    <h2 class="title">Editar Menú</h2>
+                    <h2 class="title">Editar Plato</h2>
                 </div>
                 <div class="contenedorFormulario form-row justify-content-around">
-                <form class="form-horizontal" method="POST" action="/updateMenu/" novalidate>
+                <form class="form-horizontal" method="POST" action="/updatePlato/" novalidate>
                   {% csrf_token %}
                   <table>
 
-                  <input type="hidden" id="menu_id" name="menu_id" value="{{menu.menu_id}}">
+                  <input type="hidden" id="plato_id" name="plato_id" value="{{plato.plato_id}}">
 
                   <div class="row">
                 <div class="col ml-4 ">
-                    <div class="control-label mb-3 text-center">
-                        <label for="validationCustom01" class="">ID Menú</label>
-                        <input type="text" class="form-control text-center" id="validationCustom01" name="idMenu" value="{{form.menu.menu_id}}" readonly>
-                    </div>
                     <div class="control-label  mb-3 text-center">
                          <label for="validationCustom02" class="">Nombre</label>
-                         <input type="text" class="form-control text-center" id="validationCustom02" name="nombre_menu" value="{{form.menu.nombre}}" required>
+                         <input type="text" class="form-control text-center" id="validationCustom02" name="nombre_plato" value="{{form.plato.nombre}}" required>
+                    </div>
+                    <div class="control-label  mb-3 text-center">
+                         <label for="validationCustom02" class="">Ingredientes</label>
+                         <textarea type="text" class="form-control text-center" id="validationCustom02" name="ingredientes" value="{{form.plato.ingredientes}}" required>> </textarea>
+                    </div>
+                    <div class="control-label  mb-3 text-center">
+                         <label for="validationCustom02" class="">Valor</label>
+                         <input type="text" class="form-control text-center" id="validationCustom02" name="valor" value="{{form.plato.valor}}" required>
                     </div>
                     <div class="control-label mb-3 text-center">
                          <label for="validationCustom03" class="">Fecha de Registro</label>
-                         <input type="text" class="form-control text-center" id="razons" value="{{form.menu.registro_fecha}}" name="registro_fecha" readonly>
+                         <input type="text" class="form-control text-center" id="razons" value="{{form.plato.registro_fecha}}" name="registro_fecha" readonly>
 
                     </div>
                     <div class="text-center">

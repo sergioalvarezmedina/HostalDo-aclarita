@@ -345,7 +345,7 @@ function showHabitacionEliminar(habitacionId) {
 
 }
 
-function unsetMenu(menuid) {
+function unsetPlato(plato_id) {
 
   var sel={};
 
@@ -357,7 +357,7 @@ function unsetMenu(menuid) {
   );
 
   $.post(
-    "/unsetMenu",
+    "/unsetPlato",
     {
       sel : JSON.stringify(sel),
       csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
@@ -391,11 +391,11 @@ function unsetMenu(menuid) {
 
 }
 
-function showMenuEliminar(menuid) {
+function showPlatoEliminar(plato_id) {
 
-  if (confirm("¿Esta seguro de eliminar el Menú seleccionada?")) {
+  if (confirm("¿Esta seguro de eliminar el Plato seleccionado?")) {
 
-    unsetMenu(menuid);
+    unsetPlato(plato_id);
 
   }
 

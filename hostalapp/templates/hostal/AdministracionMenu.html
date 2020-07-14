@@ -26,14 +26,18 @@
                 </div>
           <div class="control-label form-inline mb-3 mt-3">
               <label for="validationCustom03" class="mr-10 pr-2">Menu</label>
-            <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
-               <select name="estado" for="estado" id="estado" class="form-control  mr-5">
-               <option disabled="disabled" selected="selected">Ejecutivo</option>
-              </select>
+          <div class="rs-select2 js-select-simple select--no-search ml-4 pl-3">
+               <select  name="idMenu" value="idMenu"  for="" id="idMenu" class="form-control  mr-5">
+               {% for m in form.listaMenu %}
+                  <option  value="{{m.menu_id}}" {% if m.menu_id == form.idMenu %}selected{% endif %} selected="selected">{{ m.menu_id }} - {{m.nombre}}
+                  </option>  
+               {% endfor %}           
+              </select>       
             <div class="select-dropdown"></div>
           </div>
             <button id="btn " class="btn text-light registro btn-space" type="button">Listar Menu</button>
             <button id="btnNuevoMenu" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#NuevoMenu">Nuevo Menú</button>
+            <button id="btnNuevoPlato" class="btn text-light registro btn-space" type="button"  data-toggle="modal" data-target="#NuevoPlato">Nuevo Plato</button>
         </div>
         </div>
 
@@ -43,20 +47,20 @@
              <thead class="thead-dark text-center">
                <tr>
                 <th class="text-center"scope="col">Fecha</th>
-                <th class="text-center"scope="col">Menu</th>
+                <th class="text-center"scope="col">Plato</th>
                 <th class="text-center"scope="col">Sel</th>
                 <th class="text-center"scope="col">Edición</th>
               </tr>
             </thead>
             <tbody>
-              {% for listaMenu in form.listaMenu %}
+              {% for p in form.listaPlato %}
               <tr>
-                <th scope="row">{{listaMenu.registro_fecha}}</th>
-                <td>{{ listaMenu.nombre }}</td>
+                <th scope="row">{{p.registro_fecha}}</th>
+                <td>{{ p.nombre }}</td>
                 <td><div class="form-check">
-                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{listaMenu.menu_id}}" aria-label="...">
+                    <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{p.plato_id}}" aria-label="...">
                                      </div></td>
-                <td ><a href="/EditarMenu/ {{listaMenu.menu_id}}">
+                <td ><a href="/EditarPlato/ {{p.plato_id}}">
                   <button id="btnEditarMenu"   class="btn text-light registro btn-space " type="button">Editar</button>
                 </a>
                 </td>
@@ -67,7 +71,7 @@
 
           <div class="text-center">
             <button data-toggle="modal" data-target="#NuevaMinuta" id="btnAgregarMinuta" class="btn text-light registro btn-space text" type="button" onclick="getPlatosSeleccion('NuevaMinutaPlatoAdd', 'NuevaMinutaPlatoSel');">Agregar Minuta</button>
-            <button id="btnEliminarMenu " class="btn text-light registro btn-space" data-toggle="modal" data-target="#" type="button" onclick="showMenuEliminar()">Eliminar</button>
+            <button id="btnEliminarPlato " class="btn text-light registro btn-space" data-toggle="modal" data-target="#" type="button" onclick="showPlatoEliminar()">Eliminar</button>
           </div>
         </div>
       </div>
@@ -95,6 +99,42 @@
            <div class="control-label form-inline justify-content-center">
              <label for="validationCustom01" class="mr-3">Nombre</label>
              <input type="text" class="form-control" id="validationCustom01" name="nombre_menu" required>
+           </div>
+         </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+          </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar Plato-->
+  <div class="modal fade" id="NuevoPlato" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar Plato</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" action="/GuardarPlato/">
+          {% csrf_token %}
+
+          <div class="modal-body">
+           <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom01" class="mr-3">Nombre</label>
+             <input type="text" class="form-control" id="validationCustom01" name="nombre_plato" required>
+           </div>
+           <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom01" class="mr-3">Ingredientes</label>
+             <input type="text" class="form-control" id="validationCustom01" name="ingredientes" required>
+           </div>
+           <div class="control-label form-inline justify-content-center">
+             <label for="validationCustom01" class="mr-3">Valor</label>
+             <input type="text" class="form-control" id="validationCustom01" name="valor" required>
            </div>
          </div>
          <div class="modal-footer">
