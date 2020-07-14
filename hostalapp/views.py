@@ -2588,3 +2588,21 @@ def factura_pdf(request, oc_id):
 
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='factura_'+str(oCompraMax[0].factura_numero)+'_oc_'+str(oc_id)+'_F.pdf')
+
+def reportesMain(request):
+
+    form={
+
+    }
+
+    return render(request, 'hostal/reportes_main.html', { "form" : form, "nav": "/mainHostal/" })
+
+def reportesHuespedes(request):
+
+    hh=HHuespedHabitacion.objects.all()
+
+    form={
+        "hh":hh
+    }
+
+    return render(request, 'hostal/reportes_huespedes.html', { "form" : form, "nav": "/reportesMain/" })

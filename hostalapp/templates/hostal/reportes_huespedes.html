@@ -1,0 +1,53 @@
+{% extends 'hostal/base.html' %}
+
+{% load static %}
+{% block content %}
+
+<title>Menu Principal</title>
+<body>
+  <div class="wrapper">
+
+    <div class="page-wrapper bg-gra-03 pt-5 p-b-50">
+        <div class="wrapper wrapper--w960 ">
+            <div class="card card-5 ">
+
+                <br>
+                <div class="tabla-contenidos">
+
+                  <h3>Reporte de hu&eacute;spedes</h3>
+
+                    <table class="table table-bordered table-hover">
+                      <tr>
+                        <th>#</th>
+                        <th>Rut</th>
+                        <th>Nombre</th>
+                        <th>Direccion</th>
+                        <th>Cargo</th>
+                        <th>Organismo</th>
+                      </tr>
+                      {% for h in form.hh %}
+                      <tr>
+                        <td>{{h.huesped_habitacion_id}}</td>
+                        <td>{{h.persona.nombres}}</td>
+                        <td>Nombre</td>
+                        <td>Direccion</td>
+                        <td>Cargo</td>
+                        <td>Organismo</td>
+                      {% endfor %}
+                      </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form name="form-menu" id="form-menu" method="post">
+      {% csrf_token %}
+    </form>
+
+    <!--<link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.css' %}" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
+
+    <script src="{% static 'js/hostal.js' %}"></script>
+
+{% endblock %}

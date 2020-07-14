@@ -106,4 +106,7 @@ urlpatterns = [
 
     path('factura_pdf/<oc_id>', views.factura_pdf, name="factura_pdf"),
 
+    path('reportesMain', views.reportesMain, name="reportesMain"), #20 23
+    path('reportesHuespedes', views.reportesHuespedes, name="reportesHuespedes"), #20 23
+
 ]
