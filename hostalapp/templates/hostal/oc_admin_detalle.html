@@ -45,7 +45,13 @@
                             <td align="right">#{{hh.p.rut}}</td>
                             <td>{{hh.p.nombres}} {{hh.p.paterno}}</td>
                             <td>{{hh.p.cargo}}</td>
-                            <td><input type="checkbox" name="arrivoSel[]" value="{{hh.hh.oc_huesped_id}}"></td>
+                            <td>
+                              {% if  hh.oc.recepcion_flag %}
+                                <b>HUESPED RECIBIDO</b>
+                              {% else  %}
+                                <input type="checkbox" name="arrivoSel[]" value="{{hh.hh.oc_huesped_id}}">
+                              {% endif %}
+                            </td>
                             <td>
 
                                 {% if  hh.oc.recepcion_flag %}
