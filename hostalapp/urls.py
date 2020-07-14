@@ -12,6 +12,7 @@ urlpatterns = [
     # jquery , post
 
     path('setLogin', views.setLogin, name="setLogin"), #1
+    path('getProveedorBusqueda', views.getProveedorBusqueda, name="getProveedorBusqueda"),
     path('getClienteRut', views.getClienteRut, name="getClienteRut"), #1
     path('getComunaList', views.getComuna, name="getComuna"), #1
     path('mainHostal/', views.mainHostal, name="mainHostal"), #12

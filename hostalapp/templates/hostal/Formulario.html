@@ -16,7 +16,7 @@
         <link href="{% static 'vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
         <!-- Font -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    
+
         <!-- Vendor CSS-->
         <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
         <link href="{% static 'vendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
@@ -26,7 +26,7 @@
 
 <body>
     <div class="page-wrapper bg-gra-03 p-t-5 p-b-50">
- 
+
           <div class="btonAyuda ml-4 mr-4">
             <a href="{% url 'InicioSesion' %}" class="btn btn-info" onclick="$('#navigationForm').submit();">
               <i class="fa fa-chevron-left"></i> Volver Atrás
@@ -58,7 +58,7 @@
                             <div class="name">Nombre Empresa</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="nombre_fantasia" value="{{form.datos.rol_empresa}}" required>
+                                    <input class="input--style-5" type="text" id="nombre_fantasia" name="nombre_fantasia" value="{{form.datos.rol_empresa}}" required>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                             <div class="name">Rol Empresa</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="rol_empresa" value="{{form.datos.rol_empresa}}" required>
+                                    <input class="input--style-5" type="text" name="rol_empresa" id="rol_empresa" value="{{form.datos.rol_empresa}}" required>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                             <div class="name">Razon Social</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" value="{{form.datos.razon_social}}" name="razon_social" required>
+                                    <input class="input--style-5" type="text" value="{{form.datos.razon_social}}" name="razon_social" id="razon_social" required>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                             <div class="value">
                                 <div class="input-group">
                                     <div class="rs-select2 js-select-simple select--no-search">
-                                    <select select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
+                                    <select name="comunaId" for="comunas" id="comunaId" value="{{comuna}}" class="form-control">
                                     <option disabled="disabled" selected="selected" name="comuna" >-Seleccione región-</option>
                                     </select>
                                     <div class="select-dropdown" name ="comuna"></div>
@@ -113,7 +113,7 @@
                             <div class="name">Dirección</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" value="{{form.datos.direccion}}" name="direccion" required>
+                                    <input class="input--style-5" type="text" value="{{form.datos.direccion}}" name="direccion" id="direccion" required>
                                 </div>
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                             <div class="name">Nombre</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text"  name="nombre_persona" value="{{form.datos.nombre_persona}}" required>
+                                    <input class="input--style-5" type="text"  name="nombre_persona" id="nombre_persona" value="{{form.datos.nombre_persona}}" required>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,7 @@
                             <div class="name">Apellido Materno</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="Ap_materno" value="{{form.datos.Ap_materno}}" required>
+                                    <input class="input--style-5" type="text" name="Ap_materno" id="Ap_materno" value="{{form.datos.Ap_materno}}" required>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                             <div class="name">Telefono</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="telefono" name="Ptelefono" value="{{form.datos.Ptelefono}}" required>
+                                    <input class="input--style-5" type="number" name="Ptelefono" id="Ptelefono" value="{{form.datos.Ptelefono}}" required>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +157,7 @@
                             <div class="name">Email</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="email" name="Pemail" value="{{form.datos.Pemail}}" required>
+                                    <input class="input--style-5" type="email" name="Pemail" id="Pemail" value="{{form.datos.Pemail}}" required>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +165,7 @@
                             <div class="name">Nombre Usuario</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="text" name="username" value=" {{form.datos.username}}" required>
+                                    <input class="input--style-5" type="text" name="username" id="username" value=" {{form.datos.username}}" required>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,7 @@
                             <div class="name"> Contraseña</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="password"  name="contrasena" value="{{form.datos.contrasena}}" required>
+                                    <input class="input--style-5" type="password"  name="contrasena" id="contrasena" value="{{form.datos.contrasena}}" required>
                                 </div>
                             </div>
                         </div>
@@ -187,8 +187,8 @@
                         </div class="boton">
                         <button class="btn btn--radius-2 btn--color" type="submit">
                             REGISTRARME
-                            </button>
-                        </div>
+                        </button>
+
                     </form>
                 </div>
             </div>
@@ -213,7 +213,7 @@
       $("#navigationForm").prop("action", "{{nav}}");
     </script>
 
-    
+
     <script src="{% static 'js/global.js' %}"></script>
     <!-- Region y Comunas JS-->
     <script src="{% static 'js/comunas.js' %}"></script>

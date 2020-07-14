@@ -89,10 +89,12 @@
     </div>
 
       <script>
-        if ($.trim('{{msg}}') != '') {
+      {% if msg or form.msg %}
+        if ($.trim('{{msg}}{{form.msg}}') != '') {
           $("#modalMessageBody").html('{{msg}}');
           $("#modalMessage").modal('show');
         }
+      {% endif %}
       </script>
 
 </body>

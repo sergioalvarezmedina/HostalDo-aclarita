@@ -714,3 +714,58 @@ function checkSeleccionCheck_in() {
   }
 
 }
+
+function getProveedorBusqueda(rut, razon) {
+
+  if ($.trim(rut)=="" && $.trim(razon)=="") {
+    alert("Para proceder con la búsqueda se requiere como mínimo un criterio de búsqueda.");
+    return;
+  }
+
+  var dataIn =
+    {
+      rut : rut,
+      razon : razon,
+    };
+
+  $.post(
+    "/getProveedorBusqueda",
+    {
+      data : JSON.stringify(dataIn),
+      csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+    },
+    function (data) {
+
+      alert(data);
+
+      try {
+
+        var rec = JSON.parse(data);
+
+        if (rec.status=="success") {
+
+          $("#buscarProveedorList").html(rec.html);
+
+        } else {
+
+          alert(rec.msg);
+
+        }
+
+      } catch (ex) {
+
+        erJson();
+
+      }
+
+    }
+  )
+  .fail(
+    function (jqXHR, textStatus, errorThrown) {
+      console.log("Error "+jqXHR.responseText);
+      alert("Se ha producido una excepción.");
+    }
+  );
+
+
+}

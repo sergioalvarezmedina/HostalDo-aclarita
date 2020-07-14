@@ -144,38 +144,60 @@ def Formulario(request):
 
 def GuardarFormulario(request):
 
-
     now = datetime.now()
 
     username = request.POST["username"]
     rutEmpresa = request.POST["rol_empresa"]
 
-    # VALIDANDO NOMRBE DE USUARIO
-    if HUsuario.objects.filter(username = username).count() > 0:
+    print("Validando... "+username+" / "+rutEmpresa)
 
-        messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
+    try:
 
-        region = []
-        for r in HRegion.objects.all():
-            region.append(r)
-        form = {
-            "datos" : request.POST,
-            "region" : region
-        }
-        return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+        usuario=HUsuario.objects.get(username=username)
 
-    # VALIDANDO RUT DEL ORGANISMO
-    if HOrganismo.objects.filter(rut = rutEmpresa).count()>0:
+        # VALIDANDO NOMRBE DE USUARIO
+        if usuario:
 
-        messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
-        region = []
-        for r in HRegion.objects.all():
-            region.append(r)
-        form = {
-            'datos':request.POST,
-            "region" : region
-        }
-        return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+            print("Nombre de usuario ya utilizado["+username+"]...")
+
+            messages.error(request, "El nombre de usuario utilizado ya se encuentra en uso.")
+
+            region = []
+            for r in HRegion.objects.all():
+                region.append(r)
+            form = {
+                "datos" : request.POST,
+                "region" : region
+            }
+            return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+
+    except:
+
+        print("USERNAME DISPONIBLE")
+
+    try:
+
+        organismo=HOrganismo.objects.get(rut=rutEmpresa)
+
+        # VALIDANDO RUT DEL ORGANISMO
+        if organismo.count()>0:
+
+            print("Rut empresa ya usado ["+rutEmpresa+"]...")
+
+            messages.error(request, "El rol inRol de empresa ya se encuentra registrado.")
+            region = []
+            for r in HRegion.objects.all():
+                region.append(r)
+            form = {
+                'datos':request.POST,
+                "region" : region
+            }
+            return render(request, "hostal/Formulario.html",{'form':form, 'nav':'/InicioSesion/'})
+
+    except:
+        print("RUT ORGANISMO DISPONIBLE")
+
+    print("Insertando persona")
 
     # PERSONA
     persona = HPersona(
@@ -186,24 +208,13 @@ def GuardarFormulario(request):
     )
     persona.save()
 
-    # DIRECCION
-    direccionP = HPersonaDireccion(
-        persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
-        telefono = request.POST["Ptelefono"],
-        email =request.POST["Pemail"],
-        persona = persona,
-        usuario = usuarioActual(), # 56 - Usuario en sesión
-        registro_fecha = datetime.now(),
-        registro_hora = (now.hour*100)+now.minute
-    )
-    direccionP.save()
-
+    print("Insertando usuario")
     # USUARIO
     perfil=HUsuarioPerfil.objects.get(usuario_perfil_id=4)
     usuario = HUsuario(
         usuario_id = getSecuenciaId ("H_USUARIO_USUARIO_ID_SEQ"),
-        persona=persona,
-        username = request.POST["username"],
+        persona = persona,
+        username = username,
         contrasena = encode(WORDFISH, request.POST["contrasena"]),
         registro_fecha = datetime.now(),
         usuario_perfil = perfil,
@@ -211,7 +222,22 @@ def GuardarFormulario(request):
     )
     usuario.save()
 
+    print("Insertando dirección")
+    # DIRECCION
+    direccionP = HPersonaDireccion(
+        persona_direccion_id = getSecuenciaId ("H_PERSONA_DIRECCION_PERSONA_DI"),
+        telefono = request.POST["Ptelefono"],
+        email =request.POST["Pemail"],
+        persona = persona,
+        usuario = usuario, # 56 - Usuario en sesión
+        registro_fecha = datetime.now(),
+        registro_hora = (now.hour*100)+now.minute
+    )
+    direccionP.save()
+
     comuna=HComuna.objects.get(comuna_id=request.POST["comunaId"])
+
+    print("Insertando organismo")
 
     # ORGANISMO
     organismo = HOrganismo(
@@ -222,7 +248,7 @@ def GuardarFormulario(request):
         giro = "", #request.POST["giro"],
         direccion = request.POST["direccion"],
         persona = persona,
-        usuario = usuarioActual(),
+        usuario = usuario,
         registro_fecha = datetime.now(),
         comuna = comuna,
         vigencia = 1
@@ -232,6 +258,8 @@ def GuardarFormulario(request):
     form = {
         "msg":"Cliente creado exitosamente.",
     }
+
+    print("Recuperando proveedor")
 
     try:
         cliente = HOrganismo.objects.distinct(proveedor_flag =1)
@@ -476,8 +504,14 @@ def removeOCAdmin(request):
 
 def AdminClientesAgregar(request):
 
-    rut = request.POST.get('buscarRut')
-    nombre = request.POST.get('buscarNombre')
+    rut = ''
+    nombre = ''
+    if request.POST.get('buscarRut'):
+        rut = request.POST.get('buscarRut')
+    if request.POST.get('buscarNombre'):
+        nombre = request.POST.get('buscarNombre')
+
+    print(rut+" "+nombre)
 
     if rut!="" and nombre!="":
         try:
@@ -504,7 +538,7 @@ def AdminClientesAgregar(request):
                 FROM h_organismo
                 WHERE
                     (UPPER(nombre_fantasia) LIKE %s OR
-                    UPPER(nombre_fantasia) LIKE %s) AND
+                    UPPER(razon_social) LIKE %s) AND
                     RUT LIKE %s"""
 
             cliente = HOrganismo.objects.raw(sql, [nombreLike, nombreLike,rutLike])
@@ -2287,3 +2321,86 @@ def setHuespedArribo(request):
     }
 
     return render(request, 'hostal/oc_admin_detalle.html', { "form" : form, "nav": "/AdministracionOrdenesCompra/" })
+
+def getProveedorBusqueda(request):
+
+    data = json.loads(request.POST["data"]);
+
+    try:
+
+        razon=data["razon"]
+        rut=data["rut"]
+
+        sql = """
+            SELECT
+                ORGANISMO_ID,
+                RAZON_SOCIAL,
+                RUT,
+                NOMBRE_FANTASIA,
+                GIRO,
+                DIRECCION,
+                TELEFONO,
+                CUENTA_DATOS,
+                PERSONA_ID,
+                USUARIO_ID,
+                TO_CHAR(REGISTRO_FECHA, 'DD/MM/YYYY') REGISTRO_FECHA,
+                PROVEEDOR_FLAG,
+                COMUNA_ID,
+                VIGENCIA
+
+            FROM h_organismo
+            WHERE
+        """
+
+        if rut!="" and razon!="":
+            razonLike="%"+razon.upper()+"%"
+            rutLike="%"+rut.upper()+"%"
+            sql=sql+"""
+                UPPER(razon_social) LIKE %s OR RUT LIKE %s
+            """, [razonLike, rutLike]
+
+        elif rut!="":
+
+            rutLike="%"+rut.upper()+"%"
+            sql=sql+"""
+                RUT LIKE '"""+rutLike+"""'
+            """
+
+        elif razon!="":
+
+            razonLike="%"+razon.upper()+"%"
+            sql=sql+"""
+                UPPER(razon_social) LIKE '"""+razonLike+"""'
+            """
+
+        print(sql)
+
+        cliente = HOrganismo.objects.raw(sql)
+
+        html=''
+        for c in cliente:
+            html=html+"""
+                <td>
+                    <tr>"""+c.rut+"""</tr>
+                    <tr>"""+c.giro+"""</tr>
+                    <tr>"""+c.nombre_fantasia+"""</tr>
+                    <tr>"""+c.razon_social+"""</tr>
+                    <tr>
+                        <input type="checkbox" name="sel" value="""""+c.organismo_id+"""">
+                    </tr>
+                </td>
+            """
+
+        data = {
+            'status':'success',
+            'html':html,
+        }
+
+    except:
+
+        data = {
+            'status':'error',
+            'msg':'Se ha producido un error al intentar recuperar las coincidencias',
+        }
+
+    return HttpResponse(json.dumps(data))
