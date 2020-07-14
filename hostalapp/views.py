@@ -436,7 +436,12 @@ def RegistroHuespedes(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
+<<<<<<< HEAD
+        "habitacion":HHabitacion.objects.filter(vigencia=1),
+        "lHabitaciones":HHabitacion.objects.all(),
+=======
         "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
+>>>>>>> dcc267017196616e027632837141e11046ecdae7
         "pagoForma":HPagoForma.objects.all(),
         "organismo":HOrganismo.objects.all(),
         "ayuda" : ayuda[9]
@@ -1658,7 +1663,9 @@ def AdministracionHabitaciones(request): #template 37 -43
     listaHabitaciones = HHabitacion.objects.all()
     estadoHabitacion = HHabitacionEstado.objects.all()
     tipoHabitacion = HHabitacionTipo.objects.all()
+
     print(listaHabitaciones)
+    print(estadoHabitacion)
     form = {
             "listaHabitaciones" : listaHabitaciones,
             "estadoHabitacion" : estadoHabitacion,
