@@ -58,7 +58,7 @@
                     <div class="form-inline">
                       <label for="validationCustom04" class="mr-3">Habitaci&oacute;n</label>
                       <select class="form-control" id="habitacion" name="habitacion">
-                      {% for h in form.habitacion %}
+                      {% for h in form.lHabitaciones %}
                       <option value="{{h.habitacion_id}}">{{h.habitacion_id}} {{h.rotulo}} - {{h.camas}} ${{h.precio}}</option>
                       {% endfor %}
                       </select>

@@ -52,10 +52,10 @@
                 <th class="text-center"scope="col">Edición</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody >
               {% for p in form.listaPlato %}
               <tr>
-                <th scope="row">{{p.registro_fecha}}</th>
+                <th scope="row" class="text-center">{{p.registro_fecha}}</th>
                 <td>{{ p.nombre }}</td>
                 <td><div class="form-check">
                     <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" name="sel" value="{{p.plato_id}}" aria-label="...">
