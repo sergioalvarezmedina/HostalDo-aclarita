@@ -52,7 +52,7 @@
                   {% endif %}
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="/GuardarFormulario/" novalidate onsubmit="return validaOrganismo();">
+                    <form method="POST" action="/GuardarFormulario/" >
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="name">Nombre Empresa</div>

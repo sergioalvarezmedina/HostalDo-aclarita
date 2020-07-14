@@ -274,7 +274,15 @@ def misDatos(request): # DATOS PERSONALES DEL CLIENTE
         }
         return render(request, "hostal/InicioSesion.html", { "form":form } )
 
-    return render(request, 'hostal/misDatos.html')
+    region = []
+    for r in HRegion.objects.all():
+        region.append(r)
+
+    form =  {
+        "region" : region
+    }
+
+    return render(request, 'hostal/misDatos.html', {'form':form})
 
 
 def AdministracionCliente(request): # ACCESO DEL CLIENTE A SU BANDEJA DE OC
@@ -404,12 +412,12 @@ def RegistroHuespedes(request):
     form = {
         "emp":emp,
         "menu":HMenu.objects.filter(vigencia=1),
-<<<<<<< HEAD
+
         "habitacion":HHabitacion.objects.filter(vigencia=1),
         "lHabitaciones":HHabitacion.objects.all(),
-=======
+
         "habitacion":HHabitacion.objects.filter(habitacion_estado_id=1),
->>>>>>> dcc267017196616e027632837141e11046ecdae7
+
         "pagoForma":HPagoForma.objects.all(),
         "organismo":HOrganismo.objects.all(),
         "ayuda" : ayuda[9]
